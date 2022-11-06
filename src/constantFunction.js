@@ -228,7 +228,9 @@ const getHeptabaseData = new Promise((resolve, reject) => {
 
     // 获取 Heptabase 数据
     fetch(
-        'https://app.heptabase.com/api/whiteboard/?secret=d4cc3728297609add1a00aab108e90c4e57a1c378cfc2307c251745bf7d2a884'
+        'https://app.heptabase.com/api/whiteboard/?secret=d4cc3728297609add1a00aab108e90c4e57a1c378cfc2307c251745bf7d2a884',{
+            mode: 'no-cors'
+        }
     )
         .then(res => res.json())
         .then(data => {
