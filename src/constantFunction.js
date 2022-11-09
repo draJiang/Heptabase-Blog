@@ -1,3 +1,5 @@
+import fetchJsonp from 'fetch-jsonp';
+
 // const fetchHeptabaseData = new Promise((resolve, reject) => {
 
 //     console.log('getHeptabaseData fetch');
@@ -226,9 +228,12 @@ const getHeptabaseData = new Promise((resolve, reject) => {
 
     console.log('heptabase_blog_data == undefined');
 
+    const header = new Headers({ "Access-Control-Allow-Origin": "*" });
+    const url = 'https://my-heptabase-api.vercel.app/'
     // 获取 Heptabase 数据
-    fetch('https://app.heptabase.com/api/whiteboard/?secret=d4cc3728297609add1a00aab108e90c4e57a1c378cfc2307c251745bf7d2a884',{
+    fetch(url,{
         method: "get",
+        header: header
         // mode: 'no-cors'
     })
         .then(res => res.json())
@@ -256,6 +261,17 @@ const getHeptabaseData = new Promise((resolve, reject) => {
             resolve(local_data)
         })
         .catch(e => console.log('错误:', e))
+
+    // jsonp
+    // fetchJsonp('https://app.heptabase.com/api/whiteboard/?secret=d4cc3728297609add1a00aab108e90c4e57a1c378cfc2307c251745bf7d2a884')
+    //     .then(function (response) {
+    //         return response.json()
+    //     }).then((json) => {
+    //         console.log(json);
+    //         //用到this需要注意指向，箭头函数
+
+    //     }).catch(function (ex) {
+    //     })
 
 
 
