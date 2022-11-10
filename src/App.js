@@ -8,15 +8,24 @@ import About from './page/About';
 class App extends React.Component {
     render() {
         return (
+            
             <Router >
-                <div>
-                    <Routes>
-                        <Route path="/" element={<Home />} />
-                        <Route cache path="/post/*" element={<Post />} />
+                    <Routes >
+                        <Route exact path="/" element={<Home />} />
+                        {/* <Route path="/post/:id/*" element={<Post p = 'hello' />} /> */}
+                        {/* <Route exact path="/post?id" element={<Post />} /> */}
+                        <Route path="/post/:slug" element={<Post />} />
+                        
+                        
+                        {/* <Route exact path="/post/:id" render={()=>{
+                            console.log('renderrenderrenderrenderrender');
+                            return <Post />
+                        }} /> */}
+
                         <Route path="/about/" element={<About />} />
                         <Route path="/404/" element={<Empty />} />
+                        <Route element={<Empty />} />
                     </Routes>
-                </div>
             </Router>
         )
     }

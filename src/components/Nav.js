@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { getHeptabaseData } from '../constantFunction'
 
+
 class Nav extends React.Component {
 
 
@@ -12,8 +13,10 @@ class Nav extends React.Component {
 
     render() {
         return (
-            <div className='nav'>
-                <header>江子龙</header>
+            <div className='markdown-body nav'>
+                <header>
+                    <Link to='/'><img src='	https://blog.dabing.one/apple-touch-icon.png'></img></Link>
+                </header>
                 <div>
                     <ul>
                         <li>

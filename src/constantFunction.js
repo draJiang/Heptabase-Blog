@@ -28,13 +28,17 @@ import fetchJsonp from 'fetch-jsonp';
 // })
 
 // 修复单个 md 文件中的 img
-const getClearImag = (content) => {
+const getClearImag = (card) => {
 
     // 修改图片后缀，避免图片无法显示
     // 找到 ![]( 符号
     // 找到上述符号之后的第 1 个 jpg#/png#/gif# 符号
     // 找到上一个步骤后的第 1 个 ) 符号
     // 删除前面 2 步 index 中间的符号
+
+    console.log('getClearImag');
+
+    let content = card['content']
 
     let img_type = ['.png', '.jpeg', '.jpg', '.gif']
 
@@ -88,21 +92,24 @@ const getClearImag = (content) => {
 
 
     }
-
-    return content
+    card['content'] = content
+    return card
 
 }
 
 // 处理单个 md 文件中的超链接
-const getClearCard = (content, cards) => {
-
+const getClearCard = (card, cards) => {
+    console.log('getClearCard');
     // 找到 (./ 符号以及之后的第 1 个 ，或找到 {{ 符号 }}) 符号，截取这 2 个 index 中间的字符串
     // 将上述字符串放在 card 数据中匹配
     // 如果找到匹配的卡片：修改上述字符串的地址为 /post/post.id
+    let content = card['content']
+    let this_card_id = card['id']
+
 
     // 获取 {{ 符号
     let card_keyword_index = content.indexOf('{{')
-
+    console.log(card_keyword_index);
     while (card_keyword_index != -1) {
 
         //获取卡片末尾的索引
@@ -130,11 +137,15 @@ const getClearCard = (content, cards) => {
 
             for (let i = 0; i < cards.length; i++) {
 
+
+                // 处理当前卡片信息
                 if (old_card.indexOf(cards[i]['id']) >= 0) {
                     // 存在：设置卡片链接
                     new_card = '[' + cards[i]['title'] + ']' + '(' + '/post/' + cards[i]['id'] + ')'
                     break
                 }
+
+
 
             }
 
@@ -146,6 +157,8 @@ const getClearCard = (content, cards) => {
 
             card_keyword_index = content.indexOf('{{', card_keyword_index + 1)
 
+        }else{
+            break
         }
 
     }
@@ -153,6 +166,7 @@ const getClearCard = (content, cards) => {
 
     // 获取 (./ 符号
     let custom_card_keyword_index = content.indexOf('(./')
+    console.log(custom_card_keyword_index);
     while (custom_card_keyword_index != -1) {
 
         //获取卡片末尾的索引
@@ -173,6 +187,7 @@ const getClearCard = (content, cards) => {
             if (custom_old_card.indexOf(cards[i]['id']) >= 0) {
                 // 存在：设置卡片链接
                 custom_new_card = '/post/' + cards[i]['id'] + ')'
+                
                 break
             }
 
@@ -190,7 +205,23 @@ const getClearCard = (content, cards) => {
 
     }
 
-    return content
+
+    // 处理反向连接
+    // 如果 A 卡片中存在当前笔记的 ID，则 A 卡片为当前笔记的反向链接之一
+    let backLinks = []
+    for (let i = 0; i < cards.length; i++) {
+
+        if (cards[i]['content'].indexOf(this_card_id) >= 0 && cards[i]['id'] != this_card_id) {
+            console.log(this_card_id);
+            // console.log(content);
+            console.log(cards[i]['title']);
+            backLinks.push(cards[i])
+        }
+
+    }
+
+    card['content'] = content
+    return {'card':card,'backLinks':backLinks}
 
 }
 
@@ -231,7 +262,7 @@ const getHeptabaseData = new Promise((resolve, reject) => {
     const header = new Headers({ "Access-Control-Allow-Origin": "*" });
     const url = 'https://my-heptabase-api.vercel.app/'
     // 获取 Heptabase 数据
-    fetch(url,{
+    fetch(url, {
         method: "get",
         header: header
         // mode: 'no-cors'
@@ -243,15 +274,15 @@ const getHeptabaseData = new Promise((resolve, reject) => {
             let pages = {}
             // 获取 About 页面的数据
             pages.about = undefined
-            for(let i =0;i<data.cards.length;i++){
+            for (let i = 0; i < data.cards.length; i++) {
                 console.log(data.cards[i]['title']);
-                if(data.cards[i]['title']=='About'){
+                if (data.cards[i]['title'] == 'About') {
                     pages.about = data.cards[i]
                     break
                 }
             }
 
-            const local_data = { 'createdTime': Date.parse(new Date()) / 1000, 'data': data,'pages':pages }
+            const local_data = { 'createdTime': Date.parse(new Date()) / 1000, 'data': data, 'pages': pages }
             // 存储数据到本地缓存
             localStorage.setItem("heptabase_blog_data", JSON.stringify(local_data))
             // console.log(this.state.posts);

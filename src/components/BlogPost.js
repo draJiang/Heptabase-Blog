@@ -18,7 +18,7 @@ class BlogPost extends React.Component {
         // this.fetch();
 
 
-        
+
 
         getHeptabaseData.then((res) => {
             this.setState({ posts: res.data, isLoading: false })
@@ -86,10 +86,12 @@ class BlogPost extends React.Component {
 
                 console.log('posts.map');
                 console.log(posts);
-
+                console.log(posts[0].content.split('\n'));
+                
                 postList = posts.map((post) =>
                     <li key={post.id} >
-                        <Link to={'/post/' + post.id} >
+                        {/* <Link to={'/post/' + post.id} > */}
+                        <Link to={{ pathname: '/post/' + post.id }} >
                             <header>
                                 <h2>
                                     {post.title}

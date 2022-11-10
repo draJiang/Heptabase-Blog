@@ -1,7 +1,7 @@
 body {
     padding: 0;
     margin: 0;
-    background-color: #FAF9FC;
+    background-color: var(--color-canvas-default);
 }
 
 a {
@@ -33,11 +33,19 @@ img {
     color: #666;
 }
 
+.markdown-body {
+    margin: 0 auto !important;
+}
+
+.container {
+    padding-bottom: 1rem;
+}
+
 .container,
 .post_list {
+    margin: 0 auto;
     max-width: 42rem;
     padding: 0 1rem;
-    margin: 0 auto;
 }
 
 .nav {
@@ -48,7 +56,7 @@ img {
     position: sticky;
     top: 0;
     border-bottom: 1px solid #dadada;
-    margin-bottom: 3rem;
+    margin-bottom: 1rem;
 }
 
 .nav ul {
@@ -61,6 +69,7 @@ img {
 .nav li {
     margin-right: 2rem;
     list-style: none;
+    margin-top: 0em !important;
 }
 
 .nav a {
@@ -73,6 +82,7 @@ img {
 }
 
 .nav header {
+    position: relative;
     width: 100%;
     margin-left: 2rem;
 }
@@ -80,4 +90,21 @@ img {
 .nav header,
 .nav ul {
     line-height: 2.4rem;
+}
+
+.nav header img {
+    width: 1.5rem;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.backLinks {
+    border: 1px solid var(--color-border-default);
+    padding: 0.6rem;
+}
+
+.nav a,
+.post_list a {
+    color: var(--color-fg-default) !important;
 }
