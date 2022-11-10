@@ -260,7 +260,7 @@ const getHeptabaseData = new Promise((resolve, reject) => {
     console.log('heptabase_blog_data == undefined');
 
     const header = new Headers({ "Access-Control-Allow-Origin": "*" });
-    const url = 'https://my-heptabase-api.vercel.app/'
+    const url = 'https://api.dabing.one/'
     // 获取 Heptabase 数据
     fetch(url, {
         method: "get",

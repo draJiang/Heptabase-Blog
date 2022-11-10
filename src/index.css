@@ -56,7 +56,7 @@ img {
     position: sticky;
     top: 0;
     border-bottom: 1px solid #dadada;
-    margin-bottom: 1rem;
+    margin-bottom: 1.4rem !important;
 }
 
 .nav ul {
