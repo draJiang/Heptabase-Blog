@@ -4,7 +4,8 @@ import Nav from '../components/Nav';
 import '../index.css'
 import { getHeptabaseData, getClearCard, getClearImag } from '../constantFunction'
 
-import ReactMarkdown from 'https://esm.sh/react-markdown@7'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 
 // class About extends React.Component {

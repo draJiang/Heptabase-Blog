@@ -12,8 +12,11 @@ import About from './About';
 
 import 'github-markdown-css'
 
-import ReactMarkdown from 'https://esm.sh/react-markdown@7'
-import remarkGfm from 'https://esm.sh/remark-gfm@3'
+// import ReactMarkdown from 'https://esm.sh/react-markdown@7'
+// import remarkGfm from 'https://esm.sh/remark-gfm@3'
+
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 
 
@@ -147,7 +150,7 @@ function Post() {
 
         `
         window.scrollTo(0, 0);
-        
+
         return <div>
 
             <div>
