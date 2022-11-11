@@ -1,63 +1,38 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { BrowserRouter as Router, Routes, Route, Link, useParams } from 'react-router-dom';
+
+import Container from '../components/Container'
 import Nav from '../components/Nav';
 import '../index.css'
+
 import { getHeptabaseData, getClearCard, getClearImag } from '../constantFunction'
+
 
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
 
-// class About extends React.Component {
-
-//     constructor(props) {
-//         super(props);
-//         this.state = { content: '', isLoading: true };
-//     }
-
-//     componentDidMount() {
-
-//         // 获取 Heptabase 中 About 的内容进行显示
-
-//         getHeptabaseData.then((res) => {
-//             console.log(res);
-//             let card_text = getClearImag(res['pages']['about']['content'])
-//             card_text = getClearCard(card_text, res.data.cards)
-//             this.setState({ content: card_text })
-
-
-//         })
-//     }
-
-//     render() {
-
-//         var showdown = require('showdown'),
-//             converter = new showdown.Converter(),
-//             text = this.state.content,
-//             html = converter.makeHtml(text);
-
-//         return (
-//             <div>
-//                 <Nav />
-//                 <div className='container'>
-
-//                     <article dangerouslySetInnerHTML={{ __html: html }}></article>
-
-//                 </div>
-
-
-
-//             </div >
-//         );
-//     }
-// }
 
 function About() {
-    let markdown = '# hello '
-    return <div>
+    let { slug } = useParams();
+    let [page_id, setPageID] = useState('');
 
-        <ReactMarkdown children={markdown} remarkPlugins={[]} />
-    </div>
+    // 获取 About 数据的 ID
+    let heptabase_blog_data
+    
+    getHeptabaseData.then((res) => {
+        heptabase_blog_data = res.data
+        console.log(res);
+        setPageID(res['pages']['about']['id'])
+
+    })
+
+    return <div>
+        <div>
+            <Nav />
+            <Container post_id={page_id} />
+        </div>
+    </div>;
 
 }
 

@@ -13,6 +13,10 @@ img {
     max-width: 800px;
 }
 
+article {
+    margin-bottom: 2rem;
+}
+
 .post_list li {
     list-style: none;
     margin-bottom: 2rem;
@@ -21,6 +25,7 @@ img {
 .post_list h2 {
     font-size: 1.2rem;
     margin: 0.6rem 0;
+    border-bottom: none !important;
 }
 
 .post_list a {
@@ -45,18 +50,19 @@ img {
 .post_list {
     margin: 0 auto;
     max-width: 42rem;
-    padding: 0 1rem;
+    padding: 0 2rem 2rem 2rem;
 }
 
 .nav {
     background-color: #fff;
     color: #000;
     display: flex;
-    height: 2.4rem;
+    height: 2.8rem;
     position: sticky;
     top: 0;
-    border-bottom: 1px solid #dadada;
+    border-bottom: 1px solid var(--color-border-default);
     margin-bottom: 1.4rem !important;
+    padding: 0 2rem;
 }
 
 .nav ul {
@@ -67,7 +73,7 @@ img {
 }
 
 .nav li {
-    margin-right: 2rem;
+    margin-left: 2rem;
     list-style: none;
     margin-top: 0em !important;
 }
@@ -84,24 +90,34 @@ img {
 .nav header {
     position: relative;
     width: 100%;
-    margin-left: 2rem;
+    /* margin-left: 2rem; */
 }
 
 .nav header,
 .nav ul {
-    line-height: 2.4rem;
+    line-height: 2.8rem;
 }
 
 .nav header img {
     width: 1.5rem;
+}
+
+.nav header img {
     position: absolute;
     top: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(0%, -50%);
 }
 
 .backLinks {
     border: 1px solid var(--color-border-default);
     padding: 0.6rem;
+    background-color: var(--color-canvas-subtle);
+    border-radius: 2px;
+}
+
+.backLinks header {
+    margin-bottom: 0.4rem;
+    font-weight: bold;
 }
 
 .nav a,

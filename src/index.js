@@ -9,4 +9,4 @@ import { BrowserRouter } from 'react-router-dom'
 // const cors = require("cors");
 // router.use(cors());
 
-ReactDOM.render(<App/>, document.getElementById('root'));
+ReactDOM.render( < App / > , document.getElementById('root'));

@@ -15,40 +15,9 @@ class BlogPost extends React.Component {
     componentDidMount() {
 
         // 获取数据
-        // this.fetch();
-
-
-
-
         getHeptabaseData.then((res) => {
             this.setState({ posts: res.data, isLoading: false })
         })
-
-        // console.log('BlogPost componentDidMount begin');
-
-        // new Promise(async (resolve, reject) => {
-
-        //     let heptabase_blog_data = await getHeptabaseData()
-
-        //     resolve(heptabase_blog_data)
-
-
-        // }).then((res) => {
-        //     console.log('then');
-        //     console.log(res);
-        //     this.setState({ posts: res, isLoading: false })
-        // })
-
-        // async () => {
-        //     let heptabase_blog_data = getHeptabaseData()
-        // }
-        // console.log('BlogPost heptabase_blog_data:');
-        // console.log(heptabase_blog_data);
-
-        // setTimeout(() => {
-        //     console.log('setTimeout');
-        //     this.setState({ posts: heptabase_blog_data, isLoading: false })
-        // }, 50);
 
         console.log('BlogPost componentDidMount end');
 
@@ -85,8 +54,6 @@ class BlogPost extends React.Component {
 
 
                 console.log('posts.map');
-                console.log(posts);
-                console.log(posts[0].content.split('\n'));
                 
                 postList = posts.map((post) =>
                     <li key={post.id} >

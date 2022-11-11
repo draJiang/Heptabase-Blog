@@ -1,32 +1,3 @@
-import fetchJsonp from 'fetch-jsonp';
-
-// const fetchHeptabaseData = new Promise((resolve, reject) => {
-
-//     console.log('getHeptabaseData fetch');
-//     // 本地无数据
-//     // 获取 Heptabase 数据
-//     fetch(
-//         'https://app.heptabase.com/api/whiteboard/?secret=d4cc3728297609add1a00aab108e90c4e57a1c378cfc2307c251745bf7d2a884'
-//     )
-//         .then(res => res.json())
-//         .then(data => {
-//             console.log(data)
-
-//             let heptabase_blog_data = data
-
-//             const local_data = { 'createdTime': Date.parse(new Date()) / 1000, 'data': data }
-//             // 存储数据到本地缓存
-//             localStorage.setItem("heptabase_blog_data", JSON.stringify(local_data))
-//             // console.log(this.state.posts);
-
-//             console.log('getHeptabaseData return');
-//             // return heptabase_blog_data
-//             resolve(heptabase_blog_data)
-//         })
-//         .catch(e => console.log('错误:', e))
-
-// })
-
 // 修复单个 md 文件中的 img
 const getClearImag = (card) => {
 
@@ -40,8 +11,9 @@ const getClearImag = (card) => {
 
     let content = card['content']
 
+    // 支持的图片类型
     let img_type = ['.png', '.jpeg', '.jpg', '.gif']
-
+    // 包含以下关键字则认为是图片
     let img_keyword_index = content.indexOf('![')
 
     while (img_keyword_index != -1) {
@@ -49,6 +21,10 @@ const getClearImag = (card) => {
 
         // 获取下一个 ) 索引
         let img_end_inex = content.indexOf(')', img_keyword_index)
+
+        // 获取下一个 ] 索引
+        let img_alt_end_inex = content.indexOf(']', img_keyword_index)
+
         // 获取图片扩展名索引
         let img_etc_index
         for (let i = 0; i < img_type.length; i++) {
@@ -68,19 +44,30 @@ const getClearImag = (card) => {
             }
         }
 
-        // console.log('img_keyword_index');
-        // console.log(img_keyword_index);
-        // console.log('img_end_inex');
-        // console.log(img_end_inex);
-        // console.log('img_etc_index');
-        // console.log(img_etc_index);
-
         if (img_keyword_index == -1 || img_end_inex == -1 || img_etc_index == -1) {
             break
         }
 
-        let old_img_str = content.substring(img_keyword_index, img_end_inex)
-        let new_img_str = content.substring(img_keyword_index, img_etc_index)
+        let img_alt = content.substring(img_keyword_index+2,img_alt_end_inex)
+        let img_src = content.substring(img_alt_end_inex+2,img_etc_index)
+
+        console.log('image keyword');
+        console.log(img_alt);
+        console.log(img_src);
+
+        let old_img_str = content.substring(img_keyword_index, img_end_inex+1)
+        
+        
+        // 获取 = 索引
+        let img_width_inex = old_img_str.indexOf('=')
+        
+        if(img_width_inex>-1){
+            //将图片宽度保存到 alt 中
+            img_alt = img_alt+'{{width '+old_img_str.substring(img_width_inex+1,old_img_str.length-2)+'}}'
+        }
+        
+        let new_img_str = '!['+img_alt+']('+img_src+')'
+
 
         // console.log(old_img_str);
         // console.log(new_img_str);
@@ -109,7 +96,7 @@ const getClearCard = (card, cards) => {
 
     // 获取 {{ 符号
     let card_keyword_index = content.indexOf('{{')
-    console.log(card_keyword_index);
+    
     while (card_keyword_index != -1) {
 
         //获取卡片末尾的索引
@@ -157,7 +144,7 @@ const getClearCard = (card, cards) => {
 
             card_keyword_index = content.indexOf('{{', card_keyword_index + 1)
 
-        }else{
+        } else {
             break
         }
 
@@ -187,7 +174,7 @@ const getClearCard = (card, cards) => {
             if (custom_old_card.indexOf(cards[i]['id']) >= 0) {
                 // 存在：设置卡片链接
                 custom_new_card = '/post/' + cards[i]['id'] + ')'
-                
+
                 break
             }
 
@@ -221,7 +208,7 @@ const getClearCard = (card, cards) => {
     }
 
     card['content'] = content
-    return {'card':card,'backLinks':backLinks}
+    return { 'card': card, 'backLinks': backLinks }
 
 }
 
