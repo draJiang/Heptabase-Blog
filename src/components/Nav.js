@@ -23,6 +23,9 @@ class Nav extends React.Component {
                             <Link to='/'>Blog</Link>
                         </li>
                         <li>
+                            <Link to='/projects'>Projects</Link>
+                        </li>
+                        <li>
                             <Link to='/about/'>About</Link>
                         </li>
                     </ul>

@@ -21,7 +21,11 @@ function Container(props) {
     let { slug } = useParams();
 
     const post = useRef(null);
-
+    let isMobile = navigator.userAgent.match(/Mobile/i)
+    let mobileSkale = 1
+    if(isMobile){
+        mobileSkale = 2
+    }
     // 设置 img 的尺寸
     if (post.current != null) {
         console.log(post.current.innerHTML);
@@ -34,7 +38,10 @@ function Container(props) {
                 img_width = img_width.replace('{{width ', '')
                 img_width = img_width.replace('}}', '')
 
-                article_img[i].setAttribute('style', 'width:' + img_width)
+                // console.log(img_width);
+                // console.log((Number(img_width.replace('%',''))*mobileSkale).toString());
+
+                article_img[i].setAttribute('style', 'width:' + (Number(img_width.replace('%',''))*mobileSkale).toString()+'%')
                 article_img[i].style.display = 'block'
                 article_img[i].style.margin = '0 auto'
             }
@@ -116,7 +123,7 @@ function Container(props) {
         let backLinksBox = <div className='markdown-body backLinks'>
             <header>Links to this page</header>
             <ul>
-                null
+                💭
             </ul>
         </div>
 

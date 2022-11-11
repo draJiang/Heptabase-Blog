@@ -17,14 +17,24 @@ article {
     margin-bottom: 2rem;
 }
 
+.post_list {
+    margin-top: 1rem;
+}
+
+.post_list ul {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
 .post_list li {
     list-style: none;
     margin-bottom: 2rem;
 }
 
 .post_list h2 {
-    font-size: 1.2rem;
-    margin: 0.6rem 0;
+    font-size: 1.2rem !important;
+    padding-bottom: 0 !important;
+    margin-bottom: 0.4rem !important;
     border-bottom: none !important;
 }
 
@@ -50,7 +60,7 @@ article {
 .post_list {
     margin: 0 auto;
     max-width: 42rem;
-    padding: 0 2rem 2rem 2rem;
+    padding: 0 1.4rem 1.4rem 1.4rem;
 }
 
 .nav {
@@ -62,7 +72,7 @@ article {
     top: 0;
     border-bottom: 1px solid var(--color-border-default);
     margin-bottom: 1.4rem !important;
-    padding: 0 2rem;
+    padding: 0 1.4rem;
 }
 
 .nav ul {

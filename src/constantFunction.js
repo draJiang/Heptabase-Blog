@@ -1,3 +1,19 @@
+import { format } from 'date-fns'
+
+// 数组按时间排序
+const arrSort = (obj)=>{
+    console.log('arrSort');
+    obj.sort((a,b)=>{
+        let t1 =format(new Date(a.createdTime), 'yyyyMMdd')
+        let t2 =format(new Date(b.createdTime), 'yyyyMMdd')
+        
+        return t2.getTime() - t1.getTime()
+    })
+
+    return obj
+
+}
+
 // 修复单个 md 文件中的 img
 const getClearImag = (card) => {
 
@@ -215,8 +231,6 @@ const getClearCard = (card, cards) => {
 const getHeptabaseData = new Promise((resolve, reject) => {
 
     console.log('getHeptabaseData');
-    console.log(window.performance);
-    console.log(performance);
 
     // 获取本地数据
     let heptabase_blog_data = localStorage.getItem("heptabase_blog_data")
@@ -258,14 +272,26 @@ const getHeptabaseData = new Promise((resolve, reject) => {
         .then(data => {
             console.log(data)
 
+            data.cards = data.cards.sort((a,b) => {
+
+                return b.createdTime <a.createdTime?-1:1
+
+            })
+
             let pages = {}
-            // 获取 About 页面的数据
+            // 获取 About、Projects 页面的数据
             pages.about = undefined
             for (let i = 0; i < data.cards.length; i++) {
                 console.log(data.cards[i]['title']);
+
                 if (data.cards[i]['title'] == 'About') {
                     pages.about = data.cards[i]
-                    break
+                    
+                }
+
+                if (data.cards[i]['title'] == 'Projects') {
+                    pages.projects = data.cards[i]
+                    
                 }
             }
 
