@@ -134,3 +134,10 @@ article {
 .post_list a {
     color: var(--color-fg-default) !important;
 }
+
+.my_link {
+    background-color: transparent;
+    color: var(--color-accent-fg);
+    text-decoration: none;
+    cursor: pointer;
+}

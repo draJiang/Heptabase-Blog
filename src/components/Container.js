@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useUrlState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useParams } from 'react-router-dom';
 
 import '../index.css'
@@ -7,6 +7,7 @@ import 'github-markdown-css'
 
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import rehypeRaw from 'rehype-raw'
 
 
 
@@ -15,46 +16,43 @@ import { getHeptabaseData, getClearCard, getClearImag } from '../constantFunctio
 
 function Container(props) {
     console.log(props);
+    let post = useRef(null);
+
+    let path = window.location.pathname
+    let path_id = path.replace('/post/', '')
+
     let [isLoading, setLoadingState] = useState(true)
+    let [thisPageId, setPageID] = useState('')
+
+    let [my_link,setLink] = useState('');
     let [card, setCard] = useState('card');
+
+    console.log(card);
     let [heptabase_data, setHeptabaseData] = useState('heptabase_data');
     let { slug } = useParams();
 
-    const post = useRef(null);
+    if (thisPageId == '') {
+        setPageID(props.post_id)
+    }
+
+
     let isMobile = navigator.userAgent.match(/Mobile/i)
     let mobileSkale = 1
-    if(isMobile){
+    if (isMobile) {
         mobileSkale = 2
     }
-    // 设置 img 的尺寸
-    if (post.current != null) {
-        console.log(post.current.innerHTML);
-        let article_img = document.getElementsByTagName('img');
 
-        for (let i = 0; i < article_img.length; i++) {
-            let width_key_index = article_img[i]['alt'].indexOf('{{width ')
-            if (width_key_index > -1) {
-                let img_width = article_img[i]['alt'].substring(width_key_index, article_img[i]['alt'].length)
-                img_width = img_width.replace('{{width ', '')
-                img_width = img_width.replace('}}', '')
 
-                // console.log(img_width);
-                // console.log((Number(img_width.replace('%',''))*mobileSkale).toString());
 
-                article_img[i].setAttribute('style', 'width:' + (Number(img_width.replace('%',''))*mobileSkale).toString()+'%')
-                article_img[i].style.display = 'block'
-                article_img[i].style.margin = '0 auto'
-            }
-        }
 
-    }
+
+
 
     const setContent = (id) => {
         console.log('setContent');
         let heptabase_blog_data
         getHeptabaseData.then((res) => {
             heptabase_blog_data = res.data
-            console.log(res);
 
             console.log('Container setContent for:');
             for (let i = 0; i < heptabase_blog_data.cards.length; i++) {
@@ -68,12 +66,8 @@ function Container(props) {
                     let new_card = getClearCard(heptabase_blog_data.cards[i], heptabase_blog_data.cards)
                     heptabase_blog_data.cards[i] = new_card['card']
 
-                    console.log('backLinks:');
-                    console.log(new_card['backLinks']);
-                    console.log(new_card);
-
                     // this.setState({ content: heptabase_blog_data.cards[i]['content'], backLinks: new_card['backLinks'], isLoading: false, old_post_id: heptabase_blog_data.cards[i]['id'] })
-                    setHeptabaseData(heptabase_blog_data)
+                    // setHeptabaseData(heptabase_blog_data)
                     setCard(new_card)
                     setLoadingState(false)
                     break;
@@ -92,7 +86,8 @@ function Container(props) {
     }
 
     // setContent(slug)
-    console.log(props.post_id);
+    
+    
     useEffect(() => {
 
         console.log('useEffect');
@@ -100,16 +95,105 @@ function Container(props) {
         //设置页面内容
         console.log(card);
 
+
         if (card === 'card') {
-            setContent(props.post_id)
+            setContent(path_id)
         } else {
 
-            console.log(card['card']['id'] !== props.post_id);
+            console.log(card['card']['id'] !== path_id);
 
-            if (card['card']['id'] !== props.post_id) {
+            if (card['card']['id'] !== path_id) {
                 console.log('useEffect setContent');
-                setContent(props.post_id)
+                setContent(path_id)
+                setLink('')
             }
+        }
+
+        // dom 加载完毕后
+        if (post.current != null && card['card']['id'] == path_id) {
+            // console.log(post);
+
+            // 设置 img 的尺寸
+            let article_img = document.getElementsByTagName('img');
+            console.log(article_img);
+
+            for (let i = 0; i < article_img.length; i++) {
+                let width_key_index = article_img[i]['alt'].indexOf('{{width ')
+                if (width_key_index > -1) {
+                    let img_width = article_img[i]['alt'].substring(width_key_index, article_img[i]['alt'].length)
+                    img_width = img_width.replace('{{width ', '')
+                    img_width = img_width.replace('}}', '')
+
+                    // console.log(img_width);
+                    // console.log((Number(img_width.replace('%',''))*mobileSkale).toString());
+
+                    article_img[i].setAttribute('style', 'width:' + (Number(img_width.replace('%', '')) * mobileSkale).toString() + '%')
+                    article_img[i].style.display = 'block'
+                    article_img[i].style.margin = '0 auto'
+                }
+            }
+
+            // 设置 a 链接的点击事件
+            let article_link = document.getElementsByTagName('span');
+            console.log(article_link);
+            let links = []
+
+            for (let i = 0; i < article_link.length; i++) {
+                // console.log(article_link[i]);
+                // console.log(article_link[i].getAttribute('path'));
+
+                if (article_link[i].getAttribute('path') == undefined || article_link[i].getAttribute('path') == null) {
+                    continue
+                }
+
+                // let new_link = <li><Link className='new_link' to={article_link[i].getAttribute('path')}>newLink</Link></li>
+
+                // links.push(new_link)
+
+                let link_temp = <Link className='link_temp' to={article_link[i].getAttribute('path')}>Link</Link>
+                links.push(link_temp)
+                
+
+                article_link[i].onclick = () => {
+                    console.log('a click');
+                    // console.log(article_link[i].getAttribute('path'));
+
+                    let post_id = article_link[i].getAttribute('path').replace('/post/', '')
+                    console.log(post_id);
+
+                    let my_links = document.getElementsByClassName('link_temp')
+                    console.log(my_links);
+
+                    // setThisPageId(post_id)
+                    // 修改当前 post id
+                    for(let i =0;i<my_links.length;i++){
+                        console.log(my_links[i]);
+                        console.log(my_links[i].href);
+
+                        if(my_links[i].href.indexOf(article_link[i].getAttribute('path'))>=0){
+                            my_links[i].click()
+                            break
+                        }
+                    }
+                    
+
+                    // window.location.pathname = article_link[i].getAttribute('path')
+
+                    // window.history.pushState(null, null, article_link[i].getAttribute('path'))
+                    // setPageID(post_id)
+                    // setContent(post_id)
+                    // article_link[0].click()
+
+                    // new_link.click()
+
+                }
+            }
+
+            if(my_link=='' && links.length>0){
+                setLink(links)
+            }
+
+
         }
 
     });
@@ -118,6 +202,10 @@ function Container(props) {
     if (isLoading) {
         return <div>Loaindg..</div>
     } else {
+
+
+        let links = []
+
 
         // 反向链接
         let backLinksBox = <div className='markdown-body backLinks'>
@@ -147,7 +235,7 @@ function Container(props) {
         }
 
 
-        window.scrollTo(0, 0);
+        // window.scrollTo(0, 0);
 
         return <div>
 
@@ -157,8 +245,10 @@ function Container(props) {
                     {/* <article dangerouslySetInnerHTML={{ __html: html }}></article>
                     {backLinksBox} */}
 
-                    <article><ReactMarkdown children={card['card']['content']} remarkPlugins={[remarkGfm, { singleTilde: false }]} /></article>
+                    <article><ReactMarkdown children={card['card']['content']} rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm, { singleTilde: false }]} /></article>
                     {backLinksBox}
+                    <ul>{my_link}</ul>
+                    
 
                 </div>
             </div>

@@ -133,8 +133,6 @@ const getClearCard = (card, cards) => {
 
         // 检验一下的确是 card
         if (old_card.indexOf('card ') >= 0) {
-            // console.log('old_card：');
-            // console.log(old_card);
 
             // 根据 ID 匹配数据中是否存在此卡片
 
@@ -144,7 +142,8 @@ const getClearCard = (card, cards) => {
                 // 处理当前卡片信息
                 if (old_card.indexOf(cards[i]['id']) >= 0) {
                     // 存在：设置卡片链接
-                    new_card = '[' + cards[i]['title'] + ']' + '(' + '/post/' + cards[i]['id'] + ')'
+                    // new_card = '[' + cards[i]['title'] + ']' + '(' + '/post/' + cards[i]['id'] + ')'
+                    new_card = '<span class="my_link" path='+'/post/' + cards[i]['id']+'>'+cards[i]['title']+'</span>'
                     break
                 }
 
@@ -152,12 +151,7 @@ const getClearCard = (card, cards) => {
 
             }
 
-            // console.log('new_card:');
-            // console.log(new_card);
-
             content = content.replace(old_card, new_card)
-
-
             card_keyword_index = content.indexOf('{{', card_keyword_index + 1)
 
         } else {
@@ -215,9 +209,9 @@ const getClearCard = (card, cards) => {
     for (let i = 0; i < cards.length; i++) {
 
         if (cards[i]['content'].indexOf(this_card_id) >= 0 && cards[i]['id'] != this_card_id) {
-            console.log(this_card_id);
+            // console.log(this_card_id);
             // console.log(content);
-            console.log(cards[i]['title']);
+            // console.log(cards[i]['title']);
             backLinks.push(cards[i])
         }
 
