@@ -20,7 +20,7 @@ class Nav extends React.Component {
         return (
             <div className='markdown-body nav'>
                 <header>
-                    <Link to='/'>江子龙的数字花园🌱</Link>
+                    <Link to='/'>Jiang 的数字花园🌱</Link>
                 </header>
                 <div>
                     <ul>
