@@ -39,7 +39,7 @@ class BlogPost extends React.Component {
         console.log('handlePostClick');
         console.log(this);
         console.log(postID);
-        this.props.handlePostClick(postID)
+        // this.props.handlePostClick(postID)
     }
 
     render() {

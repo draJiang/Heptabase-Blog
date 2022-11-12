@@ -14,6 +14,8 @@ import remarkGfm from 'remark-gfm'
 
 
 function Projects() {
+
+    
     let { slug } = useParams();
     let [page_id, setPageID] = useState('');
 
@@ -27,7 +29,7 @@ function Projects() {
 
     })
 
-    window.scrollTo(0, 0);
+    
 
     return <div>
         <div>

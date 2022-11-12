@@ -17,6 +17,12 @@ function About() {
     let { slug } = useParams();
     let [page_id, setPageID] = useState('');
 
+    useEffect(()=>{
+
+        window.scrollTo(0, 0);
+
+    })
+
     // 获取 About 数据的 ID
     let heptabase_blog_data
 
@@ -31,10 +37,6 @@ function About() {
     if (page_id != '') {
         content = <Container post_id={page_id} />
     }
-
-    setTimeout(() => {
-        window.scrollTo(0, 0);
-    }, 50);
 
     return <div>
         <div>

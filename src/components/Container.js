@@ -96,7 +96,6 @@ function Container(props) {
         // console.log(event);
     }
 
-    // setContent(slug)
 
 
     useEffect(() => {
@@ -115,8 +114,13 @@ function Container(props) {
 
             if (card['card']['id'] !== path_id) {
                 console.log('useEffect setContent');
+                
+
                 setContent(path_id)
                 setLink('')
+                
+                // console.log('scrollTo');
+                // window.scrollTo(0, 0);
             }
         }
 
@@ -183,6 +187,9 @@ function Container(props) {
 
                         if (my_links[j].href.indexOf(article_link[i].getAttribute('path')) >= 0) {
                             my_links[j].click()
+
+                            window.scrollTo(0, 0);
+                            
                             break
                         }
                     }
@@ -244,10 +251,6 @@ function Container(props) {
                 </ul>
             </div>
         }
-
-        setTimeout(() => {
-            window.scrollTo(0, 0);
-        }, 50);
 
 
 
