@@ -19,8 +19,6 @@ function PostList() {
         <Nav />
         <BlogPost />
 
-
-
     </div>
 
 

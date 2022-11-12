@@ -78,7 +78,7 @@ const getClearImag = (card) => {
         // 获取 = 索引
         let img_width_inex = old_img_str.indexOf('=')
 
-        if (img_width_inex > -1 && old_img_str.indexOf('{{width')<0) {
+        if (img_width_inex > -1 && old_img_str.indexOf('{{width') < 0) {
             //将图片宽度保存到 alt 中
             img_alt = img_alt + '{{width ' + old_img_str.substring(img_width_inex + 1, old_img_str.length - 2) + '}}'
         }
@@ -121,7 +121,7 @@ const getClearCard = (card, cards) => {
 
         let old_card = content.substring(card_keyword_index, card_end_inex + 2)
         // {{card xxxx-xxx-xxxx}}
-        let new_card = '<span class="unknown_card">'+'{{未知卡片}}' +'</span>'
+        let new_card = '<span class="unknown_card">' + '{{未知卡片}}' + '</span>'
 
         // 检验一下的确是 card
         if (old_card.indexOf('card ') >= 0) {
@@ -135,7 +135,7 @@ const getClearCard = (card, cards) => {
                     // 存在：设置卡片链接
                     // new_card = '[' + cards[i]['title'] + ']' + '(' + '/post/' + cards[i]['id'] + ')'
 
-                    // path 参数用于点击时加载对应笔记的数据
+                    // path 参数用于点击时加载对应笔记的数据，只有 my_link 类可点击
                     new_card = '<span class="my_link" path=' + '/post/' + cards[i]['id'] + '>' + cards[i]['title'] + '</span>'
                     break
                 }
@@ -144,10 +144,10 @@ const getClearCard = (card, cards) => {
             }
 
             content = content.replace(old_card, new_card)
-            
+
 
         } else {
-            
+
         }
 
         card_keyword_index = content.indexOf('{{', card_keyword_index + 1)
@@ -167,43 +167,47 @@ const getClearCard = (card, cards) => {
         } else {
 
             // ](./ 符号
-            let custom_card_name_end_inex = content.indexOf('](./', custom_card_keyword_index)
+            let custom_card_name_end_inex = content.indexOf(']', custom_card_keyword_index)
 
             //获取卡片末尾的索引
             let custom_card_end_inex = content.indexOf(')', custom_card_keyword_index)
 
             let custom_old_card = content.substring(custom_card_keyword_index, custom_card_end_inex + 1)
 
-            if (custom_old_card.indexOf('](./') < 0) {
+            if (custom_old_card.indexOf(']') < 0 || content[custom_card_name_end_inex + 1] != '(') {
 
 
 
             } else {
 
-                let custom_card_name = content.substring(custom_card_keyword_index+1, custom_card_name_end_inex)
+                let custom_card_name = content.substring(custom_card_keyword_index + 1, custom_card_name_end_inex)
                 let custom_card_url = content.substring(custom_card_name_end_inex, custom_card_end_inex)
-                // {{card xxxx-xxx-xxxx}}
+                // [name](./url)
 
-                // 卡片默认跳转到 404 页面
-                let custom_new_card = '/404/'
+                if (custom_card_url.indexOf('./') < 0 || custom_card_url.indexOf('.md') < 0) {
+                    // 如果不是 Heptabase 内部链接则忽略
+                } else {
+                    // 卡片默认跳转到 404 页面
+                    let custom_new_card = '<a class="unknown_card" href=' + '/404/' + '>' + custom_card_name + '</a>'
 
-                // 根据 ID 匹配数据中是否存在此卡片
+                    // 根据 ID 匹配数据中是否存在此卡片
 
-                for (let i = 0; i < cards.length; i++) {
+                    for (let i = 0; i < cards.length; i++) {
 
-                    if (custom_old_card.indexOf(cards[i]['id']) >= 0) {
-                        // 存在：设置卡片链接
-                        custom_new_card = '<span class="my_link" path=' + '/post/' + cards[i]['id'] + '>' + custom_card_name + '</span>'
+                        if (custom_old_card.indexOf(cards[i]['id']) >= 0) {
+                            // 存在：设置卡片链接
+                            custom_new_card = '<span class="my_link" path=' + '/post/' + cards[i]['id'] + '>' + custom_card_name + '</span>'
 
-                        break
+                            break
+                        }
+
                     }
 
+                    console.log('custom_new_card:');
+                    console.log(custom_new_card);
+
+                    content = content.replace(custom_old_card, custom_new_card)
                 }
-
-                console.log('custom_new_card:');
-                console.log(custom_new_card);
-
-                content = content.replace(custom_old_card, custom_new_card)
 
             }
 
@@ -248,7 +252,7 @@ const getHeptabaseData = new Promise((resolve, reject) => {
 
         let createdTime = JSON.parse(heptabase_blog_data)['createdTime']
         console.log(Date.parse(new Date()) / 1000);
-        console.log(createdTime);
+
         console.log(Date.parse(new Date()) / 1000 - createdTime);
         if (Date.parse(new Date()) / 1000 - createdTime >= 600) {
             // 数据比较旧时再重新获取

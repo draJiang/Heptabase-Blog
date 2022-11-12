@@ -164,3 +164,14 @@ article a::after {
     background-color: var(--color-prettylights-syntax-markup-ignored-bg);
     color: #fff;
 }
+
+.unknown_card {
+    opacity: 0.6;
+    /* 禁止点击 */
+    pointer-events: none;
+}
+
+.unknown_card::after {
+    /* text-decoration: underline !important; */
+    content: "";
+}
