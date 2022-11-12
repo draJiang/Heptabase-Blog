@@ -6,15 +6,13 @@ import Projects from './page/Projects';
 import Empty from './page/404';
 import About from './page/About';
 
+// 设置路由
 class App extends React.Component {
     render() {
         return (
-            
             <Router >
                     <Routes >
                         <Route exact path="/" element={<About />} />
-                        {/* <Route path="/post/:id/*" element={<Post p = 'hello' />} /> */}
-                        {/* <Route exact path="/post?id" element={<Post />} /> */}
                         <Route path="/post/:slug" element={<Post />} />
                         <Route path="/notes/" element={<PostList />} />
 

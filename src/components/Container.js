@@ -14,15 +14,20 @@ import rehypeRaw from 'rehype-raw'
 import { getHeptabaseData, getClearCard, getClearImag } from '../constantFunction'
 
 
+// 文章正文
 function Container(props) {
-    console.log(props);
+    
+    // 记录文章的 DOM 信息，用来处理 DOM 元素，例如修改图片样式
     let post = useRef(null);
 
+    // 当前路径信息
     let path = window.location.pathname
 
+    // 路径中包含的 post id，用以获取文章 md 信息
     let path_id
     if (path.indexOf('/post/') < 0) {
 
+        // 若路径中不含 post id，则取父组件的 props
         path_id = props.post_id
 
     } else {
@@ -30,41 +35,44 @@ function Container(props) {
     }
 
 
-    console.log(path_id);
 
+    // 记录数据加载状态
     let [isLoading, setLoadingState] = useState(true)
+
+    // 记录当前文章的 ID
     let [thisPageId, setPageID] = useState('')
 
+    // 记录自定义的 Link 数据，用来实现 DOM 链接的间接跳转
     let [my_link, setLink] = useState('');
+
+    // 记录当前文章对应的卡片信息
     let [card, setCard] = useState('card');
 
-    console.log(card);
-    let [heptabase_data, setHeptabaseData] = useState('heptabase_data');
-    let { slug } = useParams();
+    // let [heptabase_data, setHeptabaseData] = useState('heptabase_data');
+    // let { slug } = useParams();
 
+    // 如果当前页面 ID 为空则获取数据
     if (thisPageId == '') {
         setPageID(props.post_id)
     }
 
 
+    // 如果是移动端则增加图片的尺寸
     let isMobile = navigator.userAgent.match(/Mobile/i)
     let mobileSkale = 1
     if (isMobile) {
         mobileSkale = 2
     }
 
-
-
-
-
-
-
+    // 获取文章数据、处理文章数据
     const setContent = (id) => {
         console.log('setContent');
+
+        // 存储数据的变量
         let heptabase_blog_data
         getHeptabaseData.then((res) => {
             heptabase_blog_data = res.data
-
+            let new_card = null
             console.log('Container setContent for:');
             for (let i = 0; i < heptabase_blog_data.cards.length; i++) {
 
@@ -74,11 +82,9 @@ function Container(props) {
                     heptabase_blog_data.cards[i] = getClearImag(heptabase_blog_data.cards[i])
                     console.log('getClearImag done');
                     // 处理内容中的链接
-                    let new_card = getClearCard(heptabase_blog_data.cards[i], heptabase_blog_data.cards)
+                    new_card = getClearCard(heptabase_blog_data.cards[i], heptabase_blog_data.cards)
                     heptabase_blog_data.cards[i] = new_card['card']
 
-                    // this.setState({ content: heptabase_blog_data.cards[i]['content'], backLinks: new_card['backLinks'], isLoading: false, old_post_id: heptabase_blog_data.cards[i]['id'] })
-                    // setHeptabaseData(heptabase_blog_data)
                     setCard(new_card)
                     setLoadingState(false)
                     break;
@@ -86,47 +92,40 @@ function Container(props) {
             }
 
             // 404
+            if(new_card==null){
+                console.log('404');
+                window.location = '/404'
+            }
         })
 
     }
 
-    const handleBackLinkClick = (id) => {
-        console.log('handleBackLinkClick');
-
-        // console.log(event);
-    }
-
-
-
+    // 组件生命周期，组件载入、更新时将触发此函数
     useEffect(() => {
 
         console.log('useEffect');
 
         //设置页面内容
-        console.log(card);
-
-
         if (card === 'card') {
+            // 如果 card 无内容，则获取数据
             setContent(path_id)
         } else {
 
-            console.log(card['card']['id'] !== path_id);
-
+            
             if (card['card']['id'] !== path_id) {
-                console.log('useEffect setContent');
-                
 
+                // 如果 card 的 ID 与当前 URL 中的 ID 不一致
+                console.log('useEffect setContent');
+                // 获取新 URL 中的文章 ID 对应的 md 数据
                 setContent(path_id)
+                // 清空旧页面的自定义链接
                 setLink('')
                 
-                // console.log('scrollTo');
-                // window.scrollTo(0, 0);
             }
         }
 
         // dom 加载完毕后
         if (post.current != null && card['card']['id'] == path_id) {
-            // console.log(post);
 
             // 设置 img 的尺寸
             let article_img = document.getElementsByTagName('img');
@@ -139,97 +138,83 @@ function Container(props) {
                     img_width = img_width.replace('{{width ', '')
                     img_width = img_width.replace('}}', '')
 
-                    // console.log(img_width);
-                    // console.log((Number(img_width.replace('%',''))*mobileSkale).toString());
-
                     article_img[i].setAttribute('style', 'width:' + (Number(img_width.replace('%', '')) * mobileSkale).toString() + '%')
                     article_img[i].style.display = 'block'
                     article_img[i].style.margin = '0 auto'
                 }
             }
 
-            // 设置 a 链接的点击事件
+            // 设置 a 链接的点击事件，将 a 按照 Link 的方式进行跳转，避免页面不必要的刷新
             let article_link = document.getElementsByTagName('span');
             console.log(article_link);
             let links = []
 
             for (let i = 0; i < article_link.length; i++) {
-                // console.log(article_link[i]);
-                // console.log(article_link[i].getAttribute('path'));
 
+                
                 if (article_link[i].getAttribute('path') == undefined || article_link[i].getAttribute('path') == null) {
+                    // 如果 DOM 中的元素**不**包含 path 属性，则跳过（有 path 属性的元素才需要处理）
                     continue
                 }
 
-                // let new_link = <li><Link className='new_link' to={article_link[i].getAttribute('path')}>newLink</Link></li>
-
-                // links.push(new_link)
-
+                // 创建 Link 元素，当点击上述 span 原生时，将触发 Link 元素的点击事件
                 let link_temp = <Link className='link_temp' to={article_link[i].getAttribute('path')}>Link</Link>
                 links.push(link_temp)
 
 
+                // DOM 中的特定元素点击时
                 article_link[i].onclick = () => {
                     console.log('a click');
-                    // console.log(article_link[i].getAttribute('path'));
 
+                    // 获取元素的 path 参数，提取 post id
                     let post_id = article_link[i].getAttribute('path').replace('/post/', '')
                     console.log(post_id);
 
+                    // 获取自定义的 Link 元素
                     let my_links = document.getElementsByClassName('link_temp')
-                    console.log(my_links);
 
-                    // setThisPageId(post_id)
-                    // 修改当前 post id
                     for (let j = 0; j < my_links.length; j++) {
                         console.log(my_links[j]);
                         console.log(my_links[j].href);
 
+                        // 如果自定义的 Link 的 href 属性中包含 元素 path 属性的值，则可匹配
                         if (my_links[j].href.indexOf(article_link[i].getAttribute('path')) >= 0) {
-                            my_links[j].click()
 
+                            // 点击
+                            my_links[j].click()
+                            // 页面滚动到顶部
                             window.scrollTo(0, 0);
                             
                             break
                         }
                     }
 
-
-                    // window.location.pathname = article_link[i].getAttribute('path')
-
-                    // window.history.pushState(null, null, article_link[i].getAttribute('path'))
-                    // setPageID(post_id)
-                    // setContent(post_id)
-                    // article_link[0].click()
-
-                    // new_link.click()
-
                 }
             }
 
+            // 设置自定义 Link 并渲染到 DOM 中
             if (my_link == '' && links.length > 0) {
                 setLink(links)
             }
-
 
         }
 
     });
 
 
+    // 加载中
     if (isLoading) {
-        return <div>Loaindg..</div>
+        return <div></div>
     } else {
 
 
         let links = []
 
-
         // 反向链接
         let backLinksBox = <div className='markdown-body backLinks'>
             <header>Links to this page</header>
             <ul>
-                💭
+                👻
             </ul>
         </div>
 
@@ -258,9 +243,6 @@ function Container(props) {
 
             <div>
                 <div ref={post} className='markdown-body container'>
-
-                    {/* <article dangerouslySetInnerHTML={{ __html: html }}></article>
-                    {backLinksBox} */}
 
                     <article><ReactMarkdown children={card['card']['content']} rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm, { singleTilde: false }]} /></article>
                     {backLinksBox}

@@ -4,10 +4,8 @@ import Nav from '../components/Nav';
 import BlogPost from '../components/BlogPost';
 import Container from '../components/Container';
 
+// 笔记列表
 function PostList() {
-
-
-
 
     useEffect(()=>{
 
@@ -20,8 +18,6 @@ function PostList() {
 
         <Nav />
         <BlogPost />
-        {/* {showContainer ? <Container content='# hello' />
-                :<BlogPost handlePostClick={this.toggleContainer} />} */}
 
 
 

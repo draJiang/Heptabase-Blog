@@ -22,6 +22,10 @@ article a::after {
     content: "↗";
 }
 
+.markdown-body {
+    margin: 0 auto !important;
+}
+
 .post_list {
     margin-top: 1rem;
 }
@@ -53,10 +57,6 @@ article a::after {
     color: #666;
 }
 
-.markdown-body {
-    margin: 0 auto !important;
-}
-
 .container {
     padding-bottom: 1rem;
 }
@@ -72,12 +72,12 @@ article a::after {
     background-color: #fff;
     color: #000;
     display: flex;
-    height: 2.8rem;
+    height: 3rem;
     position: sticky;
     top: 0;
     border-bottom: 1px solid var(--color-border-default);
     margin-bottom: 1.4rem !important;
-    padding: 0 1.4rem;
+    padding: 0 1rem;
 }
 
 .nav ul {
@@ -88,6 +88,7 @@ article a::after {
 }
 
 .nav li {
+    /* position: relative; */
     margin-left: 2rem;
     list-style: none;
     margin-top: 0em !important;
@@ -95,8 +96,18 @@ article a::after {
 
 .nav a {
     text-decoration: none;
-    color: #000;
+    padding: 0.4rem;
 }
+
+
+/* .nav a::after {
+    content: '';
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    bottom: -4px;
+    left: -4px;
+} */
 
 .nav a:hover {
     text-decoration: underline;
@@ -110,7 +121,7 @@ article a::after {
 
 .nav header,
 .nav ul {
-    line-height: 2.8rem;
+    line-height: 3rem;
 }
 
 .nav header img {

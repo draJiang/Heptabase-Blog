@@ -29,7 +29,14 @@ function About() {
     getHeptabaseData.then((res) => {
         heptabase_blog_data = res.data
         console.log(res);
-        setPageID(res['pages']['about']['id'])
+
+        if(res['pages']['about']!=undefined){
+            setPageID(res['pages']['about']['id'])
+        }else{
+            // 404
+            window.location = '/404'
+        }
+        
 
     })
 

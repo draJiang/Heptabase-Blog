@@ -4,8 +4,9 @@ import { format } from 'date-fns'
 const arrSort = (obj) => {
     console.log('arrSort');
     obj.sort((a, b) => {
-        let t1 = format(new Date(a.createdTime), 'yyyyMMdd')
-        let t2 = format(new Date(b.createdTime), 'yyyyMMdd')
+        // 最后编辑时间
+        let t1 = format(new Date(a.lastEditedTime), 'yyyyMMdd')
+        let t2 = format(new Date(b.lastEditedTime), 'yyyyMMdd')
 
         return t2.getTime() - t1.getTime()
     })
@@ -84,10 +85,6 @@ const getClearImag = (card) => {
 
         let new_img_str = '![' + img_alt + '](' + img_src + ')'
 
-
-        // console.log(old_img_str);
-        // console.log(new_img_str);
-
         content = content.replace(old_img_str, new_img_str)
 
         // 获取 ![ 索引
@@ -122,14 +119,9 @@ const getClearCard = (card, cards) => {
             break
         }
 
-        // console.log('card_keyword_index:');
-        // console.log(card_keyword_index);
-        // console.log('card_end_inex:');
-        // console.log(card_end_inex);
-
         let old_card = content.substring(card_keyword_index, card_end_inex + 2)
         // {{card xxxx-xxx-xxxx}}
-        let new_card = '{{未知卡片}}'
+        let new_card = '<span class="unknown_card">'+'{{未知卡片}}' +'</span>'
 
         // 检验一下的确是 card
         if (old_card.indexOf('card ') >= 0) {
@@ -138,15 +130,15 @@ const getClearCard = (card, cards) => {
 
             for (let i = 0; i < cards.length; i++) {
 
-
                 // 处理当前卡片信息
                 if (old_card.indexOf(cards[i]['id']) >= 0) {
                     // 存在：设置卡片链接
                     // new_card = '[' + cards[i]['title'] + ']' + '(' + '/post/' + cards[i]['id'] + ')'
+
+                    // path 参数用于点击时加载对应笔记的数据
                     new_card = '<span class="my_link" path=' + '/post/' + cards[i]['id'] + '>' + cards[i]['title'] + '</span>'
                     break
                 }
-
 
 
             }
@@ -191,6 +183,8 @@ const getClearCard = (card, cards) => {
                 let custom_card_name = content.substring(custom_card_keyword_index+1, custom_card_name_end_inex)
                 let custom_card_url = content.substring(custom_card_name_end_inex, custom_card_end_inex)
                 // {{card xxxx-xxx-xxxx}}
+
+                // 卡片默认跳转到 404 页面
                 let custom_new_card = '/404/'
 
                 // 根据 ID 匹配数据中是否存在此卡片
@@ -228,10 +222,9 @@ const getClearCard = (card, cards) => {
     for (let i = 0; i < cards.length; i++) {
 
         if (cards[i]['content'].indexOf(this_card_id) >= 0 && cards[i]['id'] != this_card_id) {
-            // console.log(this_card_id);
-            // console.log(content);
-            // console.log(cards[i]['title']);
+
             backLinks.push(cards[i])
+
         }
 
     }
@@ -241,6 +234,7 @@ const getClearCard = (card, cards) => {
 
 }
 
+// 获取 Heptabase 的笔记数据
 const getHeptabaseData = new Promise((resolve, reject) => {
 
     console.log('getHeptabaseData');
@@ -256,9 +250,8 @@ const getHeptabaseData = new Promise((resolve, reject) => {
         console.log(Date.parse(new Date()) / 1000);
         console.log(createdTime);
         console.log(Date.parse(new Date()) / 1000 - createdTime);
-        if (Date.parse(new Date()) / 1000 - createdTime >= 120) {
+        if (Date.parse(new Date()) / 1000 - createdTime >= 600) {
             // 数据比较旧时再重新获取
-            // let heptabase_blog_data
             console.log('数据比较旧');
 
         } else {
@@ -274,6 +267,8 @@ const getHeptabaseData = new Promise((resolve, reject) => {
     console.log('heptabase_blog_data == undefined');
 
     const header = new Headers({ "Access-Control-Allow-Origin": "*" });
+
+    // 接口地址
     const url = 'https://api.dabing.one/'
     // 获取 Heptabase 数据
     fetch(url, {
@@ -285,30 +280,37 @@ const getHeptabaseData = new Promise((resolve, reject) => {
         .then(data => {
             console.log(data)
 
+            // 按照时间排序卡片
             data.cards = data.cards.sort((a, b) => {
 
-                return b.createdTime < a.createdTime ? -1 : 1
+                // 最近编辑时间
+                return b.lastEditedTime < a.lastEditedTime ? -1 : 1
 
             })
 
             let pages = {}
             // 获取 About、Projects 页面的数据
             pages.about = undefined
+            pages.projects = undefined
+
             for (let i = 0; i < data.cards.length; i++) {
                 console.log(data.cards[i]['title']);
 
+                // About
                 if (data.cards[i]['title'] == 'About') {
 
                     pages.about = data.cards[i]
 
                 }
 
+                // Projects
                 if (data.cards[i]['title'] == 'Projects') {
                     pages.projects = data.cards[i]
 
                 }
             }
 
+            // createdTime 记录数据获取的时间
             const local_data = { 'createdTime': Date.parse(new Date()) / 1000, 'data': data, 'pages': pages }
             // 存储数据到本地缓存
             localStorage.setItem("heptabase_blog_data", JSON.stringify(local_data))
@@ -319,19 +321,6 @@ const getHeptabaseData = new Promise((resolve, reject) => {
             resolve(local_data)
         })
         .catch(e => console.log('错误:', e))
-
-    // jsonp
-    // fetchJsonp('https://app.heptabase.com/api/whiteboard/?secret=d4cc3728297609add1a00aab108e90c4e57a1c378cfc2307c251745bf7d2a884')
-    //     .then(function (response) {
-    //         return response.json()
-    //     }).then((json) => {
-    //         console.log(json);
-    //         //用到this需要注意指向，箭头函数
-
-    //     }).catch(function (ex) {
-    //     })
-
-
 
 })
 

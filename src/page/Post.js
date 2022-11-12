@@ -7,14 +7,8 @@ import '../index.css'
 
 import 'github-markdown-css'
 
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
 
-
-
-import { getHeptabaseData, getClearCard, getClearImag } from '../constantFunction'
-
-
+// 文章页面
 function Post() {
     let { slug } = useParams();
 

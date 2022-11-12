@@ -1,14 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { getHeptabaseData } from '../constantFunction'
 
-
+// 页面头部
 class Nav extends React.Component {
 
 
     componentDidMount() {
 
         // getHeptabaseData()
+    }
+
+    handleNavBarClick = (e) =>{
+        // console.log('handleNavBarClick');
+        // window.scrollTo(0, 0);
+        // e.stopPropagation()
     }
 
     render() {
