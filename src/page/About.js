@@ -19,7 +19,7 @@ function About() {
 
     // 获取 About 数据的 ID
     let heptabase_blog_data
-    
+
     getHeptabaseData.then((res) => {
         heptabase_blog_data = res.data
         console.log(res);
@@ -27,10 +27,19 @@ function About() {
 
     })
 
+    let content = <div></div>
+    if (page_id != '') {
+        content = <Container post_id={page_id} />
+    }
+
+    setTimeout(() => {
+        window.scrollTo(0, 0);
+    }, 50);
+
     return <div>
         <div>
             <Nav />
-            <Container post_id={page_id} />
+            {content}
         </div>
     </div>;
 

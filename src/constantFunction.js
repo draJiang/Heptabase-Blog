@@ -1,12 +1,12 @@
 import { format } from 'date-fns'
 
 // 数组按时间排序
-const arrSort = (obj)=>{
+const arrSort = (obj) => {
     console.log('arrSort');
-    obj.sort((a,b)=>{
-        let t1 =format(new Date(a.createdTime), 'yyyyMMdd')
-        let t2 =format(new Date(b.createdTime), 'yyyyMMdd')
-        
+    obj.sort((a, b) => {
+        let t1 = format(new Date(a.createdTime), 'yyyyMMdd')
+        let t2 = format(new Date(b.createdTime), 'yyyyMMdd')
+
         return t2.getTime() - t1.getTime()
     })
 
@@ -64,25 +64,25 @@ const getClearImag = (card) => {
             break
         }
 
-        let img_alt = content.substring(img_keyword_index+2,img_alt_end_inex)
-        let img_src = content.substring(img_alt_end_inex+2,img_etc_index)
+        let img_alt = content.substring(img_keyword_index + 2, img_alt_end_inex)
+        let img_src = content.substring(img_alt_end_inex + 2, img_etc_index)
 
         console.log('image keyword');
         console.log(img_alt);
         console.log(img_src);
 
-        let old_img_str = content.substring(img_keyword_index, img_end_inex+1)
-        
-        
+        let old_img_str = content.substring(img_keyword_index, img_end_inex + 1)
+
+
         // 获取 = 索引
         let img_width_inex = old_img_str.indexOf('=')
-        
-        if(img_width_inex>-1){
+
+        if (img_width_inex > -1 && old_img_str.indexOf('{{width')<0) {
             //将图片宽度保存到 alt 中
-            img_alt = img_alt+'{{width '+old_img_str.substring(img_width_inex+1,old_img_str.length-2)+'}}'
+            img_alt = img_alt + '{{width ' + old_img_str.substring(img_width_inex + 1, old_img_str.length - 2) + '}}'
         }
-        
-        let new_img_str = '!['+img_alt+']('+img_src+')'
+
+        let new_img_str = '![' + img_alt + '](' + img_src + ')'
 
 
         // console.log(old_img_str);
@@ -112,7 +112,7 @@ const getClearCard = (card, cards) => {
 
     // 获取 {{ 符号
     let card_keyword_index = content.indexOf('{{')
-    
+
     while (card_keyword_index != -1) {
 
         //获取卡片末尾的索引
@@ -143,7 +143,7 @@ const getClearCard = (card, cards) => {
                 if (old_card.indexOf(cards[i]['id']) >= 0) {
                     // 存在：设置卡片链接
                     // new_card = '[' + cards[i]['title'] + ']' + '(' + '/post/' + cards[i]['id'] + ')'
-                    new_card = '<span class="my_link" path='+'/post/' + cards[i]['id']+'>'+cards[i]['title']+'</span>'
+                    new_card = '<span class="my_link" path=' + '/post/' + cards[i]['id'] + '>' + cards[i]['title'] + '</span>'
                     break
                 }
 
@@ -152,53 +152,72 @@ const getClearCard = (card, cards) => {
             }
 
             content = content.replace(old_card, new_card)
-            card_keyword_index = content.indexOf('{{', card_keyword_index + 1)
+            
 
         } else {
-            break
+            
         }
+
+        card_keyword_index = content.indexOf('{{', card_keyword_index + 1)
 
     }
 
 
-    // 获取 (./ 符号
-    let custom_card_keyword_index = content.indexOf('(./')
+    // 获取拥有别名的卡片
+    let custom_card_keyword_index = content.indexOf('[')
     console.log(custom_card_keyword_index);
     while (custom_card_keyword_index != -1) {
 
-        //获取卡片末尾的索引
-        let custom_card_end_inex = content.indexOf(')', custom_card_keyword_index)
 
-        if (custom_card_keyword_index == -1 || custom_card_end_inex == -1) {
-            break
-        }
+        if (content[custom_card_keyword_index - 1] == '!') {
+            // 如果是图片则忽略
 
-        let custom_old_card = content.substring(custom_card_end_inex, custom_card_keyword_index + 1)
-        // {{card xxxx-xxx-xxxx}}
-        let custom_new_card = '/404/'
+        } else {
 
-        // 根据 ID 匹配数据中是否存在此卡片
+            // ](./ 符号
+            let custom_card_name_end_inex = content.indexOf('](./', custom_card_keyword_index)
 
-        for (let i = 0; i < cards.length; i++) {
+            //获取卡片末尾的索引
+            let custom_card_end_inex = content.indexOf(')', custom_card_keyword_index)
 
-            if (custom_old_card.indexOf(cards[i]['id']) >= 0) {
-                // 存在：设置卡片链接
-                custom_new_card = '/post/' + cards[i]['id'] + ')'
+            let custom_old_card = content.substring(custom_card_keyword_index, custom_card_end_inex + 1)
 
-                break
+            if (custom_old_card.indexOf('](./') < 0) {
+
+
+
+            } else {
+
+                let custom_card_name = content.substring(custom_card_keyword_index+1, custom_card_name_end_inex)
+                let custom_card_url = content.substring(custom_card_name_end_inex, custom_card_end_inex)
+                // {{card xxxx-xxx-xxxx}}
+                let custom_new_card = '/404/'
+
+                // 根据 ID 匹配数据中是否存在此卡片
+
+                for (let i = 0; i < cards.length; i++) {
+
+                    if (custom_old_card.indexOf(cards[i]['id']) >= 0) {
+                        // 存在：设置卡片链接
+                        custom_new_card = '<span class="my_link" path=' + '/post/' + cards[i]['id'] + '>' + custom_card_name + '</span>'
+
+                        break
+                    }
+
+                }
+
+                console.log('custom_new_card:');
+                console.log(custom_new_card);
+
+                content = content.replace(custom_old_card, custom_new_card)
+
             }
 
+
+
         }
 
-        console.log('custom_new_card:');
-        console.log(custom_new_card);
-
-        content = content.replace(custom_old_card, custom_new_card)
-
-
-        custom_card_keyword_index = content.indexOf('(./', card_keyword_index + 1)
-
-
+        custom_card_keyword_index = content.indexOf('[', custom_card_keyword_index + 1)
 
     }
 
@@ -266,9 +285,9 @@ const getHeptabaseData = new Promise((resolve, reject) => {
         .then(data => {
             console.log(data)
 
-            data.cards = data.cards.sort((a,b) => {
+            data.cards = data.cards.sort((a, b) => {
 
-                return b.createdTime <a.createdTime?-1:1
+                return b.createdTime < a.createdTime ? -1 : 1
 
             })
 
@@ -279,13 +298,14 @@ const getHeptabaseData = new Promise((resolve, reject) => {
                 console.log(data.cards[i]['title']);
 
                 if (data.cards[i]['title'] == 'About') {
+
                     pages.about = data.cards[i]
-                    
+
                 }
 
                 if (data.cards[i]['title'] == 'Projects') {
                     pages.projects = data.cards[i]
-                    
+
                 }
             }
 

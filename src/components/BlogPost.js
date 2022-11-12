@@ -60,9 +60,7 @@ class BlogPost extends React.Component {
                         {/* <Link to={'/post/' + post.id} > */}
                         <Link to={{ pathname: '/post/' + post.id }} >
                             <header>
-                                <h2>
                                     {post.title}
-                                </h2>
                             </header>
                         </Link>
                         <time>{format(new Date(post.createdTime), 'yyyy-MM-dd')}</time>

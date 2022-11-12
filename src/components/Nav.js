@@ -15,18 +15,12 @@ class Nav extends React.Component {
         return (
             <div className='markdown-body nav'>
                 <header>
-                    <Link to='/'><img src='	https://blog.dabing.one/apple-touch-icon.png'></img></Link>
+                    <Link to='/'>江子龙的数字花园🌱</Link>
                 </header>
                 <div>
                     <ul>
                         <li>
-                            <Link to='/'>Blog</Link>
-                        </li>
-                        <li>
-                            <Link to='/projects'>Projects</Link>
-                        </li>
-                        <li>
-                            <Link to='/about/'>About</Link>
+                            <Link to='/notes'>🗒️</Link>
                         </li>
                     </ul>
                 </div>

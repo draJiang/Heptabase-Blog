@@ -19,12 +19,23 @@ function Container(props) {
     let post = useRef(null);
 
     let path = window.location.pathname
-    let path_id = path.replace('/post/', '')
+
+    let path_id
+    if (path.indexOf('/post/') < 0) {
+
+        path_id = props.post_id
+
+    } else {
+        path_id = path.replace('/post/', '')
+    }
+
+
+    console.log(path_id);
 
     let [isLoading, setLoadingState] = useState(true)
     let [thisPageId, setPageID] = useState('')
 
-    let [my_link,setLink] = useState('');
+    let [my_link, setLink] = useState('');
     let [card, setCard] = useState('card');
 
     console.log(card);
@@ -86,8 +97,8 @@ function Container(props) {
     }
 
     // setContent(slug)
-    
-    
+
+
     useEffect(() => {
 
         console.log('useEffect');
@@ -152,7 +163,7 @@ function Container(props) {
 
                 let link_temp = <Link className='link_temp' to={article_link[i].getAttribute('path')}>Link</Link>
                 links.push(link_temp)
-                
+
 
                 article_link[i].onclick = () => {
                     console.log('a click');
@@ -166,16 +177,16 @@ function Container(props) {
 
                     // setThisPageId(post_id)
                     // 修改当前 post id
-                    for(let i =0;i<my_links.length;i++){
-                        console.log(my_links[i]);
-                        console.log(my_links[i].href);
+                    for (let j = 0; j < my_links.length; j++) {
+                        console.log(my_links[j]);
+                        console.log(my_links[j].href);
 
-                        if(my_links[i].href.indexOf(article_link[i].getAttribute('path'))>=0){
-                            my_links[i].click()
+                        if (my_links[j].href.indexOf(article_link[i].getAttribute('path')) >= 0) {
+                            my_links[j].click()
                             break
                         }
                     }
-                    
+
 
                     // window.location.pathname = article_link[i].getAttribute('path')
 
@@ -189,7 +200,7 @@ function Container(props) {
                 }
             }
 
-            if(my_link=='' && links.length>0){
+            if (my_link == '' && links.length > 0) {
                 setLink(links)
             }
 
@@ -234,8 +245,11 @@ function Container(props) {
             </div>
         }
 
+        setTimeout(() => {
+            window.scrollTo(0, 0);
+        }, 50);
 
-        // window.scrollTo(0, 0);
+
 
         return <div>
 
@@ -247,8 +261,8 @@ function Container(props) {
 
                     <article><ReactMarkdown children={card['card']['content']} rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm, { singleTilde: false }]} /></article>
                     {backLinksBox}
-                    <ul>{my_link}</ul>
-                    
+                    <ul style={{ display: 'none' }}>{my_link}</ul>
+
 
                 </div>
             </div>

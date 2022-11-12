@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes,Route } from 'react-router-dom';
-import Home from './page/Home';
+import PostList from './page/PostList';
 import Post from './page/Post';
 import Projects from './page/Projects';
 import Empty from './page/404';
@@ -12,19 +12,12 @@ class App extends React.Component {
             
             <Router >
                     <Routes >
-                        <Route exact path="/" element={<Home />} />
+                        <Route exact path="/" element={<About />} />
                         {/* <Route path="/post/:id/*" element={<Post p = 'hello' />} /> */}
                         {/* <Route exact path="/post?id" element={<Post />} /> */}
                         <Route path="/post/:slug" element={<Post />} />
-                        
-                        
-                        {/* <Route exact path="/post/:id" render={()=>{
-                            console.log('renderrenderrenderrenderrender');
-                            return <Post />
-                        }} /> */}
+                        <Route path="/notes/" element={<PostList />} />
 
-                        <Route path="/about/" element={<About />} />
-                        <Route path="/projects/" element={<Projects />} />
                         <Route path="/404/" element={<Empty />} />
                         <Route element={<Empty />} />
                     </Routes>
