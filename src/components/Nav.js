@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import CONFIG from '../config'
 
 // 页面头部
 class Nav extends React.Component {
@@ -20,7 +21,7 @@ class Nav extends React.Component {
         return (
             <div className='markdown-body nav'>
                 <header>
-                    <Link to='/'>Jiang 的数字花园🌱</Link>
+                    <Link to='/'>{CONFIG.title}</Link>
                 </header>
                 <div>
                     <ul>

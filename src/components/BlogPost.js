@@ -40,28 +40,34 @@ class BlogPost extends React.Component {
             if (posts != undefined && posts != null) {
 
                 postList = posts.map((post) =>
-                    <li key={post.id} >
-                        
-                        <Link to={{ pathname: '/post/' + post.id }} >
-                            <header>
-                                    {post.title}
-                            </header>
-                        </Link>
-                        <time>{post.lastEditedTimeDiff}</time>
+                    <
+                    li key = { post.id } >
 
-                    </li>
+                    <
+                    Link to = {
+                        { pathname: '/post/' + post.id }
+                    } >
+                    <
+                    header > { post.title } <
+                    /header> < /
+                    Link > <
+                    time > { post.lastEditedTimeDiff } < /time>
+
+                    <
+                    /li>
                 )
             }
 
-            return (
-                <div className='post_list'>
-                    <ul>{postList}</ul>
-                </div>
+            return ( <
+                div className = 'post_list' >
+                <
+                ul > { postList } < /ul> < /
+                div >
             );
         }
 
         // 加载中
-        return <div></div>
+        return <div > < /div>
 
     }
 }

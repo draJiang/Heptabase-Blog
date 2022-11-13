@@ -8,9 +8,6 @@ import '../index.css'
 import { getHeptabaseData, getClearCard, getClearImag } from '../constantFunction'
 
 
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
-
 
 
 function About() {

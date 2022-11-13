@@ -203,9 +203,11 @@ function Container(props) {
     });
 
 
+    // return <div className='loading'>🚀Loading...</div>
+
     // 加载中
     if (isLoading) {
-        return <div></div>
+        return <div className='loading'>🚀 Loading...</div>
     } else {
 
 

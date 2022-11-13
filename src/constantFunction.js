@@ -1,4 +1,4 @@
-import { format } from 'date-fns'
+import CONFIG from "./config";
 
 // 计算时间差
 const getLastEditedTime = (dateBegin) => {
@@ -9,24 +9,24 @@ const getLastEditedTime = (dateBegin) => {
 
     // 时间差的毫秒数
     let dateDiff = dateEnd.getTime() - dateBegin.getTime()
-    // 时间差的天数
-    let dayDiff = Math.floor(dateDiff/(24*3600*1000))
-    
+        // 时间差的天数
+    let dayDiff = Math.floor(dateDiff / (24 * 3600 * 1000))
+
     // 计算除天数外剩余的毫秒数
-    let leave1 = dateDiff%(24*3600*1000)
-    // 小时数
-    let hours = Math.floor(leave1/(3600*1000))
-    
+    let leave1 = dateDiff % (24 * 3600 * 1000)
+        // 小时数
+    let hours = Math.floor(leave1 / (3600 * 1000))
+
     // 计算除小时剩余的分钟数
-    let leave2 = leave1%(3600*1000)
-    // 分钟数
-    let minutes = Math.floor(leave2/(60*1000))
+    let leave2 = leave1 % (3600 * 1000)
+        // 分钟数
+    let minutes = Math.floor(leave2 / (60 * 1000))
 
     //计算相差的秒数
-    let leave3 = leave2%(60*1000)
-    let seconds = Math.round(leave3/1000)
+    let leave3 = leave2 % (60 * 1000)
+    let seconds = Math.round(leave3 / 1000)
 
-    return {'day':dayDiff,'hours':hours,'minutes':minutes,'seconds':seconds}
+    return { 'day': dayDiff, 'hours': hours, 'minutes': minutes, 'seconds': seconds }
 
 }
 
@@ -45,7 +45,7 @@ const getClearImag = (card) => {
 
     // 支持的图片类型
     let img_type = ['.png', '.jpeg', '.jpg', '.gif']
-    // 包含以下关键字则认为是图片
+        // 包含以下关键字则认为是图片
     let img_keyword_index = content.indexOf('![')
 
     while (img_keyword_index != -1) {
@@ -135,7 +135,7 @@ const getClearCard = (card, cards) => {
         }
 
         let old_card = content.substring(card_keyword_index, card_end_inex + 2)
-        // {{card xxxx-xxx-xxxx}}
+            // {{card xxxx-xxx-xxxx}}
         let new_card = '<span class="unknown_card">' + '{{未知卡片}}' + '</span>'
 
         // 检验一下的确是 card
@@ -197,7 +197,7 @@ const getClearCard = (card, cards) => {
 
                 let custom_card_name = content.substring(custom_card_keyword_index + 1, custom_card_name_end_inex)
                 let custom_card_url = content.substring(custom_card_name_end_inex, custom_card_end_inex)
-                // [name](./url)
+                    // [name](./url)
 
                 if (custom_card_url.indexOf('./') < 0 || custom_card_url.indexOf('.md') < 0) {
                     // 如果不是 Heptabase 内部链接则忽略
@@ -287,14 +287,12 @@ const getHeptabaseData = new Promise((resolve, reject) => {
 
     const header = new Headers({ "Access-Control-Allow-Origin": "*" });
 
-    // 接口地址
-    const url = 'https://api.dabing.one/'
     // 获取 Heptabase 数据
-    fetch(url, {
-        method: "get",
-        header: header
-        // mode: 'no-cors'
-    })
+    fetch(CONFIG.api_url, {
+            method: "get",
+            header: header
+                // mode: 'no-cors'
+        })
         .then(res => res.json())
         .then(data => {
             console.log(data)
@@ -308,7 +306,7 @@ const getHeptabaseData = new Promise((resolve, reject) => {
             })
 
             let pages = {}
-            // 获取 About、Projects 页面的数据
+                // 获取 About、Projects 页面的数据
             pages.about = undefined
             pages.projects = undefined
 
@@ -327,22 +325,22 @@ const getHeptabaseData = new Promise((resolve, reject) => {
                     pages.projects = data.cards[i]
 
                 }
-                
+
                 // 最近编辑的时间差
                 // getLastEditedTime(format(new Date(data.cards[i]['lastEditedTime']), 'yyyy-MM-dd'))
                 let timeDiff = getLastEditedTime(data.cards[i]['lastEditedTime'])
                 data.cards[i].lastEditedTimeDiff = ''
-                if(timeDiff['day']>0){
-                    data.cards[i].lastEditedTimeDiff = 'Edited '+timeDiff['day']+' days ago'
-                }else if(timeDiff['hours']>0){
+                if (timeDiff['day'] > 0) {
+                    data.cards[i].lastEditedTimeDiff = 'Edited ' + timeDiff['day'] + ' days ago'
+                } else if (timeDiff['hours'] > 0) {
 
-                    data.cards[i].lastEditedTimeDiff = 'Edited '+timeDiff['hours']+' hours ago'
+                    data.cards[i].lastEditedTimeDiff = 'Edited ' + timeDiff['hours'] + ' hours ago'
 
-                }else if(timeDiff['minutes']>0){
+                } else if (timeDiff['minutes'] > 0) {
 
-                    data.cards[i].lastEditedTimeDiff = 'Edited '+timeDiff['minutes']+' minutes ago'
+                    data.cards[i].lastEditedTimeDiff = 'Edited ' + timeDiff['minutes'] + ' minutes ago'
 
-                }else{
+                } else {
 
                     data.cards[i].lastEditedTimeDiff = 'Edited just'
 
@@ -351,9 +349,9 @@ const getHeptabaseData = new Promise((resolve, reject) => {
 
             // createdTime 记录数据获取的时间
             const local_data = { 'createdTime': Date.parse(new Date()) / 1000, 'data': data, 'pages': pages }
-            // 存储数据到本地缓存
+                // 存储数据到本地缓存
             localStorage.setItem("heptabase_blog_data", JSON.stringify(local_data))
-            // console.log(this.state.posts);
+                // console.log(this.state.posts);
 
             console.log('getHeptabaseData return');
             // return heptabase_blog_data
