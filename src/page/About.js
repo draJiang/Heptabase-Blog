@@ -10,9 +10,11 @@ import { getHeptabaseData, getClearCard, getClearImag } from '../constantFunctio
 
 
 
-function About() {
+function About(props) {
     let { slug } = useParams();
     let [page_id, setPageID] = useState('');
+    
+    document.title = props.title
 
     useEffect(()=>{
 

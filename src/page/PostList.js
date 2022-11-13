@@ -5,7 +5,9 @@ import BlogPost from '../components/BlogPost';
 import Container from '../components/Container';
 
 // 笔记列表
-function PostList() {
+function PostList(props) {
+
+    document.title = props.title
 
     useEffect(()=>{
 

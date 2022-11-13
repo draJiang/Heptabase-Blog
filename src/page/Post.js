@@ -9,8 +9,10 @@ import 'github-markdown-css'
 
 
 // 文章页面
-function Post() {
+function Post(props) {
     let { slug } = useParams();
+
+    document.title = props.title
 
     return <div>
 
