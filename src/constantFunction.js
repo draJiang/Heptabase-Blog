@@ -1,17 +1,32 @@
 import { format } from 'date-fns'
 
-// 数组按时间排序
-const arrSort = (obj) => {
-    console.log('arrSort');
-    obj.sort((a, b) => {
-        // 最后编辑时间
-        let t1 = format(new Date(a.lastEditedTime), 'yyyyMMdd')
-        let t2 = format(new Date(b.lastEditedTime), 'yyyyMMdd')
+// 计算时间差
+const getLastEditedTime = (dateBegin) => {
 
-        return t2.getTime() - t1.getTime()
-    })
+    dateBegin = new Date(dateBegin)
 
-    return obj
+    let dateEnd = new Date();
+
+    // 时间差的毫秒数
+    let dateDiff = dateEnd.getTime() - dateBegin.getTime()
+    // 时间差的天数
+    let dayDiff = Math.floor(dateDiff/(24*3600*1000))
+    
+    // 计算除天数外剩余的毫秒数
+    let leave1 = dateDiff%(24*3600*1000)
+    // 小时数
+    let hours = Math.floor(leave1/(3600*1000))
+    
+    // 计算除小时剩余的分钟数
+    let leave2 = leave1%(3600*1000)
+    // 分钟数
+    let minutes = Math.floor(leave2/(60*1000))
+
+    //计算相差的秒数
+    let leave3 = leave2%(60*1000)
+    let seconds = Math.round(leave3/1000)
+
+    return {'day':dayDiff,'hours':hours,'minutes':minutes,'seconds':seconds}
 
 }
 
@@ -310,6 +325,26 @@ const getHeptabaseData = new Promise((resolve, reject) => {
                 // Projects
                 if (data.cards[i]['title'] == 'Projects') {
                     pages.projects = data.cards[i]
+
+                }
+                
+                // 最近编辑的时间差
+                // getLastEditedTime(format(new Date(data.cards[i]['lastEditedTime']), 'yyyy-MM-dd'))
+                let timeDiff = getLastEditedTime(data.cards[i]['lastEditedTime'])
+                data.cards[i].lastEditedTimeDiff = ''
+                if(timeDiff['day']>0){
+                    data.cards[i].lastEditedTimeDiff = 'Edited '+timeDiff['day']+' days ago'
+                }else if(timeDiff['hours']>0){
+
+                    data.cards[i].lastEditedTimeDiff = 'Edited '+timeDiff['hours']+' hours ago'
+
+                }else if(timeDiff['minutes']>0){
+
+                    data.cards[i].lastEditedTimeDiff = 'Edited '+timeDiff['minutes']+' minutes ago'
+
+                }else{
+
+                    data.cards[i].lastEditedTimeDiff = 'Edited just'
 
                 }
             }

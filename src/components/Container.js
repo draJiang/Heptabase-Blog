@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef, useUrlState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useParams } from 'react-router-dom';
 
-import '../index.css'
+import { format } from 'date-fns'
 
+import '../index.css'
 import 'github-markdown-css'
 
 import ReactMarkdown from 'react-markdown'
@@ -16,7 +17,7 @@ import { getHeptabaseData, getClearCard, getClearImag } from '../constantFunctio
 
 // 文章正文
 function Container(props) {
-    
+
     // 记录文章的 DOM 信息，用来处理 DOM 元素，例如修改图片样式
     let post = useRef(null);
 
@@ -92,7 +93,7 @@ function Container(props) {
             }
 
             // 404
-            if(new_card==null){
+            if (new_card == null) {
                 console.log('404');
                 window.location = '/404'
             }
@@ -111,7 +112,7 @@ function Container(props) {
             setContent(path_id)
         } else {
 
-            
+
             if (card['card']['id'] !== path_id) {
 
                 // 如果 card 的 ID 与当前 URL 中的 ID 不一致
@@ -120,7 +121,7 @@ function Container(props) {
                 setContent(path_id)
                 // 清空旧页面的自定义链接
                 setLink('')
-                
+
             }
         }
 
@@ -151,7 +152,7 @@ function Container(props) {
 
             for (let i = 0; i < article_link.length; i++) {
 
-                
+
                 if (article_link[i].getAttribute('path') == undefined || article_link[i].getAttribute('path') == null) {
                     // 如果 DOM 中的元素**不**包含 path 属性，则跳过（有 path 属性的元素才需要处理）
                     continue
@@ -184,7 +185,7 @@ function Container(props) {
                             my_links[j].click()
                             // 页面滚动到顶部
                             window.scrollTo(0, 0);
-                            
+
                             break
                         }
                     }
@@ -212,7 +213,7 @@ function Container(props) {
 
         // 反向链接
         let backLinksBox = <div className='markdown-body backLinks'>
-            <header>Links to this page</header>
+            <header>🔗LINKS TO THIS PAGE</header>
             <ul>
                 👻
             </ul>
@@ -230,7 +231,7 @@ function Container(props) {
             )
 
             backLinksBox = <div className='markdown-body backLinks'>
-                <header>Links to this page</header>
+                <header>🔗LINKS TO THIS PAGE</header>
                 <ul>
                     {backLinks}
                 </ul>
@@ -242,9 +243,16 @@ function Container(props) {
         return <div>
 
             <div>
+
+
                 <div ref={post} className='markdown-body container'>
 
                     <article><ReactMarkdown children={card['card']['content']} rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm, { singleTilde: false }]} /></article>
+                    <div className='postTime'>
+                        <time>Created {format(new Date(card['card']['createdTime']), 'yyyy-MM-dd')}</time>
+                        <time>{card['card']['lastEditedTimeDiff']}</time>
+                    </div>
+                    {/* /反向链接 */}
                     {backLinksBox}
                     <ul style={{ display: 'none' }}>{my_link}</ul>
 

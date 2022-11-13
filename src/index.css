@@ -37,7 +37,7 @@ article a::after {
 
 .post_list li {
     list-style: none;
-    margin-bottom: 1rem;
+    margin-bottom: 1.2rem;
 }
 
 .post_list h2 {
@@ -52,9 +52,18 @@ article a::after {
     color: #333;
 }
 
-.post_list time {
+.post_list time,
+.postTime {
     font-size: 0.9rem;
     color: #666;
+}
+
+.container .postTime {
+    margin-bottom: 1rem;
+}
+
+.postTime time {
+    margin-right: 1rem;
 }
 
 .container {
@@ -65,7 +74,12 @@ article a::after {
 .post_list {
     margin: 0 auto;
     max-width: 42rem;
-    padding: 0 1.4rem 1.4rem 1.4rem;
+    padding-left: 1.4rem;
+    padding-right: 1.4rem;
+}
+
+.container {
+    padding-bottom: 1.4rem;
 }
 
 .nav {
@@ -78,6 +92,7 @@ article a::after {
     border-bottom: 1px solid var(--color-border-default);
     margin-bottom: 1.4rem !important;
     padding: 0 1rem;
+    z-index: 999;
 }
 
 .nav ul {
@@ -161,8 +176,7 @@ article a::after {
 .my_link:hover,
 .backLinks a:hover,
 .post_list a:hover {
-    background-color: var(--color-prettylights-syntax-markup-ignored-bg);
-    color: #fff;
+    text-decoration: underline;
 }
 
 .unknown_card {

@@ -47,7 +47,7 @@ class BlogPost extends React.Component {
                                     {post.title}
                             </header>
                         </Link>
-                        <time>Last edited time:{format(new Date(post.lastEditedTime), 'yyyy-MM-dd')}</time>
+                        <time>{post.lastEditedTimeDiff}</time>
 
                     </li>
                 )
