@@ -10,8 +10,8 @@ function PostList(props) {
     document.title = props.title
 
     useEffect(()=>{
-
-        window.scrollTo(0, 0);
+        // console.log('scrollTo(0, 0)');
+        // window.scrollTo(0, 0);
 
     })
 

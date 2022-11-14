@@ -17,8 +17,8 @@ function About(props) {
     document.title = props.title
 
     useEffect(()=>{
-
-        window.scrollTo(0, 0);
+        // console.log('scrollTo(0, 0)');
+        // window.scrollTo(0, 0);
 
     })
 
@@ -44,6 +44,8 @@ function About(props) {
         content = <Container post_id={page_id} />
     }
 
+
+    // return <div className='loading'><div>🚀 Loading...</div></div>
     return <div>
         <div>
             <Nav />

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useUrlState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useParams } from 'react-router-dom';
+import { useLocation } from "react-router";
 
 import { format } from 'date-fns'
 
@@ -36,7 +37,6 @@ function Container(props) {
     }
 
 
-
     // 记录数据加载状态
     let [isLoading, setLoadingState] = useState(true)
 
@@ -49,14 +49,10 @@ function Container(props) {
     // 记录当前文章对应的卡片信息
     let [card, setCard] = useState('card');
 
-    // let [heptabase_data, setHeptabaseData] = useState('heptabase_data');
-    // let { slug } = useParams();
-
     // 如果当前页面 ID 为空则获取数据
     if (thisPageId == '') {
         setPageID(props.post_id)
     }
-
 
     // 如果是移动端则增加图片的尺寸
     let isMobile = navigator.userAgent.match(/Mobile/i)
@@ -64,13 +60,13 @@ function Container(props) {
     if (isMobile) {
         mobileSkale = 2
     }
-
     // 获取文章数据、处理文章数据
     const setContent = (id) => {
         console.log('setContent');
 
         // 存储数据的变量
         let heptabase_blog_data
+
         getHeptabaseData.then((res) => {
             heptabase_blog_data = res.data
             let new_card = null
@@ -101,6 +97,20 @@ function Container(props) {
 
     }
 
+    const handleBackLinkClick = () => {
+        console.log('handleBackLinkClick');
+        // 点击反向链接时回到顶部
+        // console.log('scrollTo(0, 0)');
+        // window.scrollTo(0, 0);
+
+        // 记录跳转类型
+        sessionStorage.setItem('nav_type', 0)
+        // 记录当前滚动的位置
+        sessionStorage.setItem('scrollY', window.scrollY)
+
+    }
+
+    const { pathname } = useLocation();
     // 组件生命周期，组件载入、更新时将触发此函数
     useEffect(() => {
 
@@ -109,7 +119,10 @@ function Container(props) {
         //设置页面内容
         if (card === 'card') {
             // 如果 card 无内容，则获取数据
+
             setContent(path_id)
+
+            // window.scrollTo(0, 0);
         } else {
 
 
@@ -124,6 +137,8 @@ function Container(props) {
 
             }
         }
+
+        // window.scrollTo(0, 0);
 
         // dom 加载完毕后
         if (post.current != null && card['card']['id'] == path_id) {
@@ -181,10 +196,16 @@ function Container(props) {
                         // 如果自定义的 Link 的 href 属性中包含 元素 path 属性的值，则可匹配
                         if (my_links[j].href.indexOf(article_link[i].getAttribute('path')) >= 0) {
 
+                            // 记录跳转类型
+                            sessionStorage.setItem('nav_type', 1)
+                            // 记录当前滚动的位置
+                            sessionStorage.setItem('scrollY', window.scrollY)
+
                             // 点击
                             my_links[j].click()
                             // 页面滚动到顶部
-                            window.scrollTo(0, 0);
+                            // console.log('scrollTo(0, 0)');
+                            // window.scrollTo(0, 0);
 
                             break
                         }
@@ -200,16 +221,20 @@ function Container(props) {
 
         }
 
-    });
 
-
-    // return <div className='loading'>🚀Loading...</div>
+    }, [pathname, { card }]);
 
     // 加载中
     if (isLoading) {
-        return <div className='loading'>🚀 Loading...</div>
-    } else {
+        console.log('isLoading');
 
+        setTimeout(() => {
+
+            return <div className='loading'><div>🚀 Loading...</div></div>
+
+        }, 200);
+
+    } else {
 
         let links = []
 
@@ -224,11 +249,13 @@ function Container(props) {
         if (card['backLinks'].length > 0) {
             let backLinks = card['backLinks'].map((backLink) =>
                 <li key={backLink.id} >
+
                     <Link to={{ pathname: '/post/' + backLink.id }} >
-                        {/* <span onClick={this.handleBackLinkClick.bind(Event, backLink.id)}> */}
-                        {backLink.title}
-                        {/* </span> */}
+                        <span onClick={handleBackLinkClick}>
+                            {backLink.title}
+                        </span>
                     </Link>
+
                 </li>
             )
 
