@@ -30,8 +30,12 @@ function Post(props) {
                 // 点击了 span 或 backLink
 
                 setTimeout(() => {
-                    window.scrollTo(0, 0);
-                }, 1);
+                    window.scrollTo({
+                        top:0,
+                        left:0,
+                        behavior:'auto'
+                    });
+                }, 10);
 
                 // window.scrollTo(0, 0);
 
@@ -41,8 +45,16 @@ function Post(props) {
 
                 // 返回上一页
                 setTimeout(() => {
-                    window.scrollTo(0, sessionStorage.getItem('scrollY'));
-                }, 1);
+
+                    window.scrollTo({
+                        top:sessionStorage.getItem('scrollY'),
+                        left:0,
+                        behavior:'auto'
+                    });
+
+                    // window.scrollTo(0, sessionStorage.getItem('scrollY'));
+
+                }, 10);
 
                 // window.scrollTo(0, sessionStorage.getItem('scrollY'));
 

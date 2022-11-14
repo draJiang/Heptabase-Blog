@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Link, useParams } from 'react-r
 import Container from '../components/Container'
 import Nav from '../components/Nav';
 import '../index.css'
+import Loading from '../components/Loading'
 
 import { getHeptabaseData, getClearCard, getClearImag } from '../constantFunction'
 
@@ -12,13 +13,15 @@ import { getHeptabaseData, getClearCard, getClearImag } from '../constantFunctio
 
 function About(props) {
     let { slug } = useParams();
+    let [isLoading, setLoadingState] = useState(true)
     let [page_id, setPageID] = useState('');
-    
+
     document.title = props.title
 
-    useEffect(()=>{
+    useEffect(() => {
         // console.log('scrollTo(0, 0)');
         // window.scrollTo(0, 0);
+        window.history.scrollRestoration = 'auto';
 
     })
 
@@ -27,31 +30,46 @@ function About(props) {
 
     getHeptabaseData.then((res) => {
         heptabase_blog_data = res.data
-        console.log(res);
 
-        if(res['pages']['about']!=undefined){
+        if (res['pages']['about'] != undefined) {
+            setLoadingState(false)
             setPageID(res['pages']['about']['id'])
-        }else{
+        } else {
             // 404
             window.location = '/404'
         }
-        
+
+
+
 
     })
 
-    let content = <div></div>
-    if (page_id != '') {
+    let content = <Loading />
+    if (page_id != '' || isLoading !== true) {
         content = <Container post_id={page_id} />
+    } else {
+        // content = <Loading />
     }
 
 
     // return <div className='loading'><div>🚀 Loading...</div></div>
-    return <div>
-        <div>
-            <Nav />
-            {content}
-        </div>
-    </div>;
+
+    if (page_id != '' || isLoading !== true) {
+        return <div>
+            <div>
+                <Nav />
+                <Container post_id={page_id} />
+            </div>
+        </div>;
+    } else {
+        return <div>
+            <div>
+                <Nav />
+                <Loading />
+            </div>
+        </div>;
+    }
+
 
 }
 

@@ -6,6 +6,7 @@ import { format } from 'date-fns'
 
 import '../index.css'
 import 'github-markdown-css'
+import Loading from '../components/Loading'
 
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
@@ -39,7 +40,7 @@ function Container(props) {
 
     // 记录数据加载状态
     let [isLoading, setLoadingState] = useState(true)
-
+    console.log(isLoading);
     // 记录当前文章的 ID
     let [thisPageId, setPageID] = useState('')
 
@@ -228,11 +229,8 @@ function Container(props) {
     if (isLoading) {
         console.log('isLoading');
 
-        setTimeout(() => {
+        return <Loading />
 
-            return <div className='loading'><div>🚀 Loading...</div></div>
-
-        }, 200);
 
     } else {
 
@@ -250,8 +248,8 @@ function Container(props) {
             let backLinks = card['backLinks'].map((backLink) =>
                 <li key={backLink.id} >
 
-                    <Link to={{ pathname: '/post/' + backLink.id }} >
-                        <span onClick={handleBackLinkClick}>
+                    <Link key={backLink.id} to={{ pathname: '/post/' + backLink.id }} >
+                        <span key={backLink.id} onClick={handleBackLinkClick}>
                             {backLink.title}
                         </span>
                     </Link>

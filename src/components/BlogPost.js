@@ -4,6 +4,7 @@ import localStorage from 'localStorage';
 import { format } from 'date-fns'
 import { getHeptabaseData } from '../constantFunction'
 
+import Loading from '../components/Loading'
 
 // 文章列表
 class BlogPost extends React.Component {
@@ -68,7 +69,7 @@ class BlogPost extends React.Component {
         }
 
         // 加载中
-        return <div></div>
+        return  <Loading />
 
     }
 }
