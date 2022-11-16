@@ -20,7 +20,7 @@ function About(props) {
 
     useEffect(() => {
         // console.log('scrollTo(0, 0)');
-        // window.scrollTo(0, 0);
+        window.scrollTo(0, 0);
         window.history.scrollRestoration = 'auto';
 
     })
