@@ -199,3 +199,14 @@
         top: 50%;
         transform: translate(-50%, -50%);
     }
+    
+    .footer {
+        text-align: center;
+        color: var(--color-fg-subtle);
+    }
+    
+    .container article pre {
+        background-color: var(--color-canvas-default);
+        padding: 0;
+        margin: 0;
+    }

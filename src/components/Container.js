@@ -12,6 +12,11 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeRaw from 'rehype-raw'
 
+import {Prism as SyntaxHighlighter} from 'react-syntax-highlighter'
+import {atomDark} from 'react-syntax-highlighter/dist/esm/styles/prism'
+// import docco from 'react-syntax-highlighter/dist/esm/styles/hljs/docco';
+
+
 
 
 import { getHeptabaseData, getClearCard, getClearImag } from '../constantFunction'
@@ -100,9 +105,6 @@ function Container(props) {
 
     const handleBackLinkClick = () => {
         console.log('handleBackLinkClick');
-        // 点击反向链接时回到顶部
-        // console.log('scrollTo(0, 0)');
-        // window.scrollTo(0, 0);
 
         // 记录跳转类型
         sessionStorage.setItem('nav_type', 0)
@@ -274,7 +276,28 @@ function Container(props) {
 
                 <div ref={post} className='markdown-body container'>
 
-                    <article><ReactMarkdown children={card['card']['content']} rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm, { singleTilde: false }]} /></article>
+                    <article>
+                        <ReactMarkdown children={card['card']['content']}
+                            components={{
+                                code({ node, inline, className, children, ...props }) {
+                                    const match = /language-(\w+)/.exec(className || '')
+                                    return !inline && match ? (
+                                        <SyntaxHighlighter
+                                            children={String(children).replace(/\n$/, '')}
+                                            style={atomDark}
+                                            language={match[1]}
+                                            PreTag="div"
+                                            {...props}
+                                        />
+                                    ) : (
+                                        <code className={className} {...props}>
+                                            {children}
+                                        </code>
+                                    )
+                                }
+                            }}
+                            rehypePlugins={[rehypeRaw]}
+                            remarkPlugins={[remarkGfm, { singleTilde: false }]} /></article>
                     <div className='postTime'>
                         <time>Created {format(new Date(card['card']['createdTime']), 'yyyy-MM-dd')}</time>
                         <time>{card['card']['lastEditedTimeDiff']}</time>
@@ -282,6 +305,11 @@ function Container(props) {
                     {/* /反向链接 */}
                     {backLinksBox}
                     <ul style={{ display: 'none' }}>{my_link}</ul>
+
+                    {/* <ReactMarkdown
+                        children={markdown}
+                        
+                    /> */}
 
 
                 </div>

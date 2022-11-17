@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Nav from '../components/Nav';
+import Footer from '../components/Footer'
+
 
 function Empty(props) {
 
@@ -12,6 +14,7 @@ function Empty(props) {
             <h3>404 Not Found</h3>
             <Link to='/'>Back to Home page</Link>
         </div>
+        <Footer />
 
     </div>
 }

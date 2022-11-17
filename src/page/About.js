@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link, useParams } from 'react-r
 
 import Container from '../components/Container'
 import Nav from '../components/Nav';
+import Footer from '../components/Footer'
 import '../index.css'
 import Loading from '../components/Loading'
 
@@ -59,6 +60,7 @@ function About(props) {
             <div>
                 <Nav />
                 <Container post_id={page_id} />
+                <Footer />
             </div>
         </div>;
     } else {
@@ -66,6 +68,7 @@ function About(props) {
             <div>
                 <Nav />
                 <Loading />
+                <Footer />
             </div>
         </div>;
     }

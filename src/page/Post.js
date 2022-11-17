@@ -4,7 +4,10 @@ import { useLocation } from "react-router";
 
 import Container from '../components/Container'
 import Nav from '../components/Nav';
+import Footer from '../components/Footer'
+
 import '../index.css'
+
 
 import 'github-markdown-css'
 
@@ -61,40 +64,6 @@ function Post(props) {
 
             }
 
-            // console.log(window.history);
-            // console.log(window.history.pushState);
-
-            // let url_histroy = sessionStorage.getItem('histroy')
-            // let thisPageKey = window.history.state.key
-            // console.log(url_histroy);
-
-            // if (url_histroy != null) {
-            //     url_histroy = url_histroy.split(',')
-            //     if (url_histroy.indexOf(thisPageKey)>-1) {
-            //         // 回到旧页面
-
-            //     } else {
-            //         url_histroy = url_histroy+','+thisPageKey
-            //         sessionStorage.setItem('histroy', url_histroy)
-
-            //         window.scrollTo(0, 0);
-            //     }
-            // } else {
-            //     sessionStorage.setItem('histroy', thisPageKey)
-            // }
-
-
-            // console.log(url_histroy);
-
-            // console.log(pathname);
-
-            // console.log(sessionStorage.getItem('pathname'));
-
-
-
-            // sessionStorage.setItem('pathname', pathname)
-
-
 
         }, [pathname]);
     }
@@ -116,6 +85,7 @@ function Post(props) {
         <div>
             <Nav />
             <Container post_id={slug} />
+            <Footer />
         </div>
     </div>;
 
