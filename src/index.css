@@ -216,3 +216,16 @@ article a::after {
     padding: 0;
     margin: 0;
 }
+
+.markdown-body #player {
+    margin: 0;
+}
+
+.music {
+    text-align: center;
+    margin: 1rem 0;
+}
+
+.music iframe {
+    max-width: 28rem;
+}

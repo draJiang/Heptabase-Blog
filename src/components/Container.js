@@ -154,6 +154,11 @@ function Container(props) {
         // dom 加载完毕后
         if (post.current != null && card['card']['id'] == path_id) {
 
+            // 设置网易云音乐播放器的尺寸
+            console.log(document.getElementById('player'));
+            console.log(document.getElementById('music'));
+            // console.log(document.getElementById('music').contentWindow.getElementById('infolayer'));
+
             // 设置 img 的尺寸
             let article_img = document.getElementsByTagName('img');
             console.log(article_img);
@@ -285,6 +290,10 @@ function Container(props) {
                 <div ref={post} className='markdown-body container'>
 
                     <article>
+
+                    {/* <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" src="//music.163.com/outchain/player?type=2&id=1458394045&auto=0&height=66"></iframe> */}
+                    {/* <iframe style="border: 0; width: 100%; height: 120px;" src="https://bandcamp.com/EmbeddedPlayer/album=1962637190/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/artwork=small/transparent=true/" seamless><a href="https://macroblank.bandcamp.com/album/plastic-fables-2021-year-end-mix">Plastic Fables (2021 Year End Mix) by Macroblank</a></iframe> */}
+                    
                         <ReactMarkdown children={card['card']['content']}
                             components={{
                                 code({ node, inline, className, children, ...props }) {

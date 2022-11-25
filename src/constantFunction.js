@@ -9,17 +9,17 @@ const getLastEditedTime = (dateBegin) => {
 
     // 时间差的毫秒数
     let dateDiff = dateEnd.getTime() - dateBegin.getTime()
-        // 时间差的天数
+    // 时间差的天数
     let dayDiff = Math.floor(dateDiff / (24 * 3600 * 1000))
 
     // 计算除天数外剩余的毫秒数
     let leave1 = dateDiff % (24 * 3600 * 1000)
-        // 小时数
+    // 小时数
     let hours = Math.floor(leave1 / (3600 * 1000))
 
     // 计算除小时剩余的分钟数
     let leave2 = leave1 % (3600 * 1000)
-        // 分钟数
+    // 分钟数
     let minutes = Math.floor(leave2 / (60 * 1000))
 
     //计算相差的秒数
@@ -45,7 +45,7 @@ const getClearImag = (card) => {
 
     // 支持的图片类型
     let img_type = ['.png', '.jpeg', '.jpg', '.gif']
-        // 包含以下关键字则认为是图片
+    // 包含以下关键字则认为是图片
     let img_keyword_index = content.indexOf('![')
 
     while (img_keyword_index != -1) {
@@ -135,7 +135,7 @@ const getClearCard = (card, cards) => {
         }
 
         let old_card = content.substring(card_keyword_index, card_end_inex + 2)
-            // {{card xxxx-xxx-xxxx}}
+        // {{card xxxx-xxx-xxxx}}
         let new_card = '<span class="unknown_card">' + '{{未知卡片}}' + '</span>'
 
         // 检验一下的确是 card
@@ -181,7 +181,7 @@ const getClearCard = (card, cards) => {
 
         } else {
 
-            // ](./ 符号
+            // ] 符号
             let custom_card_name_end_inex = content.indexOf(']', custom_card_keyword_index)
 
             //获取卡片末尾的索引
@@ -197,10 +197,27 @@ const getClearCard = (card, cards) => {
 
                 let custom_card_name = content.substring(custom_card_keyword_index + 1, custom_card_name_end_inex)
                 let custom_card_url = content.substring(custom_card_name_end_inex, custom_card_end_inex)
-                    // [name](./url)
+                // [name](./url)
 
                 if (custom_card_url.indexOf('./') < 0 || custom_card_url.indexOf('.md') < 0) {
-                    // 如果不是 Heptabase 内部链接则忽略
+                    // 如果不是 Heptabase 内部链接，则判断是否为音乐链接
+                    if (custom_old_card.indexOf('https://music.163.com/song?') > -1) {
+                        // 网易云音乐
+
+                        // 获取歌曲 ID
+                        let music_id_reg = /[0-9]{4,14}/g
+                        let music_id_list = custom_old_card.match(music_id_reg)
+
+                        if (music_id_list !== []) {
+                            // 匹配到 ID
+                            let music_id = music_id_list[0]
+                            let netease_music_iframe = '<div class="music netease_music"><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" height=52 style="width: 100%; " src="//music.163.com/outchain/player?type=2&id=' + music_id + '&auto=0&height=32"></iframe></div>'
+                            content = content.replace(custom_old_card, netease_music_iframe)
+                            
+                        }
+                    }
+
+
                 } else {
                     // 卡片默认跳转到 404 页面
                     let custom_new_card = '<a class="unknown_card" href=' + '/404/' + '>' + custom_card_name + '</a>'
@@ -234,6 +251,30 @@ const getClearCard = (card, cards) => {
 
     }
 
+    // 处理网易云音乐
+    let netease_music_keyword_index = content.indexOf('<https://music.163.com/song?')
+    while (netease_music_keyword_index > -1) {
+        // 获取链接的结尾
+        let netease_music_end_inex = content.indexOf('>', netease_music_keyword_index)
+        // 原始文本
+        let netease_music_old_url = content.substring(netease_music_keyword_index, netease_music_end_inex + 1)
+
+        // 获取歌曲 ID
+        let music_id_reg = /[0-9]{4,14}/g
+        let music_id_list = netease_music_old_url.match(music_id_reg)
+
+        if (music_id_list !== []) {
+            // 匹配到 ID
+            let music_id = music_id_list[0]
+            let netease_music_iframe = '<div class="music netease_music"><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" height=52 style="width: 100%; " src="//music.163.com/outchain/player?type=2&id=' + music_id + '&auto=0&height=32"></iframe></div>'
+            content = content.replace(netease_music_old_url, netease_music_iframe)
+            // 
+        }
+
+        netease_music_keyword_index = content.indexOf('<https://music.163.com/song?', netease_music_keyword_index + 1)
+
+
+    }
 
     // 处理反向连接
     // 如果 A 卡片中存在当前笔记的 ID，则 A 卡片为当前笔记的反向链接之一
@@ -289,10 +330,10 @@ const getHeptabaseData = new Promise((resolve, reject) => {
 
     // 获取 Heptabase 数据
     fetch(CONFIG.api_url, {
-            method: "get",
-            header: header
-                // mode: 'no-cors'
-        })
+        method: "get",
+        header: header
+        // mode: 'no-cors'
+    })
         .then(res => res.json())
         .then(data => {
             console.log(data)
@@ -306,7 +347,7 @@ const getHeptabaseData = new Promise((resolve, reject) => {
             })
 
             let pages = {}
-                // 获取 About、Projects 页面的数据
+            // 获取 About、Projects 页面的数据
             pages.about = undefined
             pages.projects = undefined
 
@@ -349,9 +390,9 @@ const getHeptabaseData = new Promise((resolve, reject) => {
 
             // createdTime 记录数据获取的时间
             const local_data = { 'createdTime': Date.parse(new Date()) / 1000, 'data': data, 'pages': pages }
-                // 存储数据到本地缓存
+            // 存储数据到本地缓存
             localStorage.setItem("heptabase_blog_data", JSON.stringify(local_data))
-                // console.log(this.state.posts);
+            // console.log(this.state.posts);
 
             console.log('getHeptabaseData return');
             // return heptabase_blog_data
