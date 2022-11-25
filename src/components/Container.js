@@ -77,7 +77,6 @@ function Container(props) {
             heptabase_blog_data = res.data
             let new_card = null
             console.log('Container setContent for:');
-            console.log(heptabase_blog_data);
             for (let i = 0; i < heptabase_blog_data.cards.length; i++) {
 
                 if (heptabase_blog_data.cards[i]['id'] == id) {
@@ -88,8 +87,7 @@ function Container(props) {
                     // 处理内容中的链接
                     new_card = getClearCard(heptabase_blog_data.cards[i], heptabase_blog_data.cards)
                     heptabase_blog_data.cards[i] = new_card['card']
-                    
-                    
+
                     // 设置网页标题
                     if (new_card['card']['title'] !== 'About') {
                         document.title = new_card['card']['title']
@@ -97,11 +95,8 @@ function Container(props) {
                         document.title = 'Jiang 的数字花园🌱'
                     }
 
-
                     setCard(new_card)
                     setLoadingState(false)
-
-
 
                     break;
                 }
@@ -190,14 +185,13 @@ function Container(props) {
                 }
 
                 // 创建 Link 元素，当点击上述 span 原生时，将触发 Link 元素的点击事件
-                let link_temp = < Link className='link_temp'
-                    to={article_link[i].getAttribute('path')} > Link < /Link>
-                    links.push(link_temp)
+                let link_temp = <Link className='link_temp' to={article_link[i].getAttribute('path')}>Link</Link>
+                links.push(link_temp)
 
 
                 // DOM 中的特定元素点击时
                 article_link[i].onclick = () => {
-                        console.log('a click');
+                    console.log('a click');
 
                     // 获取元素的 path 参数，提取 post id
                     let post_id = article_link[i].getAttribute('path').replace('/post/', '')
@@ -208,23 +202,23 @@ function Container(props) {
 
                     for (let j = 0; j < my_links.length; j++) {
                         console.log(my_links[j]);
-                    console.log(my_links[j].href);
+                        console.log(my_links[j].href);
 
                         // 如果自定义的 Link 的 href 属性中包含 元素 path 属性的值，则可匹配
                         if (my_links[j].href.indexOf(article_link[i].getAttribute('path')) >= 0) {
 
-                        // 记录跳转类型
-                        sessionStorage.setItem('nav_type', 1)
-                                // 记录当前滚动的位置
+                            // 记录跳转类型
+                            sessionStorage.setItem('nav_type', 1)
+                            // 记录当前滚动的位置
                             sessionStorage.setItem('scrollY', window.scrollY)
 
-                    // 点击
-                    my_links[j].click()
-                    // 页面滚动到顶部
-                    // console.log('scrollTo(0, 0)');
-                    // window.scrollTo(0, 0);
+                            // 点击
+                            my_links[j].click()
+                            // 页面滚动到顶部
+                            // console.log('scrollTo(0, 0)');
+                            // window.scrollTo(0, 0);
 
-                    break
+                            break
                         }
                     }
 
@@ -233,120 +227,102 @@ function Container(props) {
 
             // 设置自定义 Link 并渲染到 DOM 中
             if (my_link == '' && links.length > 0) {
-                        setLink(links)
-                    }
+                setLink(links)
+            }
 
         }
 
 
-    }, [pathname, {card}]);
+    }, [pathname, { card }]);
 
-                    // 加载中
-                    if (isLoading) {
-                        console.log('isLoading');
+    // 加载中
+    if (isLoading) {
+        console.log('isLoading');
 
-                    return <Loading />
+        return <Loading />
 
 
     } else {
 
-                        let links = []
+        let links = []
 
-                    // 反向链接
-                    let backLinksBox = < div className='markdown-body backLinks' >
-                        <
-            header > 🔗LINKS TO THIS PAGE < /header> <
-            ul > 👻
-                                <
-            /ul> <
-            /div>
+        // 反向链接
+        let backLinksBox = <div className='markdown-body backLinks'>
+            <header>🔗LINKS TO THIS PAGE</header>
+            <ul>
+                👻
+            </ul>
+        </div>
 
         if (card['backLinks'].length > 0) {
-                                    let backLinks = card['backLinks'].map((backLink) =>
-                                <
-                li key={backLink.id} >
+            let backLinks = card['backLinks'].map((backLink) =>
+                <li key={backLink.id} >
 
-                                    <
-                Link key={backLink.id}
-                                        to={
-                                            { pathname: '/post/' + backLink.id }} >
-                                        <
-                span key={backLink.id}
-                                            onClick={handleBackLinkClick} > {backLink.title} <
-                /span> <
-                /Link>
+                    <Link key={backLink.id} to={{ pathname: '/post/' + backLink.id }} >
+                        <span key={backLink.id} onClick={handleBackLinkClick}>
+                            {backLink.title}
+                        </span>
+                    </Link>
 
-                                            <
-                /li>
-                                            )
+                </li>
+            )
 
-                                            backLinksBox = < div className='markdown-body backLinks' >
-                                                <
-                header > 🔗LINKS TO THIS PAGE < /header> <
-                ul > {backLinks} <
-                /ul> <
-                /div>
+            backLinksBox = <div className='markdown-body backLinks'>
+                <header>🔗LINKS TO THIS PAGE</header>
+                <ul>
+                    {backLinks}
+                </ul>
+            </div>
         }
 
 
 
-                                                        return <div >
+        return <div>
 
-                                                            <
-            div >
-
-
-                                                                <
-            div ref={post}
-                                                                    className='markdown-body container' >
-
-                                                                    <
-            article >
-                                                                        <
-                                                                            ReactMarkdown children={card['card']['content']}
-                                                                            components={
-                                                                                {
-                                                                                    code({ node, inline, className, children, ...props }) {
-                                                                                        const match = /language-(\w+)/.exec(className || '')
-                                                                                        return !inline && match ? (<
-                                                                                            SyntaxHighlighter children={String(children).replace(/\n$/, '')}
-                                                                                            style={atomDark}
-                                                                                            language={match[1]}
-                                                                                            PreTag="div" {...props}
-                                                                                        />
-                                                                                        ) : ( <
-                        code className = { className } {...props } > { children } <
-                        /code>
-                    )
-                }
-            }
-        }
-        rehypePlugins = {
-            [rehypeRaw] }
-        remarkPlugins = {
-            [remarkGfm, { singleTilde: false }] }
-        /></article >
-        <
-        div className = 'postTime' >
-            <
-            time > Created { format(new Date(card['card']['createdTime']), 'yyyy-MM-dd') } < /time> <
-            time > { card['card']['lastEditedTimeDiff'] } < /time> <
-            /div> { /* /反向链接 */ } { backLinksBox } <
-            ul style = {
-                { display: 'none' } } > { my_link } < /ul>
-
-        {
-            /* <ReactMarkdown
-                                    children={markdown}
-                                    
-                                /> */
-        }
+            <div>
 
 
-        <
-        /div> <
-        /div> <
-        /div>;
+                <div ref={post} className='markdown-body container'>
+
+                    <article>
+                        <ReactMarkdown children={card['card']['content']}
+                            components={{
+                                code({ node, inline, className, children, ...props }) {
+                                    const match = /language-(\w+)/.exec(className || '')
+                                    return !inline && match ? (
+                                        <SyntaxHighlighter
+                                            children={String(children).replace(/\n$/, '')}
+                                            style={atomDark}
+                                            language={match[1]}
+                                            PreTag="div"
+                                            {...props}
+                                        />
+                                    ) : (
+                                        <code className={className} {...props}>
+                                            {children}
+                                        </code>
+                                    )
+                                }
+                            }}
+                            rehypePlugins={[rehypeRaw]}
+                            remarkPlugins={[remarkGfm, { singleTilde: false }]} /></article>
+                    <div className='postTime'>
+                        <time>Created {format(new Date(card['card']['createdTime']), 'yyyy-MM-dd')}</time>
+                        <time>{card['card']['lastEditedTimeDiff']}</time>
+                    </div>
+                    {/* /反向链接 */}
+                    {backLinksBox}
+                    <ul style={{ display: 'none' }}>{my_link}</ul>
+
+                    {/* <ReactMarkdown
+                        children={markdown}
+                        
+                    /> */}
+
+
+                </div>
+            </div>
+        </div>;
     }
 
 }
