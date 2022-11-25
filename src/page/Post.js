@@ -16,7 +16,7 @@ function Post(props) {
     let { slug } = useParams();
 
 
-    const useScrollToTop = () => {   //注意自定义Hooks要用useXXX定义
+    const useScrollToTop = () => { //注意自定义Hooks要用useXXX定义
         const { pathname } = useLocation();
         useEffect(() => {
 
@@ -34,9 +34,9 @@ function Post(props) {
 
                 setTimeout(() => {
                     window.scrollTo({
-                        top:0,
-                        left:0,
-                        behavior:'auto'
+                        top: 0,
+                        left: 0,
+                        behavior: 'auto'
                     });
                 }, 10);
 
@@ -50,9 +50,9 @@ function Post(props) {
                 setTimeout(() => {
 
                     window.scrollTo({
-                        top:sessionStorage.getItem('scrollY'),
-                        left:0,
-                        behavior:'auto'
+                        top: sessionStorage.getItem('scrollY'),
+                        left: 0,
+                        behavior: 'auto'
                     });
 
                     // window.scrollTo(0, sessionStorage.getItem('scrollY'));
@@ -78,16 +78,21 @@ function Post(props) {
 
     })
 
-    document.title = props.title
 
-    return <div>
 
-        <div>
-            <Nav />
-            <Container post_id={slug} />
-            <Footer />
-        </div>
-    </div>;
+    return <div >
+
+        <
+        div >
+        <
+        Nav / >
+        <
+        Container post_id = { slug }
+    /> <
+    Footer / >
+        <
+        /div> <
+        /div>;
 
 }
 

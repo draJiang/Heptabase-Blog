@@ -16,6 +16,10 @@ class BlogPost extends React.Component {
 
     componentDidMount() {
         window.history.scrollRestoration = 'auto';
+
+        // 设置网页标题
+        document.title = 'Notes'
+
         // 获取数据
         getHeptabaseData.then((res) => {
             this.setState({ posts: res.data, isLoading: false })

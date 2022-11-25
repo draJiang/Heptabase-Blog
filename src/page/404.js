@@ -6,7 +6,7 @@ import Footer from '../components/Footer'
 
 function Empty(props) {
 
-    document.title = props.title
+    document.title = '404'
 
     return<div>
         <Nav />

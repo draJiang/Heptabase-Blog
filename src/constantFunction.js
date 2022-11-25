@@ -261,15 +261,15 @@ const getHeptabaseData = new Promise((resolve, reject) => {
     // 获取本地数据
     let heptabase_blog_data = localStorage.getItem("heptabase_blog_data")
 
-
+    console.log(heptabase_blog_data);
     // 若本地存在数据则不重新获取
     if (heptabase_blog_data != undefined) {
 
         let createdTime = JSON.parse(heptabase_blog_data)['createdTime']
         console.log(Date.parse(new Date()) / 1000);
-
+        console.log(createdTime);
         console.log(Date.parse(new Date()) / 1000 - createdTime);
-        if (Date.parse(new Date()) / 1000 - createdTime >= 600) {
+        if (Date.parse(new Date()) / 1000 - createdTime >= 600 && createdTime != undefined) {
             // 数据比较旧时再重新获取
             console.log('数据比较旧');
 
