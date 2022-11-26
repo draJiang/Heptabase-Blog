@@ -30,6 +30,42 @@ const getLastEditedTime = (dateBegin) => {
 
 }
 
+// 处理网易云音乐
+const setNeteaseMusic = (custom_old_card) => {
+    // 判断类型是歌曲还是歌单
+    let type = 2 //歌曲
+    let height_1 = 52
+    let height_2 = 32
+    if (custom_old_card.indexOf('playlist') > -1 || custom_old_card.indexOf('album') > -1) {
+        
+        height_1 = 450
+        height_2 = 430
+
+        if(custom_old_card.indexOf('playlist') > -1){
+            type = 0
+        }
+        if(custom_old_card.indexOf('album') > -1){
+            type = 1
+        }
+    }
+
+    // 获取歌曲 ID
+    let music_id_reg = /[0-9]{4,14}/g
+    let music_id_list = custom_old_card.match(music_id_reg)
+
+    if (music_id_list !== []) {
+        // 匹配到 ID
+        let music_id = music_id_list[0]
+        let netease_music_iframe = '<div class="music netease_music"><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" height=' + height_1 + ' style="width: 100%; " src="//music.163.com/outchain/player?type=' + type + '&id=' + music_id + '&auto=0&height='+height_2+'"></iframe></div>'
+
+        return netease_music_iframe
+
+    } else {
+        return undefined
+    }
+
+}
+
 // 修复单个 md 文件中的 img
 const getClearImag = (card) => {
 
@@ -48,7 +84,7 @@ const getClearImag = (card) => {
     // 包含以下关键字则认为是图片
     let img_keyword_index = content.indexOf('![')
 
-    while (img_keyword_index != -1) {
+    while (img_keyword_index !== -1) {
 
 
         // 获取下一个 ) 索引
@@ -64,7 +100,7 @@ const getClearImag = (card) => {
             if (img_etc_index >= 0 && img_etc_index <= img_end_inex) {
 
                 // 如果格式字符是这种格式 ![....jpg] 内，则跳过
-                if (content.substring(img_etc_index + img_type[i].length, img_etc_index + img_type[i].length + 2) == '](') {
+                if (content.substring(img_etc_index + img_type[i].length, img_etc_index + img_type[i].length + 2) === '](') {
                     img_etc_index = content.indexOf(img_type[i], img_etc_index + 1)
 
                 }
@@ -76,7 +112,7 @@ const getClearImag = (card) => {
             }
         }
 
-        if (img_keyword_index == -1 || img_end_inex == -1 || img_etc_index == -1) {
+        if (img_keyword_index === -1 || img_end_inex === -1 || img_etc_index === -1) {
             break
         }
 
@@ -125,18 +161,18 @@ const getClearCard = (card, cards) => {
     // 获取 {{ 符号
     let card_keyword_index = content.indexOf('{{')
 
-    while (card_keyword_index != -1) {
+    while (card_keyword_index !== -1) {
 
         //获取卡片末尾的索引
         let card_end_inex = content.indexOf('}}', card_keyword_index)
 
-        if (card_keyword_index == -1 || card_end_inex == -1) {
+        if (card_keyword_index === -1 || card_end_inex === -1) {
             break
         }
 
         let old_card = content.substring(card_keyword_index, card_end_inex + 2)
         // {{card xxxx-xxx-xxxx}}
-        let new_card = '<span class="unknown_card">' + '{{未知卡片}}' + '</span>'
+        let new_card = '<span class="unknown_card">{{未知卡片}}</span>'
 
         // 检验一下的确是 card
         if (old_card.indexOf('card ') >= 0) {
@@ -151,7 +187,7 @@ const getClearCard = (card, cards) => {
                     // new_card = '[' + cards[i]['title'] + ']' + '(' + '/post/' + cards[i]['id'] + ')'
 
                     // path 参数用于点击时加载对应笔记的数据，只有 my_link 类可点击
-                    new_card = '<span class="my_link" path=' + '/post/' + cards[i]['id'] + '>' + cards[i]['title'] + '</span>'
+                    new_card = '<span class="my_link" path=/post/'+ cards[i]['id'] + '>' + cards[i]['title'] + '</span>'
                     break
                 }
 
@@ -173,10 +209,10 @@ const getClearCard = (card, cards) => {
     // 获取拥有别名的卡片
     let custom_card_keyword_index = content.indexOf('[')
     console.log(custom_card_keyword_index);
-    while (custom_card_keyword_index != -1) {
+    while (custom_card_keyword_index !== -1) {
 
 
-        if (content[custom_card_keyword_index - 1] == '!') {
+        if (content[custom_card_keyword_index - 1] === '!') {
             // 如果是图片则忽略
 
         } else {
@@ -189,7 +225,7 @@ const getClearCard = (card, cards) => {
 
             let custom_old_card = content.substring(custom_card_keyword_index, custom_card_end_inex + 1)
 
-            if (custom_old_card.indexOf(']') < 0 || content[custom_card_name_end_inex + 1] != '(') {
+            if (custom_old_card.indexOf(']') < 0 || content[custom_card_name_end_inex + 1] !== '(') {
 
 
 
@@ -201,26 +237,19 @@ const getClearCard = (card, cards) => {
 
                 if (custom_card_url.indexOf('./') < 0 || custom_card_url.indexOf('.md') < 0) {
                     // 如果不是 Heptabase 内部链接，则判断是否为音乐链接
-                    if (custom_old_card.indexOf('https://music.163.com/song?') > -1) {
+                    if (custom_old_card.indexOf('https://music.163.com/') > -1) {
                         // 网易云音乐
-
-                        // 获取歌曲 ID
-                        let music_id_reg = /[0-9]{4,14}/g
-                        let music_id_list = custom_old_card.match(music_id_reg)
-
-                        if (music_id_list !== []) {
-                            // 匹配到 ID
-                            let music_id = music_id_list[0]
-                            let netease_music_iframe = '<div class="music netease_music"><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" height=52 style="width: 100%; " src="//music.163.com/outchain/player?type=2&id=' + music_id + '&auto=0&height=32"></iframe></div>'
+                        let netease_music_iframe = setNeteaseMusic(custom_old_card)
+                        if (netease_music_iframe !== undefined) {
                             content = content.replace(custom_old_card, netease_music_iframe)
-                            
                         }
+
                     }
 
 
                 } else {
                     // 卡片默认跳转到 404 页面
-                    let custom_new_card = '<a class="unknown_card" href=' + '/404/' + '>' + custom_card_name + '</a>'
+                    let custom_new_card = '<a class="unknown_card" href=/404/>' + custom_card_name + '</a>'
 
                     // 根据 ID 匹配数据中是否存在此卡片
 
@@ -228,7 +257,7 @@ const getClearCard = (card, cards) => {
 
                         if (custom_old_card.indexOf(cards[i]['id']) >= 0) {
                             // 存在：设置卡片链接
-                            custom_new_card = '<span class="my_link" path=' + '/post/' + cards[i]['id'] + '>' + custom_card_name + '</span>'
+                            custom_new_card = '<span class="my_link" path=/post/' + cards[i]['id'] + '>' + custom_card_name + '</span>'
 
                             break
                         }
@@ -252,24 +281,31 @@ const getClearCard = (card, cards) => {
     }
 
     // 处理网易云音乐
-    let netease_music_keyword_index = content.indexOf('<https://music.163.com/song?')
+    let netease_music_keyword_index = content.indexOf('<https://music.163.com/')
     while (netease_music_keyword_index > -1) {
         // 获取链接的结尾
         let netease_music_end_inex = content.indexOf('>', netease_music_keyword_index)
         // 原始文本
         let netease_music_old_url = content.substring(netease_music_keyword_index, netease_music_end_inex + 1)
 
-        // 获取歌曲 ID
-        let music_id_reg = /[0-9]{4,14}/g
-        let music_id_list = netease_music_old_url.match(music_id_reg)
+        // // 获取歌曲 ID
+        // let music_id_reg = /[0-9]{4,14}/g
+        // let music_id_list = netease_music_old_url.match(music_id_reg)
 
-        if (music_id_list !== []) {
-            // 匹配到 ID
-            let music_id = music_id_list[0]
-            let netease_music_iframe = '<div class="music netease_music"><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" height=52 style="width: 100%; " src="//music.163.com/outchain/player?type=2&id=' + music_id + '&auto=0&height=32"></iframe></div>'
+        // if (music_id_list !== []) {
+        //     // 匹配到 ID
+        //     let music_id = music_id_list[0]
+        //     let netease_music_iframe = '<div class="music netease_music"><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" height=52 style="width: 100%; " src="//music.163.com/outchain/player?type=2&id=' + music_id + '&auto=0&height=32"></iframe></div>'
+        //     content = content.replace(netease_music_old_url, netease_music_iframe)
+        //     // 
+        // }
+
+        // 网易云音乐
+        let netease_music_iframe = setNeteaseMusic(netease_music_old_url)
+        if (netease_music_iframe !== undefined) {
             content = content.replace(netease_music_old_url, netease_music_iframe)
-            // 
         }
+
 
         netease_music_keyword_index = content.indexOf('<https://music.163.com/song?', netease_music_keyword_index + 1)
 
@@ -281,7 +317,7 @@ const getClearCard = (card, cards) => {
     let backLinks = []
     for (let i = 0; i < cards.length; i++) {
 
-        if (cards[i]['content'].indexOf(this_card_id) >= 0 && cards[i]['id'] != this_card_id) {
+        if (cards[i]['content'].indexOf(this_card_id) >= 0 && cards[i]['id'] !== this_card_id) {
 
             backLinks.push(cards[i])
 
@@ -302,15 +338,14 @@ const getHeptabaseData = new Promise((resolve, reject) => {
     // 获取本地数据
     let heptabase_blog_data = localStorage.getItem("heptabase_blog_data")
 
-    console.log(heptabase_blog_data);
     // 若本地存在数据则不重新获取
-    if (heptabase_blog_data != undefined) {
+    if (heptabase_blog_data !== undefined) {
 
         let createdTime = JSON.parse(heptabase_blog_data)['createdTime']
         console.log(Date.parse(new Date()) / 1000);
         console.log(createdTime);
         console.log(Date.parse(new Date()) / 1000 - createdTime);
-        if (Date.parse(new Date()) / 1000 - createdTime >= 600 && createdTime != undefined) {
+        if (Date.parse(new Date()) / 1000 - createdTime >= 600 && createdTime !== undefined) {
             // 数据比较旧时再重新获取
             console.log('数据比较旧');
 
@@ -355,14 +390,14 @@ const getHeptabaseData = new Promise((resolve, reject) => {
                 console.log(data.cards[i]['title']);
 
                 // About
-                if (data.cards[i]['title'] == 'About') {
+                if (data.cards[i]['title'] === 'About') {
 
                     pages.about = data.cards[i]
 
                 }
 
                 // Projects
-                if (data.cards[i]['title'] == 'Projects') {
+                if (data.cards[i]['title'] === 'Projects') {
                     pages.projects = data.cards[i]
 
                 }
