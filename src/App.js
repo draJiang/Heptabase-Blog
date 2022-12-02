@@ -15,8 +15,8 @@ class App extends React.Component {
             // <ScrollToTop>
                 <Router >
                     <Routes >
-                        <Route exact path="/" element={<About title={CONFIG.title} />} title='123' />
-                        <Route path="/post/:slug" element={<Post title={CONFIG.title} />} />
+                        <Route exact path="/" element={<Post title={CONFIG.title} />} />
+                        <Route path="/post/*" element={<Post title={CONFIG.title} />} />
                         <Route path="/notes/" element={<PostList title={CONFIG.title} />} />
 
                         <Route path="/404/" element={<Empty title={CONFIG.title} />} />

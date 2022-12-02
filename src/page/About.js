@@ -29,6 +29,7 @@ function About(props) {
     // 获取 About 数据的 ID
     let heptabase_blog_data
 
+
     getHeptabaseData.then((res) => {
         heptabase_blog_data = res.data
 
@@ -39,9 +40,6 @@ function About(props) {
             // 404
             window.location = '/404'
         }
-
-
-
 
     })
 

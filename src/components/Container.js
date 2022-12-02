@@ -20,6 +20,7 @@ import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 
 
 import { getHeptabaseData, getClearCard, getClearImag } from '../constantFunction'
+import e from 'cors';
 
 
 // 文章正文
@@ -42,18 +43,11 @@ function Container(props) {
         path_id = path.replace('/post/', '')
     }
 
-
-    // 记录数据加载状态
-    let [isLoading, setLoadingState] = useState(true)
-    console.log(isLoading);
     // 记录当前文章的 ID
     let [thisPageId, setPageID] = useState('')
 
     // 记录自定义的 Link 数据，用来实现 DOM 链接的间接跳转
     let [my_link, setLink] = useState('');
-
-    // 记录当前文章对应的卡片信息
-    let [card, setCard] = useState('card');
 
     // 如果当前页面 ID 为空则获取数据
     if (thisPageId == '') {
@@ -66,58 +60,17 @@ function Container(props) {
     if (isMobile) {
         mobileSkale = 2
     }
-    // 获取文章数据、处理文章数据
-    const setContent = (id) => {
-        console.log('setContent');
 
-        // 存储数据的变量
-        let heptabase_blog_data
-
-        getHeptabaseData.then((res) => {
-            heptabase_blog_data = res.data
-            let new_card = null
-            console.log('Container setContent for:');
-            for (let i = 0; i < heptabase_blog_data.cards.length; i++) {
-
-                if (heptabase_blog_data.cards[i]['id'] == id) {
-
-                    // 处理内容中的图片
-                    heptabase_blog_data.cards[i] = getClearImag(heptabase_blog_data.cards[i])
-                    console.log('getClearImag done');
-                    // 处理内容中的链接
-                    new_card = getClearCard(heptabase_blog_data.cards[i], heptabase_blog_data.cards)
-                    heptabase_blog_data.cards[i] = new_card['card']
-
-                    // 设置网页标题
-                    if (new_card['card']['title'] !== 'About') {
-                        document.title = new_card['card']['title']
-                    } else {
-                        document.title = 'Jiang 的数字花园🌱'
-                    }
-
-                    setCard(new_card)
-                    setLoadingState(false)
-
-                    break;
-                }
-            }
-
-            // 404
-            if (new_card == null) {
-                console.log('404');
-                window.location = '/404'
-            }
-        })
-
-    }
-
-    const handleBackLinkClick = () => {
+    // 点击反向链接
+    const handleBackLinkClick = (link_id, current_id) => {
         console.log('handleBackLinkClick');
-
+        console.log(link_id);
         // 记录跳转类型
         sessionStorage.setItem('nav_type', 0)
         // 记录当前滚动的位置
         sessionStorage.setItem('scrollY', window.scrollY)
+
+        props.handleLinkClick(link_id, current_id)
 
     }
 
@@ -126,33 +79,10 @@ function Container(props) {
     useEffect(() => {
 
         console.log('useEffect');
-
-        //设置页面内容
-        if (card === 'card') {
-            // 如果 card 无内容，则获取数据
-
-            setContent(path_id)
-
-            // window.scrollTo(0, 0);
-        } else {
-
-
-            if (card['card']['id'] !== path_id) {
-
-                // 如果 card 的 ID 与当前 URL 中的 ID 不一致
-                console.log('useEffect setContent');
-                // 获取新 URL 中的文章 ID 对应的 md 数据
-                setContent(path_id)
-                // 清空旧页面的自定义链接
-                setLink('')
-
-            }
-        }
-
-        // window.scrollTo(0, 0);
+        props.handleHashChange(window.location.href)
 
         // dom 加载完毕后
-        if (post.current != null && card['card']['id'] == path_id) {
+        if (post.current != null) {
 
             // 设置网易云音乐播放器的尺寸
             console.log(document.getElementById('player'));
@@ -178,7 +108,7 @@ function Container(props) {
 
             // 设置 a 链接的点击事件，将 a 按照 Link 的方式进行跳转，避免页面不必要的刷新
             let article_link = document.getElementsByTagName('span');
-            console.log(article_link);
+            // console.log(article_link);
             let links = []
 
             for (let i = 0; i < article_link.length; i++) {
@@ -200,32 +130,35 @@ function Container(props) {
 
                     // 获取元素的 path 参数，提取 post id
                     let post_id = article_link[i].getAttribute('path').replace('/post/', '')
+                    let parent_note_id = article_link[i].getAttribute('parent_note_id')
                     console.log(post_id);
 
+                    props.handleLinkClick(post_id, parent_note_id)
+
                     // 获取自定义的 Link 元素
-                    let my_links = document.getElementsByClassName('link_temp')
+                    // let my_links = document.getElementsByClassName('link_temp')
 
-                    for (let j = 0; j < my_links.length; j++) {
-                        console.log(my_links[j]);
-                        console.log(my_links[j].href);
+                    // for (let j = 0; j < my_links.length; j++) {
+                    //     console.log(my_links[j]);
+                    //     console.log(my_links[j].href);
 
-                        // 如果自定义的 Link 的 href 属性中包含 元素 path 属性的值，则可匹配
-                        if (my_links[j].href.indexOf(article_link[i].getAttribute('path')) >= 0) {
+                    //     // 如果自定义的 Link 的 href 属性中包含 元素 path 属性的值，则可匹配
+                    //     if (my_links[j].href.indexOf(article_link[i].getAttribute('path')) >= 0) {
 
-                            // 记录跳转类型
-                            sessionStorage.setItem('nav_type', 1)
-                            // 记录当前滚动的位置
-                            sessionStorage.setItem('scrollY', window.scrollY)
+                    //         // 记录跳转类型
+                    //         sessionStorage.setItem('nav_type', 1)
+                    //         // 记录当前滚动的位置
+                    //         sessionStorage.setItem('scrollY', window.scrollY)
 
-                            // 点击
-                            my_links[j].click()
-                            // 页面滚动到顶部
-                            // console.log('scrollTo(0, 0)');
-                            // window.scrollTo(0, 0);
+                    //         // 点击
+                    //         my_links[j].click()
+                    //         // 页面滚动到顶部
+                    //         // console.log('scrollTo(0, 0)');
+                    //         // window.scrollTo(0, 0);
 
-                            break
-                        }
-                    }
+                    //         break
+                    //     }
+                    // }
 
                 }
             }
@@ -235,13 +168,21 @@ function Container(props) {
                 setLink(links)
             }
 
+            // 滚动到对应卡片的位置
+            setTimeout(() => {
+                let last_note = document.getElementsByClassName('container')
+                // console.log(last_note[last_note.length - 1]);
+                // document.getElementsByClassName('notes')[0].scrollTo({ left: last_note[last_note.length - 1].offsetLeft, behavior: 'smooth' })
+            }, 100);
+
+
         }
 
 
-    }, [pathname, { card }]);
+    });
 
     // 加载中
-    if (isLoading) {
+    if (false) {
         console.log('isLoading');
 
         return <Loading />
@@ -259,15 +200,15 @@ function Container(props) {
             </ul>
         </div>
 
-        if (card['backLinks'].length > 0) {
-            let backLinks = card['backLinks'].map((backLink) =>
+        if (props['card']['backLinks'].length > 0) {
+            let backLinks = props['card']['backLinks'].map((backLink) =>
                 <li key={backLink.id} >
 
-                    <Link key={backLink.id} to={{ pathname: '/post/' + backLink.id }} >
-                        <span key={backLink.id} onClick={handleBackLinkClick}>
-                            {backLink.title}
-                        </span>
-                    </Link>
+                    {/* <Link key={backLink.id} to={{ pathname: '/post/' + backLink.id }} > */}
+                    <span className='my_link' key={backLink.id} onClick={handleBackLinkClick.bind(this, backLink.id, props['card']['card']['id'])}>
+                        {backLink.title}
+                    </span>
+                    {/* </Link> */}
 
                 </li>
             )
@@ -282,56 +223,41 @@ function Container(props) {
 
 
 
-        return <div>
+        return <div style={props['style']} ref={post} className='markdown-body container' note_id={props['card']['card']['id']}>
 
-            <div>
+            <article>
 
-
-                <div ref={post} className='markdown-body container'>
-
-                    <article>
-
-                    {/* <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" src="//music.163.com/outchain/player?type=2&id=1458394045&auto=0&height=66"></iframe> */}
-                    {/* <iframe style="border: 0; width: 100%; height: 120px;" src="https://bandcamp.com/EmbeddedPlayer/album=1962637190/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/artwork=small/transparent=true/" seamless><a href="https://macroblank.bandcamp.com/album/plastic-fables-2021-year-end-mix">Plastic Fables (2021 Year End Mix) by Macroblank</a></iframe> */}
-                    
-                        <ReactMarkdown children={card['card']['content']}
-                            components={{
-                                code({ node, inline, className, children, ...props }) {
-                                    const match = /language-(\w+)/.exec(className || '')
-                                    return !inline && match ? (
-                                        <SyntaxHighlighter
-                                            children={String(children).replace(/\n$/, '')}
-                                            style={atomDark}
-                                            language={match[1]}
-                                            PreTag="div"
-                                            {...props}
-                                        />
-                                    ) : (
-                                        <code className={className} {...props}>
-                                            {children}
-                                        </code>
-                                    )
-                                }
-                            }}
-                            rehypePlugins={[rehypeRaw]}
-                            remarkPlugins={[remarkGfm, { singleTilde: false }]} /></article>
-                    <div className='postTime'>
-                        <time>Created {format(new Date(card['card']['createdTime']), 'yyyy-MM-dd')}</time>
-                        <time>{card['card']['lastEditedTimeDiff']}</time>
-                    </div>
-                    {/* /反向链接 */}
-                    {backLinksBox}
-                    <ul style={{ display: 'none' }}>{my_link}</ul>
-
-                    {/* <ReactMarkdown
-                        children={markdown}
-                        
-                    /> */}
-
-
-                </div>
+                <ReactMarkdown children={props['card']['card']['content']}
+                    components={{
+                        code({ node, inline, className, children, ...props }) {
+                            const match = /language-(\w+)/.exec(className || '')
+                            return !inline && match ? (
+                                <SyntaxHighlighter
+                                    children={String(children).replace(/\n$/, '')}
+                                    style={atomDark}
+                                    language={match[1]}
+                                    PreTag="div"
+                                    {...props}
+                                />
+                            ) : (
+                                <code className={className} {...props}>
+                                    {children}
+                                </code>
+                            )
+                        }
+                    }}
+                    rehypePlugins={[rehypeRaw]}
+                    remarkPlugins={[remarkGfm, { singleTilde: false }]} /></article>
+            <div className='postTime'>
+                <time>Created {format(new Date(props['card']['card']['createdTime']), 'yyyy-MM-dd')}</time>
+                <time>{props['card']['card']['lastEditedTimeDiff']}</time>
             </div>
-        </div>;
+            {/* /反向链接 */}
+            {backLinksBox}
+            <ul style={{ display: 'none' }}>{my_link}</ul>
+
+
+        </div>
     }
 
 }

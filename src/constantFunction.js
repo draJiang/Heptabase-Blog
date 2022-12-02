@@ -1,6 +1,6 @@
 import CONFIG from "./config";
 
-// 计算时间差
+// 计算指定时间与当前的时间差
 const getLastEditedTime = (dateBegin) => {
 
     dateBegin = new Date(dateBegin)
@@ -31,6 +31,7 @@ const getLastEditedTime = (dateBegin) => {
 }
 
 // 处理网易云音乐
+// 输入 markdown 格式的 URL，例如 [xxx](http:....)，返回网易云音乐的 iframe HTML
 const setNeteaseMusic = (custom_old_card) => {
     // 判断类型是歌曲还是歌单
     let type = 2 //歌曲
@@ -38,14 +39,14 @@ const setNeteaseMusic = (custom_old_card) => {
     let height_2 = 32
     if (custom_old_card.indexOf('playlist') > -1 || custom_old_card.indexOf('album') > -1) {
         
-        height_1 = 450
-        height_2 = 430
+        height_1 = 110
+        height_2 = 90
 
         if(custom_old_card.indexOf('playlist') > -1){
-            type = 0
+            type = 0 // 歌单
         }
         if(custom_old_card.indexOf('album') > -1){
-            type = 1
+            type = 1 // 专辑
         }
     }
 
@@ -53,7 +54,7 @@ const setNeteaseMusic = (custom_old_card) => {
     let music_id_reg = /[0-9]{4,14}/g
     let music_id_list = custom_old_card.match(music_id_reg)
 
-    if (music_id_list !== []) {
+    if (music_id_list !== [] && music_id_list!==null) {
         // 匹配到 ID
         let music_id = music_id_list[0]
         let netease_music_iframe = '<div class="music netease_music"><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" height=' + height_1 + ' style="width: 100%; " src="//music.163.com/outchain/player?type=' + type + '&id=' + music_id + '&auto=0&height='+height_2+'"></iframe></div>'
@@ -187,7 +188,7 @@ const getClearCard = (card, cards) => {
                     // new_card = '[' + cards[i]['title'] + ']' + '(' + '/post/' + cards[i]['id'] + ')'
 
                     // path 参数用于点击时加载对应笔记的数据，只有 my_link 类可点击
-                    new_card = '<span class="my_link" path=/post/'+ cards[i]['id'] + '>' + cards[i]['title'] + '</span>'
+                    new_card = '<span class="my_link" parent_note_id='+this_card_id+' path=/post/'+ cards[i]['id'] + '>' + cards[i]['title'] + '</span>'
                     break
                 }
 
@@ -257,8 +258,7 @@ const getClearCard = (card, cards) => {
 
                         if (custom_old_card.indexOf(cards[i]['id']) >= 0) {
                             // 存在：设置卡片链接
-                            custom_new_card = '<span class="my_link" path=/post/' + cards[i]['id'] + '>' + custom_card_name + '</span>'
-
+                            custom_new_card = '<span class="my_link" parent_note_id='+this_card_id+' path=/post/' + cards[i]['id'] + '>' + custom_card_name + '</span>'
                             break
                         }
 
