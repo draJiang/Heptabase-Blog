@@ -363,6 +363,7 @@ class Post extends React.Component {
 
                                 // 小标题文案
                                 if (notes[j - 1].getElementsByTagName('H1').length === 0) {
+                                    // 如果笔记中没有 H1 标题
                                     note_title.innerHTML = notes[j - 1].innerText.substring(0,6)+'...'
                                 } else {
                                     note_title.innerHTML = notes[j - 1].getElementsByTagName('H1')[0].innerHTML
@@ -411,7 +412,7 @@ class Post extends React.Component {
                         {card_list_dom}
                     </div>
 
-                    <Footer />
+                    {/* <Footer /> */}
                 </div>
 
             </div>)

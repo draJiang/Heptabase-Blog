@@ -15,7 +15,15 @@
 body {
     padding: 0;
     margin: 0;
+    height: 100vh;
     /* background-color: var(--color-canvas-default, red); */
+}
+
+#root>div,
+#root>div>div {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
 }
 
 a {
@@ -118,10 +126,10 @@ article a::after {
 
 .notes {
     display: flex;
-    flex-direction: row;
-    height: 94vh;
     width: auto;
     overflow-x: scroll;
+    overflow-y: hidden;
+    flex-grow: 1;
 }
 
 .container {
