@@ -12,18 +12,25 @@
     }
 }
 
+@media (width <=600px) {
+    #root .container {
+        border: none;
+    }
+}
+
+@media (width >600px) {
+    #root .notes_box {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+    }
+}
+
 body {
     padding: 0;
     margin: 0;
     height: 100vh;
     /* background-color: var(--color-canvas-default, red); */
-}
-
-#root>div,
-#root>div>div {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
 }
 
 a {
@@ -101,8 +108,8 @@ article a::after {
 .container,
 .post_list {
     margin: 0 auto;
-    width: 38rem;
-    max-width: 90%;
+    /* width: 38rem; */
+    max-width: 650px;
     padding-left: 1.4rem;
     padding-right: 1.4rem;
 }

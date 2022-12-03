@@ -36,8 +36,6 @@ class Post extends React.Component {
 
     componentDidMount() {
 
-        console.log(windowWidth);
-
         // 请求 hepta 数据 getHeptabaseData
         getHeptabaseData.then((res) => {
 
@@ -364,7 +362,7 @@ class Post extends React.Component {
                                 // 小标题文案
                                 if (notes[j - 1].getElementsByTagName('H1').length === 0) {
                                     // 如果笔记中没有 H1 标题
-                                    note_title.innerHTML = notes[j - 1].innerText.substring(0,6)+'...'
+                                    note_title.innerHTML = notes[j - 1].innerText.substring(0, 6) + '...'
                                 } else {
                                     note_title.innerHTML = notes[j - 1].getElementsByTagName('H1')[0].innerHTML
                                 }
@@ -403,17 +401,15 @@ class Post extends React.Component {
 
 
 
-            return (<div>
+            return (<div className='notes_box'>
 
-                <div>
-                    <Nav />
-                    {/* <Container card={card} /> */}
-                    <div className='notes'>
-                        {card_list_dom}
-                    </div>
-
-                    {/* <Footer /> */}
+                <Nav />
+                {/* <Container card={card} /> */}
+                <div className='notes'>
+                    {card_list_dom}
                 </div>
+
+                {/* <Footer /> */}
 
             </div>)
         }
