@@ -37,7 +37,7 @@ article a::after {
 }
 
 .markdown-body {
-    margin: 0 auto !important;
+    /* margin: 0 auto !important; */
 }
 
 .post_list {
@@ -99,6 +99,23 @@ article a::after {
     padding-right: 1.4rem;
 }
 
+.container .note_title {
+    position: absolute;
+    left: 0;
+    top: 0;
+    writing-mode: vertical-lr;
+    background-color: var(--color-canvas-default);
+    width: 40px;
+    height: 100%;
+    padding-top: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.container .note_title * {
+    margin: 0 auto;
+}
+
 .notes {
     display: flex;
     flex-direction: row;
@@ -109,6 +126,10 @@ article a::after {
 
 .container {
     padding-bottom: 1.4rem;
+}
+
+.overlay {
+    box-shadow: 0px 0px 15px 3px rgb(0 0 0 / 10%);
 }
 
 .nav {

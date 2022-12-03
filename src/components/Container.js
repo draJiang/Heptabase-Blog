@@ -47,7 +47,7 @@ function Container(props) {
     let [thisPageId, setPageID] = useState('')
 
     // 记录自定义的 Link 数据，用来实现 DOM 链接的间接跳转
-    let [my_link, setLink] = useState('');
+    // let [my_link, setLink] = useState('');
 
     // 如果当前页面 ID 为空则获取数据
     if (thisPageId == '') {
@@ -120,8 +120,8 @@ function Container(props) {
                 }
 
                 // 创建 Link 元素，当点击上述 span 原生时，将触发 Link 元素的点击事件
-                let link_temp = <Link className='link_temp' to={article_link[i].getAttribute('path')}>Link</Link>
-                links.push(link_temp)
+                // let link_temp = <Link className='link_temp' to={article_link[i].getAttribute('path')}>Link</Link>
+                // links.push(link_temp)
 
 
                 // DOM 中的特定元素点击时
@@ -164,9 +164,9 @@ function Container(props) {
             }
 
             // 设置自定义 Link 并渲染到 DOM 中
-            if (my_link == '' && links.length > 0) {
-                setLink(links)
-            }
+            // if (my_link == '' && links.length > 0) {
+            //     setLink(links)
+            // }
 
             // 滚动到对应卡片的位置
             setTimeout(() => {
@@ -254,7 +254,6 @@ function Container(props) {
             </div>
             {/* /反向链接 */}
             {backLinksBox}
-            <ul style={{ display: 'none' }}>{my_link}</ul>
 
 
         </div>

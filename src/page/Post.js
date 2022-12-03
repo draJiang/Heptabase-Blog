@@ -34,7 +34,6 @@ class Post extends React.Component {
         };
     }
 
-
     componentDidMount() {
 
         console.log(windowWidth);
@@ -64,7 +63,6 @@ class Post extends React.Component {
             return
         }
 
-
         let new_card = null
         console.log('Post findContent for:');
         for (let i = 0; i < heptabase_blog_data.cards.length; i++) {
@@ -78,10 +76,7 @@ class Post extends React.Component {
                 new_card = getClearCard(heptabase_blog_data.cards[i], heptabase_blog_data.cards)
                 heptabase_blog_data.cards[i] = new_card['card']
 
-                let cardList = []
-
                 return new_card
-
 
             }
         }
@@ -92,8 +87,6 @@ class Post extends React.Component {
 
     // 文章内链接、反向链接点击
     handleLinkClick = (link_id, current_id) => {
-        // window.location.search = window.location.search+'&note-id='+id
-        // setHash(hash + 'note-id='+id)
 
         // 设置当前活跃的笔记（用户焦点）
         this.setState({
@@ -106,20 +99,16 @@ class Post extends React.Component {
 
             if (link_id == item['card']['id']) {
 
-
                 bingo = true
 
             }
 
         });
 
-
-
         if (bingo) {
 
             return
         }
-
 
         // 删除 Link 所在 card 后的所有 URL 参数
         let url_search = window.location.search
@@ -173,7 +162,6 @@ class Post extends React.Component {
         // 根据 URL 获取 card 数据
         this.herfToData()
 
-
     }
 
     herfToData = () => {
@@ -184,7 +172,6 @@ class Post extends React.Component {
             // 找到首页卡片的 ID
             let main_id = this.state.main_card['id']
             // 设置 URL
-            // window.location.href = window.location.origin + '/post?note-id=' + main_id
             window.location.replace(window.location.origin + '/post?note-id=' + main_id)
 
         }
@@ -195,14 +182,6 @@ class Post extends React.Component {
         url_search = url_search.replace('?', '')
         url_search = url_search.replace(/&/gi, '')
         let url_search_list = url_search.split('note-id=')
-
-        // if(url_search_list.length===1){
-        //     if(url_search_list[0]===''){
-        //         //访问的是首页
-        //         url_search_list.push(this.state.main_card['id'])
-        //     }
-
-        // }
 
         for (let i = 0; i < url_search_list.length; i++) {
             if (url_search_list[i] == '') {
@@ -249,9 +228,6 @@ class Post extends React.Component {
             }
         }, 100);
 
-
-
-        console.log(url);
         // 如果 url 发生变化，则更新数据
         if (url !== this.state.location) {
 
@@ -361,6 +337,59 @@ class Post extends React.Component {
 
                     break;
                 }
+            }
+
+            // 监听 notes 容器滚动
+            if (document.getElementsByClassName('notes')[0] !== undefined) {
+
+                let notes = document.getElementsByClassName('container')
+                document.getElementsByClassName('notes')[0].addEventListener('scroll', function () {
+
+                    // 判断卡片的位置，当遮挡前 1 个卡片时，前 1 个卡片显示垂直标题
+                    for (let j = 0; j < notes.length; j++) {
+
+                        if (j === 0) {
+                            continue
+                        }
+
+                        // 小标题
+                        if (notes[j].getBoundingClientRect().x <= j * 40) {
+
+                            // 如果前一元素无标题
+                            if (notes[j - 1].classList.contains('mini') == false) {
+                                // 前一个元素显示垂直标题
+                                let note_title = document.createElement('div')
+                                note_title.classList.add('note_title')
+                                note_title.innerHTML = notes[j - 1].getElementsByTagName('H1')[0].innerHTML
+                                notes[j - 1].appendChild(note_title)
+
+                                notes[j - 1].classList.add('mini')
+                            }
+
+                        } else {
+
+                            let note_title = notes[j - 1].getElementsByClassName('note_title')[0]
+                            if (note_title !== undefined) {
+                                
+                                // 移除标题父级容器的类名标记
+                                notes[j - 1].classList.remove('mini')
+
+                                // 移除前一个元素的垂直标题
+                                notes[j - 1].removeChild(note_title)
+                            }
+
+                        }
+
+                        // 样式
+                        if (notes[j].getBoundingClientRect().x < notes[j-1].getBoundingClientRect().x+notes[j-1].getBoundingClientRect().width){
+                            notes[j].classList.add('overlay')
+                        }else{
+                            notes[j].classList.remove('overlay')
+                        }
+
+                    }
+
+                })
             }
 
 
