@@ -360,7 +360,15 @@ class Post extends React.Component {
                                 // 前一个元素显示垂直标题
                                 let note_title = document.createElement('div')
                                 note_title.classList.add('note_title')
-                                note_title.innerHTML = notes[j - 1].getElementsByTagName('H1')[0].innerHTML
+
+                                // 小标题文案
+                                if (notes[j - 1].getElementsByTagName('H1').length === 0) {
+                                    note_title.innerHTML = notes[j - 1].innerText.substring(0,6)+'...'
+                                } else {
+                                    note_title.innerHTML = notes[j - 1].getElementsByTagName('H1')[0].innerHTML
+                                }
+
+
                                 notes[j - 1].appendChild(note_title)
 
                                 notes[j - 1].classList.add('mini')
@@ -370,7 +378,7 @@ class Post extends React.Component {
 
                             let note_title = notes[j - 1].getElementsByClassName('note_title')[0]
                             if (note_title !== undefined) {
-                                
+
                                 // 移除标题父级容器的类名标记
                                 notes[j - 1].classList.remove('mini')
 
@@ -381,9 +389,9 @@ class Post extends React.Component {
                         }
 
                         // 样式
-                        if (notes[j].getBoundingClientRect().x < notes[j-1].getBoundingClientRect().x+notes[j-1].getBoundingClientRect().width){
+                        if (notes[j].getBoundingClientRect().x < notes[j - 1].getBoundingClientRect().x + notes[j - 1].getBoundingClientRect().width) {
                             notes[j].classList.add('overlay')
-                        }else{
+                        } else {
                             notes[j].classList.remove('overlay')
                         }
 

@@ -85,13 +85,9 @@ function Container(props) {
         if (post.current != null) {
 
             // 设置网易云音乐播放器的尺寸
-            console.log(document.getElementById('player'));
-            console.log(document.getElementById('music'));
-            // console.log(document.getElementById('music').contentWindow.getElementById('infolayer'));
 
             // 设置 img 的尺寸
             let article_img = document.getElementsByTagName('img');
-            console.log(article_img);
 
             for (let i = 0; i < article_img.length; i++) {
                 let width_key_index = article_img[i]['alt'].indexOf('{{width ')
