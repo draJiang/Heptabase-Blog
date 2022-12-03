@@ -24,6 +24,10 @@
         flex-direction: column;
         height: 100vh;
     }
+    .container,
+    .post_list {
+        width: 650px;
+    }
 }
 
 body {
@@ -109,7 +113,7 @@ article a::after {
 .post_list {
     margin: 0 auto;
     /* width: 38rem; */
-    max-width: 650px;
+    /* width: 650px; */
     padding-left: 1.4rem;
     padding-right: 1.4rem;
 }

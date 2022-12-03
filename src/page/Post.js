@@ -202,14 +202,17 @@ class Post extends React.Component {
     // 当 URL 变化时（子组件 container 载入完毕后也会调用此方法）
     handleHashChange = (url) => {
 
-        // 定位到当前用户关注的笔记
+
         setTimeout(() => {
             let note_list = document.getElementsByClassName('container')
             let foucus_note = this.state.activeNote
+            console.log(note_list);
 
             let target_note_offsetLeft = 0
             for (let j = 0; j < note_list.length; j++) {
                 let note = note_list[j]
+
+                // 定位到当前用户关注的笔记
                 if (note.getAttribute('note_id') === foucus_note) {
 
                     if (windowWidth > minWidth) {
@@ -218,9 +221,58 @@ class Post extends React.Component {
 
                     }
 
-                    break;
+                    // break;
 
                 }
+
+                // 设置样式
+                if (j > 0) {
+                    console.log(note_list[j]);
+                    // 小标题
+                    if (note_list[j].getBoundingClientRect().x <= j * 40) {
+
+                        // 如果前一元素无标题
+                        if (note_list[j - 1].classList.contains('mini') == false) {
+                            // 前一个元素显示垂直标题
+                            let note_title = document.createElement('div')
+                            note_title.classList.add('note_title')
+
+                            // 小标题文案
+                            if (note_list[j - 1].getElementsByTagName('H1').length === 0) {
+                                // 如果笔记中没有 H1 标题
+                                note_title.innerHTML = note_list[j - 1].innerText.substring(0, 6) + '...'
+                            } else {
+                                note_title.innerHTML = note_list[j - 1].getElementsByTagName('H1')[0].innerHTML
+                            }
+
+
+                            note_list[j - 1].appendChild(note_title)
+
+                            note_list[j - 1].classList.add('mini')
+                        }
+
+                    } else {
+
+                        let note_title = note_list[j - 1].getElementsByClassName('note_title')[0]
+                        if (note_title !== undefined) {
+
+                            // 移除标题父级容器的类名标记
+                            note_list[j - 1].classList.remove('mini')
+
+                            // 移除前一个元素的垂直标题
+                            note_list[j - 1].removeChild(note_title)
+                        }
+
+                    }
+
+                    // 样式
+                    if (note_list[j].getBoundingClientRect().x < note_list[j - 1].getBoundingClientRect().x + note_list[j - 1].getBoundingClientRect().width) {
+                        note_list[j].classList.add('overlay')
+                    } else {
+                        note_list[j].classList.remove('overlay')
+                    }
+                }
+
 
                 target_note_offsetLeft += note.clientWidth
             }
@@ -271,6 +323,13 @@ class Post extends React.Component {
             }
 
         }
+
+    }
+
+    // 设置笔记样式
+    setNoteStyle = (notes) => {
+
+
 
     }
 
@@ -398,8 +457,6 @@ class Post extends React.Component {
 
                 })
             }
-
-
 
             return (<div className='notes_box'>
 
