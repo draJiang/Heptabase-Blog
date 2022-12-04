@@ -345,6 +345,8 @@ const getHeptabaseData = new Promise((resolve, reject) => {
         console.log(Date.parse(new Date()) / 1000);
         console.log(createdTime);
         console.log(Date.parse(new Date()) / 1000 - createdTime);
+
+        //Date.parse(new Date()) / 1000 - createdTime >= 1200 && createdTime !== undefined
         if (Date.parse(new Date()) / 1000 - createdTime >= 1200 && createdTime !== undefined) {
             // 数据比较旧时再重新获取
             console.log('数据比较旧');

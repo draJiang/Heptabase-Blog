@@ -119,16 +119,17 @@ article a::after {
 }
 
 .container .note_title {
-    position: absolute;
-    left: 0;
+    position: fixed;
     top: 0;
+    padding-top: 60px;
+    padding-left: 8px;
+    width: 240px;
+    height: 100%;
     writing-mode: vertical-lr;
     background-color: var(--color-canvas-default);
-    width: 40px;
-    height: 100%;
-    padding-top: 1rem;
     display: flex;
-    align-items: center;
+    /* align-items: center; */
+    z-index: 999;
 }
 
 .container .note_title * {
