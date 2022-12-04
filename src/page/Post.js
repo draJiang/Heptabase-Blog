@@ -75,6 +75,8 @@ function setCardMiniTitleAndStyle(notes) {
 
                 type = 2
                 note = notes[j]
+                // 添加悬浮样式
+                // note.classList.add('overlay')
 
             } else {
                 // 移除小标题
@@ -91,6 +93,9 @@ function setCardMiniTitleAndStyle(notes) {
                         note.removeChild(note_title)
                     }
                 }
+
+                // 移除悬浮样式
+                // note.classList.remove('overlay')
             }
 
         }
@@ -127,49 +132,6 @@ function setCardMiniTitleAndStyle(notes) {
             }
 
         }
-
-        // if (notes[j].getBoundingClientRect().x <= j * 40 + 80 || notes[j].getBoundingClientRect().x >= notes[j - 1].getBoundingClientRect().x + notes[j - 1].getBoundingClientRect().width) {
-
-        //     // 如果前一元素无标题
-        //     if (notes[j - 1].classList.contains('mini') == false) {
-        //         // 前一个元素显示垂直标题
-        //         let note_title = document.createElement('div')
-        //         note_title.classList.add('note_title')
-
-        //         if (notes[j].getBoundingClientRect().x <= j * 40 + 80) {
-        //             note_title.style.left = (j - 1) * 40 + 'px'
-        //         } else {
-        //             note_title.style.right = (notes.length - j) * 40 - 248 + 'px'
-        //         }
-
-
-        //         // 小标题文案
-        //         if (notes[j - 1].getElementsByTagName('H1').length === 0) {
-        //             // 如果笔记中没有 H1 标题
-        //             note_title.innerHTML = notes[j - 1].innerText.substring(0, 6) + '...'
-        //         } else {
-        //             note_title.innerHTML = notes[j - 1].getElementsByTagName('H1')[0].innerHTML
-        //         }
-
-
-        //         notes[j - 1].appendChild(note_title)
-
-        //         notes[j - 1].classList.add('mini')
-        //     }
-
-        // } else {
-
-        //     let note_title = notes[j - 1].getElementsByClassName('note_title')[0]
-        //     if (note_title !== undefined) {
-
-        //         // 移除标题父级容器的类名标记
-        //         notes[j - 1].classList.remove('mini')
-
-        //         // 移除前一个元素的垂直标题
-        //         notes[j - 1].removeChild(note_title)
-        //     }
-
-        // }
 
         // 样式
         if (j !== 0) {
@@ -497,7 +459,7 @@ class Post extends React.Component {
                     // left = index*40px; right = index*-40-400
                     let note_style = {
                         left: i * 40 + 'px',
-                        right: -500 - i * 40 + 'px',
+                        right: -696 + (this.state.cardList.length - i) * 40 + 'px',
                         flex: '0 0 auto'
                     }
 
