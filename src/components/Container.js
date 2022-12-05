@@ -110,7 +110,7 @@ function Container(props) {
             for (let i = 0; i < article_link.length; i++) {
 
 
-                if (article_link[i].getAttribute('path') == undefined || article_link[i].getAttribute('path') == null) {
+                if (article_link[i].classList.contains('my_link')!==true || article_link[i].getAttribute('path') === undefined || article_link[i].getAttribute('path') === null) {
                     // 如果 DOM 中的元素**不**包含 path 属性，则跳过（有 path 属性的元素才需要处理）
                     continue
                 }

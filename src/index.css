@@ -119,21 +119,33 @@ article a::after {
 }
 
 .container .note_title {
+    display: flex;
     position: fixed;
+    flex-direction: row;
+    align-items: center;
     top: 0;
     padding-top: 60px;
-    padding-left: 8px;
-    width: 240px;
+    /* padding-left: 5px; */
+    width: 40px;
     height: 100%;
     writing-mode: vertical-lr;
     background-color: var(--color-canvas-default);
-    display: flex;
-    /* align-items: center; */
     z-index: 999;
 }
 
 .container .note_title * {
-    margin: 0 auto;
+    margin: 0;
+    padding: 4px;
+}
+
+.container .note_title .note_close_button {
+    position: absolute;
+    bottom: 60px;
+    cursor: pointer;
+}
+
+.container .note_title .note_close_button:hover {
+    opacity: 0.6;
 }
 
 .notes {

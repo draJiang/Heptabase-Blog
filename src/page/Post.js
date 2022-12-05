@@ -20,132 +20,6 @@ import useHash from "../hooks/useHash";
 let windowWidth = window.innerWidth
 let minWidth = 600
 
-function setCardMiniTitleAndStyle(notes) {
-    
-    for (let j = 0; j < notes.length; j++) {
-
-        // 小标题
-
-        let type = 0 // 记录标题在左侧还是右侧
-        let note // 记录需要添加标题的节点
-
-        // 判断卡片的位置，当遮挡前 1 个卡片时，前 1 个卡片显示垂直标题
-        let left_mark = notes[j].getBoundingClientRect().x <= j * 40 + 80
-        // 判断是否要显示右侧标题
-        let right_mark = notes[j].getBoundingClientRect().x >= window.innerWidth - (notes.length - j) * 40
-
-        // 左侧小标题
-        if (right_mark !== true) {
-
-            if (left_mark) {
-
-                if (j !== 0) {
-                    type = 1
-                    note = notes[j - 1]
-                }
-
-            } else {
-
-                // 移除小标题
-                if (j !== 0) {
-                    note = notes[j - 1]
-                }
-
-                if (note !== undefined) {
-                    let note_title = note.getElementsByClassName('note_title')[0]
-                    if (note_title !== undefined) {
-
-                        // 移除标题父级容器的类名标记
-                        note.classList.remove('mini')
-
-                        // 移除前一个元素的垂直标题
-                        note.removeChild(note_title)
-                    }
-                }
-
-            }
-
-        }
-
-
-        // 右侧小标题
-        if (left_mark !== true) {
-
-            if (right_mark) {
-
-                type = 2
-                note = notes[j]
-                // 添加悬浮样式
-                // note.classList.add('overlay')
-
-            } else {
-                // 移除小标题
-                note = notes[j]
-
-                if (note !== undefined && j !== 0) {
-                    let note_title = note.getElementsByClassName('note_title')[0]
-                    if (note_title !== undefined) {
-
-                        // 移除标题父级容器的类名标记
-                        note.classList.remove('mini')
-
-                        // 移除前一个元素的垂直标题
-                        note.removeChild(note_title)
-                    }
-                }
-
-                // 移除悬浮样式
-                // note.classList.remove('overlay')
-            }
-
-        }
-
-
-        // 需要显示小标题
-        if (type > 0) {
-
-            // 如果元素无标题
-            if (note.classList.contains('mini') == false) {
-                // 前一个元素显示垂直标题
-                let note_title = document.createElement('div')
-                note_title.classList.add('note_title')
-
-                if (type === 1) {
-                    note_title.style.left = (j - 1) * 40 + 'px'
-                } else {
-                    note_title.style.right = (notes.length - j) * 40 - 248 + 'px'
-                }
-
-
-                // 小标题文案
-                if (note.getElementsByTagName('H1').length === 0) {
-                    // 如果笔记中没有 H1 标题
-                    note_title.innerHTML = note.innerText.substring(0, 6) + '...'
-                } else {
-                    note_title.innerHTML = note.getElementsByTagName('H1')[0].innerHTML
-                }
-
-
-                note.appendChild(note_title)
-
-                note.classList.add('mini')
-            }
-
-        }
-
-        // 样式
-        if (j !== 0) {
-            if (notes[j].getBoundingClientRect().x < notes[j - 1].getBoundingClientRect().x + notes[j - 1].getBoundingClientRect().width) {
-                notes[j].classList.add('overlay')
-            } else {
-                notes[j].classList.remove('overlay')
-            }
-        }
-
-
-    }
-}
-
 // 文章页面
 class Post extends React.Component {
 
@@ -178,6 +52,12 @@ class Post extends React.Component {
             })
 
         })
+
+        // 监听 notes 容器滚动
+        if (document.getElementsByClassName('notes')[0] !== undefined) {
+
+            document.getElementsByClassName('notes')[0].addEventListener('scroll', this.setCardMiniTitleAndStyle)
+        }
 
     }
 
@@ -359,7 +239,7 @@ class Post extends React.Component {
             }
 
             // 设置样式、小标题
-            setCardMiniTitleAndStyle(note_list)
+            this.setCardMiniTitleAndStyle()
 
         }, 100);
 
@@ -411,10 +291,164 @@ class Post extends React.Component {
 
     }
 
-    // 设置笔记样式
-    setNoteStyle = (notes) => {
+    setCardMiniTitleAndStyle = () => {
+
+        let notes = document.getElementsByClassName('container')
+
+        console.log('setCardMiniTitleAndStyle');
+
+        for (let j = 0; j < notes.length; j++) {
+
+            // 小标题
+
+            let type = 0 // 记录标题在左侧还是右侧
+            let note // 记录需要添加标题的节点
+
+            // 判断卡片的位置，当遮挡前 1 个卡片时，前 1 个卡片显示垂直标题
+            let left_mark = notes[j].getBoundingClientRect().x <= j * 40
+            // 判断是否要显示右侧标题
+            let right_mark = notes[j].getBoundingClientRect().x +1 >= window.innerWidth - (notes.length - j) * 40
+
+            // 左侧小标题
+            if (right_mark !== true) {
+
+                if (left_mark) {
+
+                    if (j !== 0) {
+                        type = 1
+                        note = notes[j - 1]
+                    }
+
+                } else {
+
+                    // 移除小标题
+                    if (j !== 0) {
+                        note = notes[j - 1]
+                    }
+
+                    if (note !== undefined) {
+                        let note_title = note.getElementsByClassName('note_title')[0]
+                        if (note_title !== undefined) {
+
+                            // 移除标题父级容器的类名标记
+                            note.classList.remove('mini')
+
+                            // 移除前一个元素的垂直标题
+                            note.removeChild(note_title)
+                        }
+                    }
+
+                }
+
+            }
 
 
+            // 右侧小标题
+            if (left_mark !== true) {
+
+                if (right_mark) {
+
+                    type = 2
+                    note = notes[j]
+                    // 添加悬浮样式
+                    // note.classList.add('overlay')
+
+                } else {
+                    // 移除小标题
+                    note = notes[j]
+
+                    if (note !== undefined && j !== 0) {
+                        let note_title = note.getElementsByClassName('note_title')[0]
+                        if (note_title !== undefined) {
+
+                            // 移除标题父级容器的类名标记
+                            note.classList.remove('mini')
+
+                            // 移除前一个元素的垂直标题
+                            note.removeChild(note_title)
+                        }
+                    }
+
+                    // 移除悬浮样式
+                    // note.classList.remove('overlay')
+                }
+
+            }
+
+
+            // 需要显示小标题
+            if (type > 0) {
+
+                // 如果元素无标题
+                if (note.classList.contains('mini') == false) {
+                    // 前一个元素显示垂直标题
+                    let note_title = document.createElement('div')
+                    note_title.classList.add('note_title')
+
+                    if (type === 1) {
+                        note_title.style.left = (j - 1) * 40 + 'px'
+                    } else {
+                        note_title.style.right = (notes.length - j) * 40 - 40 + 'px'
+                    }
+
+                    // 小标题文案
+                    let note_title_span = document.createElement('p')
+
+                    if (note.getElementsByTagName('H1').length === 0) {
+                        // 如果笔记中没有 H1 标题
+                        note_title_span.innerHTML = note.innerText.substring(0, 6) + '...'
+                    } else {
+                        note_title_span.innerHTML = note.getElementsByTagName('H1')[0].innerHTML
+                    }
+
+                    // 小标题关闭按钮
+                    let note_close_button = document.createElement('span')
+                    note_close_button.innerHTML = '<svg t="1670226356192" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2683" width="16" height="16"><path d="M557.2 512l233.4-233.4c12.5-12.5 12.5-32.8 0-45.2s-32.8-12.5-45.2 0L512 466.8 278.6 233.4c-12.5-12.5-32.8-12.5-45.2 0s-12.5 32.8 0 45.2L466.8 512 233.4 745.4c-12.5 12.5-12.5 32.8 0 45.2 6.2 6.2 14.4 9.4 22.6 9.4s16.4-3.1 22.6-9.4L512 557.2l233.4 233.4c6.2 6.2 14.4 9.4 22.6 9.4s16.4-3.1 22.6-9.4c12.5-12.5 12.5-32.8 0-45.2L557.2 512z" p-id="2684"></path></svg>'
+                    note_close_button.classList.add('note_close_button')
+                    note_close_button.onclick = (event) => {
+                        
+                        // 点击关闭按钮
+
+                        this.handleCardCloseClick(note.getAttribute('note_id'))
+                    }
+
+                    note_title.appendChild(note_title_span)
+                    note_title.appendChild(note_close_button)
+                    note.appendChild(note_title)
+
+                    note.classList.add('mini')
+                }
+
+            }
+
+            // 样式
+            if (j !== 0) {
+                if (notes[j].getBoundingClientRect().x < notes[j - 1].getBoundingClientRect().x + notes[j - 1].getBoundingClientRect().width) {
+                    notes[j].classList.add('overlay')
+                } else {
+                    notes[j].classList.remove('overlay')
+                }
+            }
+
+
+        }
+    }
+
+    // 关闭卡片
+    handleCardCloseClick = (note_id) => {
+
+        console.log('handleCardCloseClick');
+        // 修改 URL
+        let new_url = window.location.href.replace('note-id=' + note_id, '')
+        // 设置 URL
+        window.history.pushState({}, '', new_url)
+
+        // 记录 URL
+        this.setState({
+            location: window.location.href
+        })
+
+        // 从 UI 中隐藏卡片？？
 
     }
 
@@ -422,7 +456,9 @@ class Post extends React.Component {
         if (this.state.card === null || this.state.cardList.length === 0) {
             return (<div>
                 <Nav />
-                <Loading />
+                <div className='notes'>
+                    <Loading />
+                </div>
                 <Footer />
             </div>)
         } else {
@@ -459,7 +495,7 @@ class Post extends React.Component {
                     // left = index*40px; right = index*-40-400
                     let note_style = {
                         left: i * 40 + 'px',
-                        right: -696 + (this.state.cardList.length - i) * 40 + 'px',
+                        right: -694.8 + (this.state.cardList.length - i) * 40 + 'px',
                         flex: '0 0 auto'
                     }
 
@@ -480,17 +516,6 @@ class Post extends React.Component {
 
                     break;
                 }
-            }
-
-            // 监听 notes 容器滚动
-            if (document.getElementsByClassName('notes')[0] !== undefined) {
-
-                let notes = document.getElementsByClassName('container')
-                document.getElementsByClassName('notes')[0].addEventListener('scroll', function () {
-
-                    setCardMiniTitleAndStyle(notes)
-
-                })
             }
 
             return (<div className='notes_box'>
