@@ -93,9 +93,12 @@ class Post extends React.Component {
     handleLinkClick = (link_id, current_id) => {
 
         // 设置当前活跃的笔记（用户焦点）
-        this.setState({
-            activeNote: link_id
-        })
+        if (this.state.activeNote !== link_id) {
+            this.setState({
+                activeNote: link_id
+            })
+        }
+
 
         // 已经显示此卡片则不更新 URL 和数据
         let bingo = false
@@ -212,7 +215,6 @@ class Post extends React.Component {
         setTimeout(() => {
             let note_list = document.getElementsByClassName('container')
             let foucus_note = this.state.activeNote
-            console.log(note_list);
 
             let target_note_offsetLeft = 0
             for (let j = 0; j < note_list.length; j++) {
@@ -295,7 +297,7 @@ class Post extends React.Component {
 
         let notes = document.getElementsByClassName('container')
 
-        console.log('setCardMiniTitleAndStyle');
+        // console.log('setCardMiniTitleAndStyle');
 
         for (let j = 0; j < notes.length; j++) {
 
@@ -307,7 +309,7 @@ class Post extends React.Component {
             // 判断卡片的位置，当遮挡前 1 个卡片时，前 1 个卡片显示垂直标题
             let left_mark = notes[j].getBoundingClientRect().x <= j * 40
             // 判断是否要显示右侧标题
-            let right_mark = notes[j].getBoundingClientRect().x +1 >= window.innerWidth - (notes.length - j) * 40
+            let right_mark = notes[j].getBoundingClientRect().x + 1 >= window.innerWidth - (notes.length - j) * 40
 
             // 左侧小标题
             if (right_mark !== true) {
@@ -406,7 +408,7 @@ class Post extends React.Component {
                     note_close_button.innerHTML = '<svg t="1670226356192" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2683" width="16" height="16"><path d="M557.2 512l233.4-233.4c12.5-12.5 12.5-32.8 0-45.2s-32.8-12.5-45.2 0L512 466.8 278.6 233.4c-12.5-12.5-32.8-12.5-45.2 0s-12.5 32.8 0 45.2L466.8 512 233.4 745.4c-12.5 12.5-12.5 32.8 0 45.2 6.2 6.2 14.4 9.4 22.6 9.4s16.4-3.1 22.6-9.4L512 557.2l233.4 233.4c6.2 6.2 14.4 9.4 22.6 9.4s16.4-3.1 22.6-9.4c12.5-12.5 12.5-32.8 0-45.2L557.2 512z" p-id="2684"></path></svg>'
                     note_close_button.classList.add('note_close_button')
                     note_close_button.onclick = (event) => {
-                        
+
                         // 点击关闭按钮
 
                         this.handleCardCloseClick(note.getAttribute('note_id'))

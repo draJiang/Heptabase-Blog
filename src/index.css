@@ -10,6 +10,9 @@
         --notes-bg-color: #0d1117;
         --notes-border-default: #30363d;
     }
+    .container .note_title .note_close_button svg {
+        fill: var(--color-fg-default, #c9d1d9);
+    }
 }
 
 @media (width <=600px) {

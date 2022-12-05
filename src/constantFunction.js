@@ -209,7 +209,7 @@ const getClearCard = (card, cards) => {
 
     // 获取拥有别名的卡片
     let custom_card_keyword_index = content.indexOf('[')
-    console.log(custom_card_keyword_index);
+    // console.log(custom_card_keyword_index);
     while (custom_card_keyword_index !== -1) {
 
 
@@ -264,8 +264,8 @@ const getClearCard = (card, cards) => {
 
                     }
 
-                    console.log('custom_new_card:');
-                    console.log(custom_new_card);
+                    // console.log('custom_new_card:');
+                    // console.log(custom_new_card);
 
                     content = content.replace(custom_old_card, custom_new_card)
                 }
