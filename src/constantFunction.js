@@ -188,7 +188,7 @@ const getClearCard = (card, cards) => {
                     // new_card = '[' + cards[i]['title'] + ']' + '(' + '/post/' + cards[i]['id'] + ')'
 
                     // path 参数用于点击时加载对应笔记的数据，只有 my_link 类可点击
-                    new_card = '<span class="my_link" parent_note_id='+this_card_id+' path=/post/'+ cards[i]['id'] + '>' + cards[i]['title'] + '</span>'
+                    new_card = '<span class="my_link article_link" parent_note_id='+this_card_id+' path=/post/'+ cards[i]['id'] + '>' + cards[i]['title'] + '</span>'
                     break
                 }
 
@@ -258,7 +258,7 @@ const getClearCard = (card, cards) => {
 
                         if (custom_old_card.indexOf(cards[i]['id']) >= 0) {
                             // 存在：设置卡片链接
-                            custom_new_card = '<span class="my_link" parent_note_id='+this_card_id+' path=/post/' + cards[i]['id'] + '>' + custom_card_name + '</span>'
+                            custom_new_card = '<span class="my_link article_link" parent_note_id='+this_card_id+' path=/post/' + cards[i]['id'] + '>' + custom_card_name + '</span>'
                             break
                         }
 

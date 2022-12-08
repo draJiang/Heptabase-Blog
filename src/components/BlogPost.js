@@ -55,7 +55,7 @@ class BlogPost extends React.Component {
                     <li key={post.id} >
 
                         {/* <Link to={{ pathname: '/post',query:{'note-id':post.id}}}  > */}
-                        <Link to={'/post?note-id='+post.id}  >
+                        <Link to={'/post?note-id='+post.id+'&active-note-id='+post.id}  >
                             <header onClick={this.handlePostClick}>
                                 {post.title}
                             </header>

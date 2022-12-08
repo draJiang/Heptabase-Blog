@@ -14,13 +14,6 @@ import rehypeRaw from 'rehype-raw'
 
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
-// import docco from 'react-syntax-highlighter/dist/esm/styles/hljs/docco';
-
-
-
-
-import { getHeptabaseData, getClearCard, getClearImag } from '../constantFunction'
-import e from 'cors';
 
 
 // 文章正文
@@ -80,7 +73,7 @@ function Container(props) {
 
         if (node !== undefined) {
 
-            if (node.classList.contains('my_link') !== true || node.getAttribute('path') === undefined || node.getAttribute('path') === null) {
+            if (node.classList.contains('article_link') !== true || node.getAttribute('path') === undefined || node.getAttribute('path') === null) {
                 // 如果 DOM 中的元素**不**包含 path 属性，则跳过（有 path 属性的元素才需要处理）
 
             } else {
@@ -93,8 +86,6 @@ function Container(props) {
             }
 
         }
-
-
 
     }
 
@@ -127,31 +118,13 @@ function Container(props) {
             }
 
             // 设置 a 链接的点击事件，将 a 按照 Link 的方式进行跳转，避免页面不必要的刷新
-            let article_link = document.getElementsByTagName('span');
+            let article_link = document.getElementsByClassName('article_link');
 
-            // document.getElementsByClassName('my_link')[0].addEventListener('click', function (event) {
-
-            //         console.log('a click');
-
-            //         if (event.classList.contains('my_link') !== true || event.getAttribute('path') === undefined || event.getAttribute('path') === null) {
-            //             // 如果 DOM 中的元素**不**包含 path 属性，则跳过（有 path 属性的元素才需要处理）
-            //         } else {
-            //             // 获取元素的 path 参数，提取 post id
-            //             let post_id = event.getAttribute('path').replace('/post/', '')
-            //             let parent_note_id = event.getAttribute('parent_note_id')
-            //             console.log(post_id);
-
-            //             props.handleLinkClick(post_id, parent_note_id)
-            //         }
-
-            // })
-
-            // console.log(article_link);
             let links = []
 
             for (let i = 0; i < article_link.length; i++) {
 
-                if (article_link[i].classList.contains('my_link') !== true || article_link[i].getAttribute('path') === undefined || article_link[i].getAttribute('path') === null) {
+                if (article_link[i].classList.contains('article_link') !== true || article_link[i].getAttribute('path') === undefined || article_link[i].getAttribute('path') === null) {
                     // 如果 DOM 中的元素**不**包含 path 属性，则跳过（有 path 属性的元素才需要处理）
                     continue
                 }
@@ -161,31 +134,6 @@ function Container(props) {
                     handleAarticleLinkClick(article_link[i])
 
                 }, 10);
-
-
-                // 创建 Link 元素，当点击上述 span 原生时，将触发 Link 元素的点击事件
-                // let link_temp = <Link className='link_temp' to={article_link[i].getAttribute('path')}>Link</Link>
-                // links.push(link_temp)
-
-
-                // DOM 中的特定元素点击时
-                // article_link[i].addEventListener('click', function (i) {
-                //     console.log('a click');
-
-                //     if (article_link[i].classList.contains('my_link') !== true || article_link[i].getAttribute('path') === undefined || article_link[i].getAttribute('path') === null) {
-                //         // 如果 DOM 中的元素**不**包含 path 属性，则跳过（有 path 属性的元素才需要处理）
-                //     } else {
-                //         // 获取元素的 path 参数，提取 post id
-                //         let post_id = article_link[i].getAttribute('path').replace('/post/', '')
-                //         let parent_note_id = article_link[i].getAttribute('parent_note_id')
-                //         console.log(post_id);
-
-                //         props.handleLinkClick(post_id, parent_note_id)
-                //     }
-                // })
-
-
-
 
             }
 

@@ -30,7 +30,7 @@ class Post extends React.Component {
             , main_card: null //首页卡片
             , cardList: [] // 当前页面的卡片列表
             , location: '' // 记录 URL
-            , activeNote: 'null'
+            , activeNote: 'null' // 记录当前焦点卡片 etc 3a433c0b-e2e1-4722......
         };
     }
 
@@ -94,9 +94,14 @@ class Post extends React.Component {
 
         // 设置当前活跃的笔记（用户焦点）
         if (this.state.activeNote !== link_id) {
+
+            // 设置 state
             this.setState({
                 activeNote: link_id
+            }, () => {
+                this.setUrlActiveNote(link_id)
             })
+
         }
 
 
@@ -118,10 +123,13 @@ class Post extends React.Component {
         }
 
         // 删除 Link 所在 card 后的所有 URL 参数
-        let url_search = window.location.search
-        url_search = url_search.replace('?', '')
-        url_search = url_search.replace(/&/gi, '')
-        let url_search_list = url_search.split('note-id=')
+        // let url_search = window.location.search
+        // url_search = url_search.replace('?', '')
+        // url_search = url_search.replace(/&/gi, '')
+        // let url_search_list = url_search.split('note-id=')
+
+        let getUrlSearch_req = this.getUrlSearch(window.location.search)
+        let url_search_list = getUrlSearch_req['url_search_list']
 
         let new_url_search = ''
         let current_page_index = -1
@@ -156,6 +164,9 @@ class Post extends React.Component {
             new_url_search += '&note-id=' + link_id
         }
 
+
+        new_url_search += '&active-note-id=' + link_id
+
         // 设置 URL
         window.history.pushState({}, '', window.location.origin + '/post' + new_url_search)
         // 记录 URL
@@ -185,10 +196,8 @@ class Post extends React.Component {
 
         // 从 URL 中获取 note id，根据 id 获取卡片数据
         let card_list = []
-        let url_search = window.location.search
-        url_search = url_search.replace('?', '')
-        url_search = url_search.replace(/&/gi, '')
-        let url_search_list = url_search.split('note-id=')
+        let getUrlSearch_req = this.getUrlSearch(window.location.search)
+        let url_search_list = getUrlSearch_req['url_search_list']
 
         for (let i = 0; i < url_search_list.length; i++) {
             if (url_search_list[i] == '') {
@@ -199,18 +208,35 @@ class Post extends React.Component {
 
         }
 
+        // 设置当前活跃的笔记（用户焦点）
+        let activeNote
+        if (getUrlSearch_req['active_str'] !== '') {
+            activeNote = getUrlSearch_req['active_str'].replace('active-note-id=', '')
+        } else {
+            activeNote = card_list[card_list.length - 1]['card']['id']
+        }
+
+
+
         // 收集 card 数据后一次性 setState（在 for 内分多次 setState 的话容易丢失数据）
-        this.setState({
-            cardList: card_list,
-            activeNote: card_list[card_list.length - 1]['card']['id'] // 设置当前活跃的笔记（用户焦点）
-        })
+        if (this.state.activeNote !== activeNote) {
+            this.setState({
+                cardList: card_list,
+                activeNote: activeNote
+            }, () => {
+                // 更新 URL
+                this.setUrlActiveNote(activeNote)
+            })
+        }
+
+
+
 
 
     }
 
     // 当 URL 变化时（子组件 container 载入完毕后也会调用此方法）
     handleHashChange = (url) => {
-
 
         setTimeout(() => {
             let note_list = document.getElementsByClassName('container')
@@ -234,9 +260,6 @@ class Post extends React.Component {
 
                 }
 
-
-
-
                 target_note_offsetLeft += note.clientWidth
             }
 
@@ -246,21 +269,53 @@ class Post extends React.Component {
         }, 100);
 
         // 如果 url 发生变化，则更新数据
-        if (url !== this.state.location) {
+        let old_url = this.getUrlSearch(this.state.location)
+        let new_url = this.getUrlSearch(url)
 
+        let old_url_1 = old_url['url_search_list'].join('-')
+        let new_url_1 = new_url['url_search_list'].join('-')
+
+        // 数据发生变化（忽略焦点变化）
+        if (new_url_1 !== old_url_1) {
 
             // 将当前 URL 保存到 state 中
             this.setState({
                 location: url
+            }, () => {
+
+                if (this.state.location !== '') {
+
+                    // cardList 中不存在 URL 的某一个 card
+                    // 加载此 card 的数据
+                    this.herfToData()
+
+                }
+
             })
 
-            if (this.state.location !== '') {
 
-                // cardList 中不存在 URL 的某一个 card
-                // 加载此 card 的数据
-                this.herfToData()
 
-            }
+        }
+
+        // 焦点发生变化
+        if (old_url['active_str'] !== new_url['active_str']) {
+
+            // 将当前 URL 保存到 state 中
+            this.setState({
+                location: url
+            }, () => {
+
+                if (this.state.location !== '') {
+                    // 记录新焦点到 state 中
+                    let new_active_note_id = new_url['active_str'].replace('active-note-id=', '')
+                    this.setState({
+                        activeNote: new_active_note_id
+                    })
+                }
+
+            })
+
+
 
         }
 
@@ -276,7 +331,6 @@ class Post extends React.Component {
         for (let i = 0; i < this.state.cardList.length; i++) {
             // url 中不存在此 card
             if (url.indexOf(this.state.cardList[i]['card']['id']) < 0) {
-
 
                 // 删除 card
                 this.state.cardList.splice(i, 1)
@@ -454,6 +508,77 @@ class Post extends React.Component {
 
     }
 
+    // 获取 URL 参数
+    getUrlSearch = (location_search) => {
+
+        let url_search = location_search.replace('?', '')
+        url_search = url_search.replace(/&/gi, '')
+
+        // 忽略焦点卡片
+        let active_str = '' // 焦点卡片参数名称及其值
+        let active_index = url_search.indexOf('active-note-id')
+        if (active_index > -1) {
+            let is_last_index = url_search.indexOf('note-id', active_index + 14)
+            if (is_last_index > -1) {
+                // 焦点卡片不是最后一个参数
+                active_str = url_search.substring(active_index, is_last_index)
+            } else {
+                // 焦点卡片是最后一个参数
+                active_str = url_search.substring(active_index, url_search.length)
+            }
+
+        }
+
+        url_search = url_search.replace(active_str, '')
+
+        let url_search_list = url_search.split('note-id=')
+
+        return { 'url_search_list': url_search_list, 'active_str': active_str }
+
+    }
+
+    // 将焦点卡片 ID 写入 URL
+    setUrlActiveNote = (note_id) => {
+
+        // 获取 URL 中的焦点卡片信息
+        let getUrlSearch_req = this.getUrlSearch(window.location.search)
+        let active_str = getUrlSearch_req['active_str']
+
+        let new_url_search = window.location.search
+
+        if (active_str === '') {
+            // URL 中无焦点卡片
+
+            new_url_search = new_url_search + '&active-note-id=' + note_id
+
+        } else {
+            // URL 中有焦点卡片
+
+            // 如果焦点卡片无变化，则不更新
+            if (active_str.indexOf(note_id) > -1) {
+                return
+            }
+
+            new_url_search = new_url_search.replace(active_str, 'active-note-id=' + note_id)
+        }
+
+
+        // 删除旧卡片、写入新卡片
+
+
+        // 设置 URL
+        window.history.pushState({}, '', window.location.origin + '/post' + new_url_search)
+
+        // 记录 URL
+        this.setState({
+            location: window.location.href
+        })
+
+    }
+
+
+
+
     render() {
         if (this.state.card === null || this.state.cardList.length === 0) {
             return (<div>
@@ -465,7 +590,7 @@ class Post extends React.Component {
             </div>)
         } else {
 
-            console.log(this.state.activeNote);
+            // console.log(this.state.activeNote);
 
             let card_list_dom = []
 
