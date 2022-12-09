@@ -337,9 +337,9 @@ const getHeptabaseData = new Promise((resolve, reject) => {
 
     // 获取本地数据
     let heptabase_blog_data = localStorage.getItem("heptabase_blog_data")
-
+    // console.log(heptabase_blog_data);
     // 若本地存在数据则不重新获取
-    if (heptabase_blog_data !== undefined) {
+    if (heptabase_blog_data !== false) {
 
         let createdTime = JSON.parse(heptabase_blog_data)['createdTime']
         console.log(Date.parse(new Date()) / 1000);

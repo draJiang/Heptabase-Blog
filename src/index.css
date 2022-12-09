@@ -127,13 +127,17 @@ article a::after {
     flex-direction: row;
     align-items: center;
     top: 0;
-    padding-top: 60px;
-    /* padding-left: 5px; */
+    padding: 60px 0 0 0;
     width: 40px;
     height: 100%;
     writing-mode: vertical-lr;
     background-color: var(--color-canvas-default);
     z-index: 999;
+}
+
+.container .note_title p {
+    cursor: pointer;
+    flex: 0.9;
 }
 
 .container .note_title * {
@@ -143,11 +147,17 @@ article a::after {
 
 .container .note_title .note_close_button {
     position: absolute;
-    bottom: 60px;
+    bottom: 64px;
     cursor: pointer;
 }
 
-.container .note_title .note_close_button:hover {
+.container .note_title p:hover {
+    color: var(--color-accent-fg);
+}
+
+.container .note_title .note_close_button:hover,
+.container .note_title p:active,
+.my_link:active {
     opacity: 0.6;
 }
 

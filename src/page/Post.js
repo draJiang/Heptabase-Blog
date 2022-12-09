@@ -90,7 +90,7 @@ class Post extends React.Component {
     }
 
     // 文章内链接、反向链接点击
-    handleLinkClick = (link_id, current_id) => {
+    handleLinkClick = (link_id, current_id = undefined) => {
 
         // 设置当前活跃的笔记（用户焦点）
         if (this.state.activeNote !== link_id) {
@@ -109,7 +109,7 @@ class Post extends React.Component {
         let bingo = false
         this.state.cardList.forEach(item => {
 
-            if (link_id == item['card']['id']) {
+            if (link_id === item['card']['id']) {
 
                 bingo = true
 
@@ -117,7 +117,7 @@ class Post extends React.Component {
 
         });
 
-        if (bingo) {
+        if (bingo || current_id === undefined || current_id === null) {
 
             return
         }
@@ -347,6 +347,7 @@ class Post extends React.Component {
 
     }
 
+    // 设置小标题
     setCardMiniTitleAndStyle = () => {
 
         let notes = document.getElementsByClassName('container')
@@ -455,6 +456,13 @@ class Post extends React.Component {
                         note_title_span.innerHTML = note.innerText.substring(0, 6) + '...'
                     } else {
                         note_title_span.innerHTML = note.getElementsByTagName('H1')[0].innerHTML
+                    }
+
+                    note_title_span.onclick = (event) => {
+                        console.log(event);
+                        console.log(event.target.innerText);
+                        console.log(note.getAttribute('note_id'));
+                        this.handleLinkClick(note.getAttribute('note_id'))
                     }
 
                     // 小标题关闭按钮
