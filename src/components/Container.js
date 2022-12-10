@@ -94,7 +94,7 @@ function Container(props) {
     useEffect(() => {
 
         console.log('useEffect');
-        props.handleHashChange(window.location.href)
+        props.handleHashChange(window.location.href,props['card'])
 
         // dom 加载完毕后
         if (post.current != null) {
