@@ -120,9 +120,9 @@ const getClearImag = (card) => {
         let img_alt = content.substring(img_keyword_index + 2, img_alt_end_inex)
         let img_src = content.substring(img_alt_end_inex + 2, img_etc_index)
 
-        console.log('image keyword');
-        console.log(img_alt);
-        console.log(img_src);
+        // console.log('image keyword');
+        // console.log(img_alt);
+        // console.log(img_src);
 
         let old_img_str = content.substring(img_keyword_index, img_end_inex + 1)
 
@@ -337,7 +337,7 @@ const getHeptabaseData = new Promise((resolve, reject) => {
 
     // 获取本地数据
     let heptabase_blog_data = localStorage.getItem("heptabase_blog_data")
-    console.log(heptabase_blog_data);
+
     // 若本地存在数据则不重新获取
     if (heptabase_blog_data !== undefined && heptabase_blog_data !== null) {
 
