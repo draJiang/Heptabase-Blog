@@ -16,9 +16,11 @@ import { id } from 'date-fns/locale';
 import useHash from "../hooks/useHash";
 
 
-
-let windowWidth = window.innerWidth
-let minWidth = 600
+// 属性
+let ACTIVE_NOTE = ''                                            // 焦点笔记 ID 例如 38d9247c-1b0b-47ca-a119-933af80d71c2
+let CURRENT_URL = window.location.href                          // 当前 URL，用来判断 URL 有变化时触发相关事件
+let windowWidth = window.innerWidth                             // 窗口宽度
+let minWidth = 600                                              // 以此宽度为分界线需渲染不同界面
 
 // 文章页面
 class Post extends React.Component {
@@ -90,98 +92,105 @@ class Post extends React.Component {
     }
 
     // 文章内链接、反向链接点击
-    handleLinkClick = (link_id, current_id = undefined) => {
+    handleLinkClick = (link_id, current_id = undefined, type = -1) => {
 
-        // 设置当前活跃的笔记（用户焦点）
-        if (this.state.activeNote !== link_id) {
-
-            // 设置 state
-            this.setState({
-                activeNote: link_id
-            }, () => {
-                this.setUrlActiveNote(link_id)
-            })
-
-        }
-
-
-        // 已经显示此卡片则不更新 URL 和数据
         let bingo = false
         this.state.cardList.forEach(item => {
 
             if (link_id === item['card']['id']) {
 
+                // 界面上已显示点击的卡片
                 bingo = true
 
             }
 
         });
 
+        // 已经显示此卡片则不更新 URL 和数据
         if (bingo || current_id === undefined || current_id === null) {
 
-            return
-        }
 
-        // 删除 Link 所在 card 后的所有 URL 参数
-        // let url_search = window.location.search
-        // url_search = url_search.replace('?', '')
-        // url_search = url_search.replace(/&/gi, '')
-        // let url_search_list = url_search.split('note-id=')
+            if (ACTIVE_NOTE !== link_id) {
 
-        let getUrlSearch_req = this.getUrlSearch(window.location.search)
-        let url_search_list = getUrlSearch_req['url_search_list']
+                // 修改 URL 中的焦点卡片
+                this.setUrlActiveNote(link_id)
 
-        let new_url_search = ''
-        let current_page_index = -1
-        for (let i = 0; i < url_search_list.length; i++) {
+                // 记录焦点卡片
+                ACTIVE_NOTE = link_id
 
-            if (url_search_list[i] === '') {
-                continue
+                // 如果是小尺寸设备，需要更新 UI 显示焦点卡片
+                if (windowWidth < minWidth && this.state.activeNote !== ACTIVE_NOTE) {
+
+                    this.setState({
+                        activeNote: ACTIVE_NOTE
+                    })
+
+                }
+
             }
 
-            if (url_search_list[i] === current_id) {
-                // URL 参数 === current_id
-                current_page_index = i
-            } else {
-                // URL 参数 !== current_id
+            this.ScrollToActiveNote()
+
+            return
+
+        } else {
+
+            let getUrlSearch_req = this.getUrlSearch(window.location.search)
+            let url_search_list = getUrlSearch_req['url_search_list']
+
+            let new_url_search = ''
+            let current_page_index = -1
+            for (let i = 0; i < url_search_list.length; i++) {
+
+                if (url_search_list[i] === '') {
+                    continue
+                }
+
+                if (url_search_list[i] === current_id) {
+                    // URL 参数 === current_id
+                    current_page_index = i
+                } else {
+                    // URL 参数 !== current_id
+                }
+
+                if (new_url_search == '') {
+                    new_url_search += '?note-id=' + url_search_list[i]
+                } else {
+                    new_url_search += '&note-id=' + url_search_list[i]
+                }
+
+                //如果当前 id === current_id，则忽略后面的所有 ID
+                if (current_page_index > -1) {
+                    break;
+                }
             }
 
             if (new_url_search == '') {
-                new_url_search += '?note-id=' + url_search_list[i]
+                new_url_search += '?note-id=' + link_id
             } else {
-                new_url_search += '&note-id=' + url_search_list[i]
+                new_url_search += '&note-id=' + link_id
             }
 
-            //如果当前 id === current_id，则忽略后面的所有 ID
-            if (current_page_index > -1) {
-                break;
-            }
+
+            new_url_search += '&active-note-id=' + link_id
+
+            // 设置 URL
+            window.history.pushState({}, '', window.location.origin + '/post' + new_url_search)
+            // 记录 URL
+            CURRENT_URL = window.location.origin + '/post' + new_url_search
+
+            // 删除 URL 中不存在的 Card
+            this.resetCardList()
+            // 根据 URL 获取 card 数据
+            this.herfToData()
+
         }
 
-        if (new_url_search == '') {
-            new_url_search += '?note-id=' + link_id
-        } else {
-            new_url_search += '&note-id=' + link_id
-        }
 
-
-        new_url_search += '&active-note-id=' + link_id
-
-        // 设置 URL
-        window.history.pushState({}, '', window.location.origin + '/post' + new_url_search)
-        // 记录 URL
-        this.setState({
-            location: window.location.href
-        })
-
-
-        // 删除 URL 中不存在的 Card
-        this.resetCardList()
-        // 根据 URL 获取 card 数据
-        this.herfToData()
 
     }
 
+    // 根据 herf 渲染界面上显示的数据
     herfToData = () => {
 
         // 首页的情况
@@ -216,84 +225,64 @@ class Post extends React.Component {
             activeNote = card_list[card_list.length - 1]['card']['id']
         }
 
+        // 根据 URL 渲染新的数据到界面上
+        if (this.state.cardList !== card_list) {
 
-
-        // 收集 card 数据后一次性 setState（在 for 内分多次 setState 的话容易丢失数据）
-        if (this.state.activeNote !== activeNote) {
             this.setState({
-                cardList: card_list,
-                activeNote: activeNote
+                cardList: card_list
+                // activeNote: activeNote
             }, () => {
                 // 更新 URL
-                this.setUrlActiveNote(activeNote)
+                // this.setUrlActiveNote(activeNote)
             })
         }
 
-
-
-
+        // 如果焦点发生变化
+        if (ACTIVE_NOTE !== activeNote) {
+            ACTIVE_NOTE = activeNote
+            // 将最新的焦点设置到 URL 中
+            this.setUrlActiveNote(ACTIVE_NOTE)
+        }
 
     }
 
     // 当 URL 变化时（子组件 container 载入完毕后也会调用此方法）
-    handleHashChange = (url) => {
+    handleHashChange = (url, card) => {
 
-        setTimeout(() => {
-            let note_list = document.getElementsByClassName('container')
-            let foucus_note = this.state.activeNote
-
-            let target_note_offsetLeft = 0
-            for (let j = 0; j < note_list.length; j++) {
-                let note = note_list[j]
-
-                // 定位到当前用户关注的笔记
-                if (note.getAttribute('note_id') === foucus_note) {
-
-                    if (windowWidth > minWidth) {
-                        console.log(target_note_offsetLeft);
-                        document.getElementsByClassName('notes')[0].scrollTo({ left: j * 650, behavior: 'smooth' })
-                    } else {
-
-                    }
-
-                    break;
-
-                }
-
-                target_note_offsetLeft += note.clientWidth
-            }
-
-            // 设置样式、小标题
-            this.setCardMiniTitleAndStyle()
-
-        }, 100);
 
         // 如果 url 发生变化，则更新数据
-        let old_url = this.getUrlSearch(this.state.location)
+        let old_url = this.getUrlSearch(CURRENT_URL)
         let new_url = this.getUrlSearch(url)
 
         let old_url_1 = old_url['url_search_list'].join('-')
         let new_url_1 = new_url['url_search_list'].join('-')
 
+        // 定位到焦点卡片
+        if (new_url['active_str'].indexOf(card['card']['id']) > -1) {
+
+            // 定位到焦点卡片
+            this.ScrollToActiveNote()
+
+        }
+
         // 数据发生变化（忽略焦点变化）
         if (new_url_1 !== old_url_1) {
 
             // 将当前 URL 保存到 state 中
-            this.setState({
-                location: url
-            }, () => {
+            CURRENT_URL = url
 
-                if (this.state.location !== '') {
+            if (CURRENT_URL !== '') {
 
-                    // cardList 中不存在 URL 的某一个 card
-                    // 加载此 card 的数据
-                    this.herfToData()
+                this.herfToData()
 
-                }
+            }
 
-            })
-
-
+            // setTimeout(() => {
+            //     // 定位到焦点卡片
+            //     this.ScrollToActiveNote()
+            //     // 设置样式、小标题
+            //     this.setCardMiniTitleAndStyle()
+            // }, 100);
 
         }
 
@@ -301,21 +290,22 @@ class Post extends React.Component {
         if (old_url['active_str'] !== new_url['active_str']) {
 
             // 将当前 URL 保存到 state 中
-            this.setState({
-                location: url
-            }, () => {
+            CURRENT_URL = url
 
-                if (this.state.location !== '') {
-                    // 记录新焦点到 state 中
-                    let new_active_note_id = new_url['active_str'].replace('active-note-id=', '')
+            if (CURRENT_URL !== '') {
+                // 记录新焦点到 state 中
+                ACTIVE_NOTE = new_url['active_str'].replace('active-note-id=', '')
+
+                // 如果是小尺寸设备，需要更新 UI 显示焦点卡片
+                if (windowWidth < minWidth && this.state.activeNote !== ACTIVE_NOTE) {
+
                     this.setState({
-                        activeNote: new_active_note_id
+                        activeNote: ACTIVE_NOTE
                     })
+
                 }
 
-            })
-
-
+            }
 
         }
 
@@ -341,6 +331,30 @@ class Post extends React.Component {
             } else {
                 // url 中存在此 card
                 // continue
+            }
+
+        }
+
+    }
+
+    // 定位到焦点卡片
+    ScrollToActiveNote = () => {
+
+        let note_list = document.getElementsByClassName('container')
+        for (let j = 0; j < note_list.length; j++) {
+            let note = note_list[j]
+
+            // 定位到当前用户关注的笔记
+            if (note.getAttribute('note_id') === ACTIVE_NOTE) {
+
+                if (windowWidth > minWidth) {
+                    document.getElementsByClassName('notes')[0].scrollTo({ left: j * 650, behavior: 'smooth' })
+                } else {
+
+                }
+
+                break;
+
             }
 
         }
@@ -462,7 +476,7 @@ class Post extends React.Component {
                         console.log(event);
                         console.log(event.target.innerText);
                         console.log(note.getAttribute('note_id'));
-                        this.handleLinkClick(note.getAttribute('note_id'))
+                        this.handleLinkClick(note.getAttribute('note_id'), undefined, 0)
                     }
 
                     // 小标题关闭按钮
@@ -504,15 +518,14 @@ class Post extends React.Component {
         console.log('handleCardCloseClick');
         // 修改 URL
         let new_url = window.location.href.replace('note-id=' + note_id, '')
-        // 设置 URL
+        // 设置新的 URL
         window.history.pushState({}, '', new_url)
 
         // 记录 URL
-        this.setState({
-            location: window.location.href
-        })
+        CURRENT_URL = window.location.href
 
-        // 从 UI 中隐藏卡片？？
+        // 更新 UI
+        this.herfToData()
 
     }
 
@@ -571,16 +584,15 @@ class Post extends React.Component {
         }
 
 
-        // 删除旧卡片、写入新卡片
-
-
         // 设置 URL
         window.history.pushState({}, '', window.location.origin + '/post' + new_url_search)
 
         // 记录 URL
-        this.setState({
-            location: window.location.href
-        })
+        CURRENT_URL = window.location.origin + '/post' + new_url_search
+
+        // this.setState({
+        //     location: window.location.href
+        // })
 
     }
 
@@ -610,7 +622,7 @@ class Post extends React.Component {
                 let card = this.state.cardList[this.state.cardList.length - 1]
 
                 for (let k = 0; k < this.state.cardList.length; k++) {
-                    if (this.state.cardList[k]['card']['id'] === this.state.activeNote) {
+                    if (this.state.cardList[k]['card']['id'] === ACTIVE_NOTE) {
                         card = this.state.cardList[k]
                         break;
                     }
@@ -641,7 +653,7 @@ class Post extends React.Component {
 
             // 设置网页标题
             for (let k = 0; k < this.state.cardList.length; k++) {
-                if (this.state.cardList[k]['card']['id'] === this.state.activeNote) {
+                if (this.state.cardList[k]['card']['id'] === ACTIVE_NOTE) {
 
                     if (this.state.cardList[k]['card']['title'] !== 'About') {
                         document.title = this.state.cardList[k]['card']['title']
@@ -656,11 +668,9 @@ class Post extends React.Component {
             return (<div className='notes_box'>
 
                 <Nav />
-                {/* <Container card={card} /> */}
                 <div className='notes'>
                     {card_list_dom}
                 </div>
-
                 {/* <Footer /> */}
 
             </div>)
