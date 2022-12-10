@@ -21,6 +21,9 @@ let ACTIVE_NOTE = ''                                            // 焦点笔记 
 let CURRENT_URL = window.location.href                          // 当前 URL，用来判断 URL 有变化时触发相关事件
 let windowWidth = window.innerWidth                             // 窗口宽度
 let minWidth = 600                                              // 以此宽度为分界线需渲染不同界面
+// 数据
+let HEPTABASE_DATA                                              // hepta 数据
+let HOME_DATA                                                   // 首页数据
 
 // 文章页面
 class Post extends React.Component {
@@ -28,10 +31,7 @@ class Post extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            card: null //所有的 hepta 数据
-            , main_card: null //首页卡片
-            , cardList: [] // 当前页面的卡片列表
-            , location: '' // 记录 URL
+            cardList: [] // 当前页面的卡片列表
             , activeNote: 'null' // 记录当前焦点卡片 etc 3a433c0b-e2e1-4722......
         };
     }
@@ -43,15 +43,22 @@ class Post extends React.Component {
 
             let heptabase_blog_data = res.data
 
-            // 将数据保存到 state 中
-            this.setState({
-                card: heptabase_blog_data,
-                main_card: res['pages']['about']
-            }, () => {
 
-                // 渲染 URL、数据
-                this.herfToData()
-            })
+            
+            // 将数据保存到全局变量中
+            HEPTABASE_DATA = heptabase_blog_data
+            HOME_DATA = res['pages']['about']
+
+            // 渲染 URL、数据
+            this.herfToData()
+
+            // this.setState({
+            //     card: heptabase_blog_data,
+            //     main_card: res['pages']['about']
+            // }, () => {
+
+                
+            // })
 
         })
 
@@ -77,7 +84,7 @@ class Post extends React.Component {
 
                 // 处理内容中的图片
                 heptabase_blog_data.cards[i] = getClearImag(heptabase_blog_data.cards[i])
-                console.log('getClearImag done');
+                
                 // 处理内容中的链接
                 new_card = getClearCard(heptabase_blog_data.cards[i], heptabase_blog_data.cards)
                 heptabase_blog_data.cards[i] = new_card['card']
@@ -119,7 +126,7 @@ class Post extends React.Component {
                 ACTIVE_NOTE = link_id
 
                 // 如果是小尺寸设备，需要更新 UI 显示焦点卡片
-                if (windowWidth < minWidth && this.state.activeNote !== ACTIVE_NOTE) {
+                if (windowWidth < minWidth) {
 
                     this.setState({
                         activeNote: ACTIVE_NOTE
@@ -197,7 +204,7 @@ class Post extends React.Component {
         if (window.location.search === '') {
 
             // 找到首页卡片的 ID
-            let main_id = this.state.main_card['id']
+            let main_id = HOME_DATA['id']
             // 设置 URL
             window.location.replace(window.location.origin + '/post?note-id=' + main_id)
 
@@ -213,7 +220,7 @@ class Post extends React.Component {
                 continue
             }
             // 将数据保存到 card list 中
-            card_list.push(this.findContent(url_search_list[i], this.state.card))
+            card_list.push(this.findContent(url_search_list[i], HEPTABASE_DATA))
 
         }
 
@@ -248,7 +255,6 @@ class Post extends React.Component {
 
     // 当 URL 变化时（子组件 container 载入完毕后也会调用此方法）
     handleHashChange = (url, card) => {
-
 
         // 如果 url 发生变化，则更新数据
         let old_url = this.getUrlSearch(CURRENT_URL)
@@ -596,11 +602,8 @@ class Post extends React.Component {
 
     }
 
-
-
-
     render() {
-        if (this.state.card === null || this.state.cardList.length === 0) {
+        if (HEPTABASE_DATA === null || this.state.cardList.length === 0) {
             return (<div>
                 <Nav />
                 <div className='notes'>
@@ -676,8 +679,6 @@ class Post extends React.Component {
             </div>)
         }
     }
-
-
 
 }
 

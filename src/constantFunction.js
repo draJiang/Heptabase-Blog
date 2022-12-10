@@ -38,14 +38,14 @@ const setNeteaseMusic = (custom_old_card) => {
     let height_1 = 52
     let height_2 = 32
     if (custom_old_card.indexOf('playlist') > -1 || custom_old_card.indexOf('album') > -1) {
-        
+
         height_1 = 110
         height_2 = 90
 
-        if(custom_old_card.indexOf('playlist') > -1){
+        if (custom_old_card.indexOf('playlist') > -1) {
             type = 0 // 歌单
         }
-        if(custom_old_card.indexOf('album') > -1){
+        if (custom_old_card.indexOf('album') > -1) {
             type = 1 // 专辑
         }
     }
@@ -54,10 +54,10 @@ const setNeteaseMusic = (custom_old_card) => {
     let music_id_reg = /[0-9]{4,14}/g
     let music_id_list = custom_old_card.match(music_id_reg)
 
-    if (music_id_list !== [] && music_id_list!==null) {
+    if (music_id_list !== [] && music_id_list !== null) {
         // 匹配到 ID
         let music_id = music_id_list[0]
-        let netease_music_iframe = '<div class="music netease_music"><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" height=' + height_1 + ' style="width: 100%; " src="//music.163.com/outchain/player?type=' + type + '&id=' + music_id + '&auto=0&height='+height_2+'"></iframe></div>'
+        let netease_music_iframe = '<div class="music netease_music"><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" height=' + height_1 + ' style="width: 100%; " src="//music.163.com/outchain/player?type=' + type + '&id=' + music_id + '&auto=0&height=' + height_2 + '"></iframe></div>'
 
         return netease_music_iframe
 
@@ -75,8 +75,6 @@ const getClearImag = (card) => {
     // 找到上述符号之后的第 1 个 jpg#/png#/gif# 符号
     // 找到上一个步骤后的第 1 个 ) 符号
     // 删除前面 2 步 index 中间的符号
-
-    console.log('getClearImag');
 
     let content = card['content']
 
@@ -151,7 +149,7 @@ const getClearImag = (card) => {
 
 // 处理单个 md 文件中的超链接
 const getClearCard = (card, cards) => {
-    console.log('getClearCard');
+
     // 找到 (./ 符号以及之后的第 1 个 ，或找到 {{ 符号 }}) 符号，截取这 2 个 index 中间的字符串
     // 将上述字符串放在 card 数据中匹配
     // 如果找到匹配的卡片：修改上述字符串的地址为 /post/post.id
@@ -188,7 +186,7 @@ const getClearCard = (card, cards) => {
                     // new_card = '[' + cards[i]['title'] + ']' + '(' + '/post/' + cards[i]['id'] + ')'
 
                     // path 参数用于点击时加载对应笔记的数据，只有 my_link 类可点击
-                    new_card = '<span class="my_link article_link" parent_note_id='+this_card_id+' path=/post/'+ cards[i]['id'] + '>' + cards[i]['title'] + '</span>'
+                    new_card = '<span class="my_link article_link" parent_note_id=' + this_card_id + ' path=/post/' + cards[i]['id'] + '>' + cards[i]['title'] + '</span>'
                     break
                 }
 
@@ -258,7 +256,7 @@ const getClearCard = (card, cards) => {
 
                         if (custom_old_card.indexOf(cards[i]['id']) >= 0) {
                             // 存在：设置卡片链接
-                            custom_new_card = '<span class="my_link article_link" parent_note_id='+this_card_id+' path=/post/' + cards[i]['id'] + '>' + custom_card_name + '</span>'
+                            custom_new_card = '<span class="my_link article_link" parent_note_id=' + this_card_id + ' path=/post/' + cards[i]['id'] + '>' + custom_card_name + '</span>'
                             break
                         }
 
@@ -388,8 +386,12 @@ const getHeptabaseData = new Promise((resolve, reject) => {
             pages.about = undefined
             pages.projects = undefined
 
+            // 存储去重后的数组
+            let new_cards = []
+            // 存储卡片 ID，用户判断是否重复
+            let cards_id = []
+
             for (let i = 0; i < data.cards.length; i++) {
-                console.log(data.cards[i]['title']);
 
                 // About
                 if (data.cards[i]['title'] === 'About') {
@@ -404,26 +406,41 @@ const getHeptabaseData = new Promise((resolve, reject) => {
 
                 }
 
-                // 最近编辑的时间差
-                // getLastEditedTime(format(new Date(data.cards[i]['lastEditedTime']), 'yyyy-MM-dd'))
-                let timeDiff = getLastEditedTime(data.cards[i]['lastEditedTime'])
-                data.cards[i].lastEditedTimeDiff = ''
-                if (timeDiff['day'] > 0) {
-                    data.cards[i].lastEditedTimeDiff = 'Edited ' + timeDiff['day'] + ' days ago'
-                } else if (timeDiff['hours'] > 0) {
-
-                    data.cards[i].lastEditedTimeDiff = 'Edited ' + timeDiff['hours'] + ' hours ago'
-
-                } else if (timeDiff['minutes'] > 0) {
-
-                    data.cards[i].lastEditedTimeDiff = 'Edited ' + timeDiff['minutes'] + ' minutes ago'
-
+                // 去重
+                if (cards_id.indexOf(data.cards[i]['id']) > -1) {
+                    // 已存在此卡片，则忽略
+                    // console.log(data.cards[i]);
                 } else {
 
-                    data.cards[i].lastEditedTimeDiff = 'Edited just'
+                    // 不存在此卡片
+
+                    // 最近编辑的时间差
+                    let timeDiff = getLastEditedTime(data.cards[i]['lastEditedTime'])
+                    data.cards[i].lastEditedTimeDiff = ''
+                    if (timeDiff['day'] > 0) {
+                        data.cards[i].lastEditedTimeDiff = 'Edited ' + timeDiff['day'] + ' days ago'
+                    } else if (timeDiff['hours'] > 0) {
+
+                        data.cards[i].lastEditedTimeDiff = 'Edited ' + timeDiff['hours'] + ' hours ago'
+
+                    } else if (timeDiff['minutes'] > 0) {
+
+                        data.cards[i].lastEditedTimeDiff = 'Edited ' + timeDiff['minutes'] + ' minutes ago'
+
+                    } else {
+
+                        data.cards[i].lastEditedTimeDiff = 'Edited just'
+
+                    }
+
+                    new_cards.push(data.cards[i])
+                    cards_id.push(data.cards[i]['id'])
 
                 }
+
             }
+
+            data.cards = new_cards
 
             // createdTime 记录数据获取的时间
             const local_data = { 'createdTime': Date.parse(new Date()) / 1000, 'data': data, 'pages': pages }
