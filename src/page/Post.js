@@ -43,22 +43,12 @@ class Post extends React.Component {
 
             let heptabase_blog_data = res.data
 
-
-            
             // 将数据保存到全局变量中
             HEPTABASE_DATA = heptabase_blog_data
             HOME_DATA = res['pages']['about']
 
             // 渲染 URL、数据
             this.herfToData()
-
-            // this.setState({
-            //     card: heptabase_blog_data,
-            //     main_card: res['pages']['about']
-            // }, () => {
-
-                
-            // })
 
         })
 
@@ -84,7 +74,7 @@ class Post extends React.Component {
 
                 // 处理内容中的图片
                 heptabase_blog_data.cards[i] = getClearImag(heptabase_blog_data.cards[i])
-                
+
                 // 处理内容中的链接
                 new_card = getClearCard(heptabase_blog_data.cards[i], heptabase_blog_data.cards)
                 heptabase_blog_data.cards[i] = new_card['card']
@@ -142,6 +132,7 @@ class Post extends React.Component {
 
         } else {
 
+            // 打开新卡片
             let getUrlSearch_req = this.getUrlSearch(window.location.search)
             let url_search_list = getUrlSearch_req['url_search_list']
 
@@ -355,7 +346,18 @@ class Post extends React.Component {
 
                 if (windowWidth > minWidth) {
                     document.getElementsByClassName('notes')[0].scrollTo({ left: j * 650, behavior: 'smooth' })
+
+
                 } else {
+
+                    if (sessionStorage.getItem('nav_type') > -1) {
+                        // 滚动到顶部
+                        window.scrollTo(0, 0)
+
+                        // 重置 nav_type
+                        sessionStorage.setItem('nav_type', -1)
+                    }
+
 
                 }
 

@@ -80,7 +80,10 @@ function Container(props) {
                 let post_id = node.getAttribute('path').replace('/post/', '')
                 let parent_note_id = node.getAttribute('parent_note_id')
                 node.addEventListener('click', function () {
-
+                    // 记录跳转类型
+                    sessionStorage.setItem('nav_type', 1)
+                    // 记录当前滚动的位置
+                    sessionStorage.setItem('scrollY', window.scrollY)
                     props.handleLinkClick(post_id, parent_note_id)
                 })
             }
@@ -94,7 +97,7 @@ function Container(props) {
     useEffect(() => {
 
         console.log('useEffect');
-        props.handleHashChange(window.location.href,props['card'])
+        props.handleHashChange(window.location.href, props['card'])
 
         // dom 加载完毕后
         if (post.current != null) {
