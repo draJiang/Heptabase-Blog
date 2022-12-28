@@ -202,9 +202,12 @@ function Container(props) {
 
         return <div style={props['style']} ref={post} className='markdown-body container' note_id={props['card']['card']['id']}>
 
-            <article>
+            <article dangerouslySetInnerHTML={{ __html: props['card']['card']['content'].innerHTML }}>
+                {/* <div dangerouslySetInnerHTML={{ __html: props['card']['card']['content'].innerHTML }}></div> */}
 
-                <ReactMarkdown children={props['card']['card']['content']}
+
+                {/* <ReactMarkdown children={props['card']['card']['content'].
+                    innerHTML}
                     components={{
                         code({ node, inline, className, children, ...props }) {
                             const match = /language-(\w+)/.exec(className || '')
@@ -224,12 +227,13 @@ function Container(props) {
                         }
                     }}
                     rehypePlugins={[rehypeRaw]}
-                    remarkPlugins={[remarkGfm, { singleTilde: false }]} /></article>
+                    remarkPlugins={[remarkGfm, { singleTilde: false }]} /> */}
+            </article>
             <div className='postTime'>
                 <time>Created {format(new Date(props['card']['card']['createdTime']), 'yyyy-MM-dd')}</time>
                 <time>{props['card']['card']['lastEditedTimeDiff']}</time>
             </div>
-            {/* /反向链接 */}
+            {/* 反向链接 */}
             {backLinksBox}
 
 

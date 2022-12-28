@@ -10,7 +10,7 @@ import Loading from '../components/Loading'
 import '../index.css'
 import 'github-markdown-css'
 
-import { getHeptabaseData, getClearCard, getClearImag } from '../constantFunction'
+import { getHeptabaseData, getClearCard, getClearImag, heptaToMD } from '../constantFunction'
 import { id } from 'date-fns/locale';
 
 import useHash from "../hooks/useHash";
@@ -66,19 +66,22 @@ class Post extends React.Component {
             return
         }
 
-        let new_card = null
+        let new_card
         console.log('Post findContent for:');
         for (let i = 0; i < heptabase_blog_data.cards.length; i++) {
 
             if (heptabase_blog_data.cards[i]['id'] == id) {
 
-                // 处理内容中的图片
-                heptabase_blog_data.cards[i] = getClearImag(heptabase_blog_data.cards[i])
+                // // 处理内容中的图片
+                // heptabase_blog_data.cards[i] = getClearImag(heptabase_blog_data.cards[i])
 
-                // 处理内容中的链接
+                // 处理反向链接
                 new_card = getClearCard(heptabase_blog_data.cards[i], heptabase_blog_data.cards)
-                heptabase_blog_data.cards[i] = new_card['card']
+                // heptabase_blog_data.cards[i] = new_card['card']
 
+                new_card['card']['content'] = heptaToMD(new_card['card'])
+                
+                
                 return new_card
 
             }
