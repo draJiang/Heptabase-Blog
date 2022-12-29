@@ -472,7 +472,7 @@ const heptaToMD = (Hpeta_card_data) => {
     if (Hpeta_card_data['content'] instanceof HTMLElement) {
         return Hpeta_card_data['content']
     }
-    
+
     let parent_card_id = Hpeta_card_data['id']
     let box = document.createElement('div')
     box = heptaContentTomd(JSON.parse(Hpeta_card_data['content'])['content'], box, parent_card_id)
@@ -506,13 +506,32 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
             case 'card':
                 new_node = document.createElement('span')
                 new_node.innerHTML = content_list[i]['attrs']['cardTitle']
-                new_node.classList.add('my_link')
-                new_node.classList.add('article_link')
 
-                new_node.setAttribute('path', '/post/' + content_list[i]['attrs']['cardId'])
-                new_node.setAttribute('parent_note_id', parent_card_id)
+                if (content_list[i]['attrs']['cardTitle'] === 'Invalid card') {
+                    // 未知卡片
+                    new_node.classList.add('unknown_card')
 
-                //new_card = '<span class="my_link article_link" parent_note_id=' + this_card_id + ' path=/post/' + cards[i]['id'] + '>' + cards[i]['title'] + '</span>'
+                    // new_node.classList.add('my_link')
+                    // new_node.classList.add('article_link')
+                    // new_node.setAttribute('path', '/post/' + content_list[i]['attrs']['cardId'])
+                    // new_node.setAttribute('parent_note_id', parent_card_id)
+
+                } else {
+                    new_node.classList.add('my_link')
+                    new_node.classList.add('article_link')
+                    new_node.setAttribute('path', '/post/' + content_list[i]['attrs']['cardId'])
+                    new_node.setAttribute('parent_note_id', parent_card_id)
+                }
+
+                break
+
+            case 'image':
+                new_node = document.createElement('img')
+                new_node.setAttribute('src', content_list[i]['attrs']['src'])
+
+                if (content_list[i]['attrs']['width'] !== null) {
+                    new_node.setAttribute('style', 'width: ' + content_list[i]['attrs']['width']);
+                }
                 break
 
             case 'paragraph':
@@ -573,10 +592,10 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
                                 break
 
                             case 'link':
-                                let link_title = mark['attrs']['title']
-                                if (link_title === null) {
-                                    link_title = mark['attrs']['href']
-                                }
+                                // let link_title = mark['attrs']['title']
+                                // if (link_title === null) {
+                                //     link_title = mark['attrs']['href']
+                                // }
 
                                 if (mark['attrs']['data-internal-href'] !== null) {
                                     // 内部卡片链接
@@ -584,12 +603,14 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
                                     new_node.innerHTML = content_list[i]['text']
                                     new_node.classList.add('my_link')
                                     new_node.classList.add('article_link')
+                                    new_node.setAttribute('path', '/post/' + mark['attrs']['data-internal-href'].replace('meta://card/', ''))
+                                    new_node.setAttribute('parent_note_id', parent_card_id)
 
                                 } else {
                                     // 外链
                                     new_node = document.createElement('a')
                                     new_node.href = mark['attrs']['href']
-                                    new_node.innerText = link_title
+                                    new_node.innerHTML = content_list[i]['text']
                                 }
 
                                 break
@@ -603,7 +624,7 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
                     // 无行内样式
                     // new_node = document.createElement('span')
                     // new_node.innerText = new_node.innerText + content_list[i]['text']
-                    parent_node.innerHTML = parent_node.innerHTML + content_list[i]['text']
+                    new_node = document.createTextNode(content_list[i]['text'])
                 }
 
                 break
