@@ -5,7 +5,7 @@
  Category: enterprise, config
  */
 
- /** @type LanguageFn */
+/** @type LanguageFn */
 function dsconfig(hljs) {
   const QUOTED_PROPERTY = {
     className: 'string',

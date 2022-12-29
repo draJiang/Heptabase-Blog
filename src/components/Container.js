@@ -8,6 +8,12 @@ import '../index.css'
 import 'github-markdown-css'
 import Loading from '../components/Loading'
 
+// import "highlight.js/styles/github.css";
+import 'highlight.js/styles/dark.css';
+// import 'highlight.js/styles/hopscotch.css'; 
+import hljs from "highlight.js";
+
+
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeRaw from 'rehype-raw'
@@ -154,6 +160,15 @@ function Container(props) {
 
 
         }
+
+        // 代码高亮
+        if (document.querySelectorAll('pre').length > 0) {
+            document.querySelectorAll('pre').forEach(element => {
+                hljs.highlightBlock(element);
+            });
+        }
+
+
 
 
     });

@@ -1,3 +1,4 @@
+import React from "react";
 import CONFIG from "./config";
 
 // 计算指定时间与当前的时间差
@@ -540,6 +541,7 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
                     new_node = document.createElement('p')
                 } else {
                     new_node = document.createElement('span')
+                    new_node.setAttribute('style', 'margin-left:4px');
                 }
 
                 break
@@ -583,9 +585,12 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
                                 new_node = document.createElement('span')
 
                                 if (mark['attrs']['type'] === 'background') {
-                                    new_node.setAttribute('style', 'background-color: ' + mark['attrs']['color']);
+                                    // new_node.setAttribute('style', 'background-color: ' + mark['attrs']['color']);
+
+                                    new_node.classList.add('highlight_bg')
                                 } else {
-                                    new_node.setAttribute('style', 'color: ' + mark['attrs']['color']);
+                                    // new_node.setAttribute('style', 'color: ' + mark['attrs']['color']);
+                                    new_node.classList.add('highlight_color')
                                 }
 
                                 new_node.innerText = content_list[i]['text']
@@ -656,10 +661,10 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
                         task_input.setAttribute("checked", content_list[i]['attrs']['checked']);
                     }
 
-
                     task_input.disabled = true
 
                     new_node.classList.add('task-list-item')
+                    new_node.setAttribute('style', 'margin: 16px 0');
                     new_node.appendChild(task_input)
                 }
                 break
@@ -673,7 +678,15 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
                 break
 
             case 'code_block':
+
                 new_node = document.createElement('pre')
+                new_node.classList.add('hljs')
+                new_node.classList.add('language-'+content_list[i]['attrs']['params'])
+
+                // new_node = React.createElement('SyntaxHighlighter')
+                console.log(new_node);
+
+                // <SyntaxHighlighter language="javascript" style={dark}>{codeString}</SyntaxHighlighter>
                 break
 
             case 'table':

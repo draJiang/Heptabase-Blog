@@ -2,6 +2,8 @@
      :root {
         --notes-bg-color: #fff;
         --notes-border-default: #d0d7de;
+        --notes-text-bg-yellow: #fbf2da;
+        --notes-text-color-yellow: #ca902e;
     }
 }
 
@@ -9,6 +11,8 @@
      :root {
         --notes-bg-color: #0d1117;
         --notes-border-default: #30363d;
+        --notes-text-bg-yellow: #564328;
+        --notes-text-color-yellow: #c99849;
     }
     .container .note_title .note_close_button svg {
         fill: var(--color-fg-default, #c9d1d9);
@@ -293,9 +297,9 @@ article a::after {
 }
 
 .container article pre {
-    background-color: var(--color-canvas-default, var(--notes-bg-color));
+    /* background-color: var(--color-canvas-default, var(--notes-bg-color));
     padding: 0;
-    margin: 0;
+    margin: 0; */
 }
 
 .markdown-body #player {
@@ -309,4 +313,16 @@ article a::after {
 
 .music iframe {
     max-width: 28rem;
+}
+
+.highlight_bg {
+    background-color: var(--notes-text-bg-yellow);
+}
+
+.highlight_color {
+    color: var(--notes-text-color-yellow);
+}
+
+.markdown-body pre {
+    background: #303030 !important;
 }
