@@ -464,7 +464,7 @@ const getHeptabaseData = new Promise((resolve, reject) => {
 /**
  * 
  * @param {Object} Hpeta_card_data Hepta 卡片数据
- * @returns 返回拼接后的 md 字符串                    
+ * @returns 返回拼接后的 DOM 元素
  */
 const heptaToMD = (Hpeta_card_data) => {
 
@@ -484,8 +484,8 @@ const heptaToMD = (Hpeta_card_data) => {
 /**
  * 
  * @param {list} content_list   block 列表
- * @param {string} md   拼接后的 md 字符串
- * @param {string} parent_type  content_list 对应的类型，首层类型首 doc 
+ * @param {string} parent_node   要添加子元素的父级 DOM 元素
+ * @param {string} parent_card_id  当前卡片的 ID
  * @returns 返回拼接后的 md 字符串                    
  */
 const heptaContentTomd = (content_list, parent_node, parent_card_id) => {

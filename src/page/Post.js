@@ -312,6 +312,9 @@ class Post extends React.Component {
         // 删除 URL 中不存在的 Card
         this.resetCardList()
 
+        // 设置卡片样式、小标题
+        this.setCardMiniTitleAndStyle()
+
     }
 
     // 删除 URL 中不存在的 Card
@@ -372,7 +375,7 @@ class Post extends React.Component {
 
     }
 
-    // 设置小标题
+    // 设置小标题、overlay 样式
     setCardMiniTitleAndStyle = () => {
 
         let notes = document.getElementsByClassName('container')
