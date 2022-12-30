@@ -15,6 +15,9 @@ import { id } from 'date-fns/locale';
 
 import useHash from "../hooks/useHash";
 
+import { Button, message } from 'antd';
+
+
 
 // 属性
 let ACTIVE_NOTE = ''                                            // 焦点笔记 ID 例如 38d9247c-1b0b-47ca-a119-933af80d71c2
@@ -80,8 +83,8 @@ class Post extends React.Component {
                 // heptabase_blog_data.cards[i] = new_card['card']
 
                 new_card['card']['content'] = heptaToMD(new_card['card'])
-                
-                
+
+
                 return new_card
 
             }
@@ -93,7 +96,7 @@ class Post extends React.Component {
 
     // 文章内链接、反向链接点击
     handleLinkClick = (link_id, current_id = undefined, type = -1) => {
-
+        console.log('post.js handleLinkClick');
         let bingo = false
         this.state.cardList.forEach(item => {
 
@@ -136,58 +139,65 @@ class Post extends React.Component {
         } else {
 
             // 打开新卡片
-            let getUrlSearch_req = this.getUrlSearch(window.location.search)
-            let url_search_list = getUrlSearch_req['url_search_list']
 
-            let new_url_search = ''
-            let current_page_index = -1
-            for (let i = 0; i < url_search_list.length; i++) {
+            // 先判断卡片是否存在
+            let target_card = this.findContent(link_id, HEPTABASE_DATA)
+            if (target_card === undefined) {
+                // 卡片无效
+                message.info('Invalid card');
 
-                if (url_search_list[i] === '') {
-                    continue
-                }
+            } else {
+                let getUrlSearch_req = this.getUrlSearch(window.location.search)
+                let url_search_list = getUrlSearch_req['url_search_list']
 
-                if (url_search_list[i] === current_id) {
-                    // URL 参数 === current_id
-                    current_page_index = i
-                } else {
-                    // URL 参数 !== current_id
+                let new_url_search = ''
+                let current_page_index = -1
+                for (let i = 0; i < url_search_list.length; i++) {
+
+                    if (url_search_list[i] === '') {
+                        continue
+                    }
+
+                    if (url_search_list[i] === current_id) {
+                        // URL 参数 === current_id
+                        current_page_index = i
+                    } else {
+                        // URL 参数 !== current_id
+                    }
+
+                    if (new_url_search == '') {
+                        new_url_search += '?note-id=' + url_search_list[i]
+                    } else {
+                        new_url_search += '&note-id=' + url_search_list[i]
+                    }
+
+                    //如果当前 id === current_id，则忽略后面的所有 ID
+                    if (current_page_index > -1) {
+                        break;
+                    }
                 }
 
                 if (new_url_search == '') {
-                    new_url_search += '?note-id=' + url_search_list[i]
+                    new_url_search += '?note-id=' + link_id
                 } else {
-                    new_url_search += '&note-id=' + url_search_list[i]
+                    new_url_search += '&note-id=' + link_id
                 }
 
-                //如果当前 id === current_id，则忽略后面的所有 ID
-                if (current_page_index > -1) {
-                    break;
-                }
+
+                new_url_search += '&active-note-id=' + link_id
+
+                // 设置 URL
+                window.history.pushState({}, '', window.location.origin + '/post' + new_url_search)
+                // 记录 URL
+                CURRENT_URL = window.location.origin + '/post' + new_url_search
+
+                // 删除 URL 中不存在的 Card
+                this.resetCardList()
+                // 根据 URL 获取 card 数据
+                this.herfToData()
             }
-
-            if (new_url_search == '') {
-                new_url_search += '?note-id=' + link_id
-            } else {
-                new_url_search += '&note-id=' + link_id
-            }
-
-
-            new_url_search += '&active-note-id=' + link_id
-
-            // 设置 URL
-            window.history.pushState({}, '', window.location.origin + '/post' + new_url_search)
-            // 记录 URL
-            CURRENT_URL = window.location.origin + '/post' + new_url_search
-
-            // 删除 URL 中不存在的 Card
-            this.resetCardList()
-            // 根据 URL 获取 card 数据
-            this.herfToData()
 
         }
-
-
 
     }
 

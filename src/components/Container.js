@@ -73,9 +73,31 @@ function Container(props) {
 
     }
 
+    // const handleAarticleLinkClickInstant = () => {
+    //     // 记录跳转类型
+    //     sessionStorage.setItem('nav_type', 1)
+    //     // 记录当前滚动的位置
+    //     sessionStorage.setItem('scrollY', window.scrollY)
+    //     props.handleLinkClick(post_id, parent_note_id)
+    // }
+
+    function handleAarticleLinkClickInstant(post_id, parent_note_id) {
+        console.log('hello');
+        console.log(post_id);
+        console.log(parent_note_id);
+        // 记录跳转类型
+        sessionStorage.setItem('nav_type', 1)
+        // 记录当前滚动的位置
+        sessionStorage.setItem('scrollY', window.scrollY)
+        props.handleLinkClick(post_id, parent_note_id)
+    }
+
+
     // 点击文内链接
     const handleAarticleLinkClick = (node) => {
         // console.log(node);
+
+
 
         if (node !== undefined) {
 
@@ -85,13 +107,33 @@ function Container(props) {
             } else {
                 let post_id = node.getAttribute('path').replace('/post/', '')
                 let parent_note_id = node.getAttribute('parent_note_id')
-                node.addEventListener('click', function () {
-                    // 记录跳转类型
-                    sessionStorage.setItem('nav_type', 1)
-                    // 记录当前滚动的位置
-                    sessionStorage.setItem('scrollY', window.scrollY)
-                    props.handleLinkClick(post_id, parent_note_id)
-                })
+
+                if (node.getAttribute('addClickHandleFlag') !== '1') {
+                    node.setAttribute('addClickHandleFlag','1')
+
+                    node.addEventListener('click', function () {
+                        // 记录跳转类型
+                        sessionStorage.setItem('nav_type', 1)
+                        // 记录当前滚动的位置
+                        sessionStorage.setItem('scrollY', window.scrollY)
+                        props.handleLinkClick(post_id, parent_note_id)
+                    })
+                }
+
+
+                // node.removeEventListener('click', handleAarticleLinkClickInstant.bind(Event, post_id, parent_note_id))
+                // node.addEventListener('click', handleAarticleLinkClickInstant.bind(Event, post_id, parent_note_id))
+
+                // node.removeEventListener('click', ttest,false)
+                // node.addEventListener('click', ttest,false)
+
+                // node.onClick = handleAarticleLinkClickInstant.bind(Event,post_id, parent_note_id)
+                // node.onClick = function () {
+                //     console.log('ok');
+                //     handleAarticleLinkClickInstant(Event, post_id, parent_note_id)
+                // }
+
+
             }
 
         }
@@ -111,20 +153,20 @@ function Container(props) {
             // 设置网易云音乐播放器的尺寸
 
             // 设置 img 的尺寸
-            let article_img = document.getElementsByTagName('img');
+            // let article_img = document.getElementsByTagName('img');
 
-            for (let i = 0; i < article_img.length; i++) {
-                let width_key_index = article_img[i]['alt'].indexOf('{{width ')
-                if (width_key_index > -1) {
-                    let img_width = article_img[i]['alt'].substring(width_key_index, article_img[i]['alt'].length)
-                    img_width = img_width.replace('{{width ', '')
-                    img_width = img_width.replace('}}', '')
+            // for (let i = 0; i < article_img.length; i++) {
+            //     let width_key_index = article_img[i]['alt'].indexOf('{{width ')
+            //     if (width_key_index > -1) {
+            //         let img_width = article_img[i]['alt'].substring(width_key_index, article_img[i]['alt'].length)
+            //         img_width = img_width.replace('{{width ', '')
+            //         img_width = img_width.replace('}}', '')
 
-                    article_img[i].setAttribute('style', 'width:' + (Number(img_width.replace('%', '')) * mobileSkale).toString() + '%')
-                    article_img[i].style.display = 'block'
-                    article_img[i].style.margin = '0 auto'
-                }
-            }
+            //         article_img[i].setAttribute('style', 'width:' + (Number(img_width.replace('%', '')) * mobileSkale).toString() + '%')
+            //         article_img[i].style.display = 'block'
+            //         article_img[i].style.margin = '0 auto'
+            //     }
+            // }
 
             // 设置 a 链接的点击事件，将 a 按照 Link 的方式进行跳转，避免页面不必要的刷新
             let article_link = document.getElementsByClassName('article_link');

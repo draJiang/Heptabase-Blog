@@ -476,6 +476,7 @@ const heptaToMD = (Hpeta_card_data) => {
 
     let parent_card_id = Hpeta_card_data['id']
     let box = document.createElement('div')
+    console.log(JSON.parse(Hpeta_card_data['content'])['content']);
     box = heptaContentTomd(JSON.parse(Hpeta_card_data['content'])['content'], box, parent_card_id)
     return box
 
@@ -508,21 +509,47 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
                 new_node = document.createElement('span')
                 new_node.innerHTML = content_list[i]['attrs']['cardTitle']
 
+                let bingo = false
+
                 if (content_list[i]['attrs']['cardTitle'] === 'Invalid card') {
                     // 未知卡片
-                    new_node.classList.add('unknown_card')
+                    // 在数据中先找一下
+                    let heptabase_blog_data = JSON.parse(localStorage.getItem("heptabase_blog_data"))
 
-                    // new_node.classList.add('my_link')
-                    // new_node.classList.add('article_link')
-                    // new_node.setAttribute('path', '/post/' + content_list[i]['attrs']['cardId'])
-                    // new_node.setAttribute('parent_note_id', parent_card_id)
+                    for (let k = 0; k < heptabase_blog_data.data.cards.length; k++) {
+                        if (heptabase_blog_data.data.cards[k]['id'] === content_list[i]['attrs']['cardId']) {
+                            new_node.innerHTML = heptabase_blog_data.data.cards[k]['title']
+                            bingo = true
+                            break
+                        }
+                    }
 
-                } else {
+                    // if (bingo === true) {
+                    //     new_node.classList.add('my_link')
+                    //     new_node.classList.add('article_link')
+                    //     new_node.setAttribute('path', '/post/' + content_list[i]['attrs']['cardId'])
+                    //     new_node.setAttribute('parent_note_id', parent_card_id)
+                    // } else {
+                    //     new_node.classList.add('unknown_card')
+                    // }
+
+
+                }
+
+                if (bingo === true || content_list[i]['attrs']['cardTitle'] !== 'Invalid card') {
                     new_node.classList.add('my_link')
                     new_node.classList.add('article_link')
                     new_node.setAttribute('path', '/post/' + content_list[i]['attrs']['cardId'])
                     new_node.setAttribute('parent_note_id', parent_card_id)
+                } else {
+                    new_node.classList.add('unknown_card')
                 }
+
+
+
+
+
+
 
                 break
 
@@ -681,7 +708,7 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
 
                 new_node = document.createElement('pre')
                 new_node.classList.add('hljs')
-                new_node.classList.add('language-'+content_list[i]['attrs']['params'])
+                new_node.classList.add('language-' + content_list[i]['attrs']['params'])
 
                 // new_node = React.createElement('SyntaxHighlighter')
                 console.log(new_node);
