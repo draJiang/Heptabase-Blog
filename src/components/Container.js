@@ -73,31 +73,8 @@ function Container(props) {
 
     }
 
-    // const handleAarticleLinkClickInstant = () => {
-    //     // 记录跳转类型
-    //     sessionStorage.setItem('nav_type', 1)
-    //     // 记录当前滚动的位置
-    //     sessionStorage.setItem('scrollY', window.scrollY)
-    //     props.handleLinkClick(post_id, parent_note_id)
-    // }
-
-    function handleAarticleLinkClickInstant(post_id, parent_note_id) {
-        console.log('hello');
-        console.log(post_id);
-        console.log(parent_note_id);
-        // 记录跳转类型
-        sessionStorage.setItem('nav_type', 1)
-        // 记录当前滚动的位置
-        sessionStorage.setItem('scrollY', window.scrollY)
-        props.handleLinkClick(post_id, parent_note_id)
-    }
-
-
     // 点击文内链接
     const handleAarticleLinkClick = (node) => {
-        // console.log(node);
-
-
 
         if (node !== undefined) {
 
@@ -109,6 +86,7 @@ function Container(props) {
                 let parent_note_id = node.getAttribute('parent_note_id')
 
                 if (node.getAttribute('addClickHandleFlag') !== '1') {
+                    // 如果未绑定事件，则绑定，否则不绑定
                     node.setAttribute('addClickHandleFlag','1')
 
                     node.addEventListener('click', function () {

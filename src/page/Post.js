@@ -9,6 +9,7 @@ import Loading from '../components/Loading'
 
 import '../index.css'
 import 'github-markdown-css'
+import 'antd/dist/reset.css';
 
 import { getHeptabaseData, getClearCard, getClearImag, heptaToMD } from '../constantFunction'
 import { id } from 'date-fns/locale';
@@ -621,6 +622,15 @@ class Post extends React.Component {
     }
 
     render() {
+
+        // return (<div>
+        //     <Nav />
+        //     <div className='notes'>
+        //         <Loading />
+        //     </div>
+        //     <Footer />
+        // </div>)
+
         if (HEPTABASE_DATA === null || this.state.cardList.length === 0) {
             return (<div>
                 <Nav />

@@ -17,6 +17,16 @@
     .container .note_title .note_close_button svg {
         fill: var(--color-fg-default, #c9d1d9);
     }
+    /* background: linear-gradient(90deg, rgba(255, 255, 255, 0.12) 25%, rgba(255, 255, 255, 0.18) 37%, rgba(255, 255, 255, 0.12) 63%);
+    background: rgba(255, 255, 255, 0.12); */
+     :where(.css-dev-only-do-not-override-acm2ia).ant-skeleton.ant-skeleton-active .ant-skeleton-title::after,
+     :where(.css-dev-only-do-not-override-acm2ia).ant-skeleton.ant-skeleton-active .ant-skeleton-paragraph>li::after,
+     :where(.css-dev-only-do-not-override-acm2ia).ant-skeleton.ant-skeleton-active .ant-skeleton-avatar::after,
+     :where(.css-dev-only-do-not-override-acm2ia).ant-skeleton.ant-skeleton-active .ant-skeleton-button::after,
+     :where(.css-dev-only-do-not-override-acm2ia).ant-skeleton.ant-skeleton-active .ant-skeleton-input::after,
+     :where(.css-dev-only-do-not-override-acm2ia).ant-skeleton.ant-skeleton-active .ant-skeleton-image::after {
+        background: linear-gradient(90deg, rgba(255, 255, 255, 0.12) 25%, rgba(255, 255, 255, 0.18) 37%, rgba(255, 255, 255, 0.12) 63%);
+    }
 }
 
 @media (width <=600px) {
@@ -281,14 +291,9 @@ article a::after {
 
 .loading {
     /* position: relative; */
-    opacity: 0.6;
-}
-
-.loading div {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    /* opacity: 0.6; */
+    width: 650px;
+    padding: 0 1rem;
 }
 
 .footer {
