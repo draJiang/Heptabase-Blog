@@ -161,7 +161,7 @@ article a::after {
 
 .container .note_title .note_close_button {
     position: absolute;
-    bottom: 64px;
+    bottom: 8px;
     cursor: pointer;
 }
 

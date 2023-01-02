@@ -480,11 +480,15 @@ class Post extends React.Component {
                     // 前一个元素显示垂直标题
                     let note_title = document.createElement('div')
                     note_title.classList.add('note_title')
+                    
 
                     if (type === 1) {
+                        // 左侧小标题
                         note_title.style.left = (j - 1) * 40 + 'px'
                     } else {
+                        // 右侧小标题
                         note_title.style.right = (notes.length - j) * 40 - 40 + 'px'
+                        note_title.classList.add('overlay')
                     }
 
                     // 小标题文案
@@ -506,7 +510,7 @@ class Post extends React.Component {
 
                     // 小标题关闭按钮
                     let note_close_button = document.createElement('span')
-                    note_close_button.innerHTML = '<svg t="1670226356192" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2683" width="16" height="16"><path d="M557.2 512l233.4-233.4c12.5-12.5 12.5-32.8 0-45.2s-32.8-12.5-45.2 0L512 466.8 278.6 233.4c-12.5-12.5-32.8-12.5-45.2 0s-12.5 32.8 0 45.2L466.8 512 233.4 745.4c-12.5 12.5-12.5 32.8 0 45.2 6.2 6.2 14.4 9.4 22.6 9.4s16.4-3.1 22.6-9.4L512 557.2l233.4 233.4c6.2 6.2 14.4 9.4 22.6 9.4s16.4-3.1 22.6-9.4c12.5-12.5 12.5-32.8 0-45.2L557.2 512z" p-id="2684"></path></svg>'
+                    note_close_button.innerHTML = '<svg t="1670226356192" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2683" width="20" height="20"><path d="M557.2 512l233.4-233.4c12.5-12.5 12.5-32.8 0-45.2s-32.8-12.5-45.2 0L512 466.8 278.6 233.4c-12.5-12.5-32.8-12.5-45.2 0s-12.5 32.8 0 45.2L466.8 512 233.4 745.4c-12.5 12.5-12.5 32.8 0 45.2 6.2 6.2 14.4 9.4 22.6 9.4s16.4-3.1 22.6-9.4L512 557.2l233.4 233.4c6.2 6.2 14.4 9.4 22.6 9.4s16.4-3.1 22.6-9.4c12.5-12.5 12.5-32.8 0-45.2L557.2 512z" p-id="2684"></path></svg>'
                     note_close_button.classList.add('note_close_button')
                     note_close_button.onclick = (event) => {
 

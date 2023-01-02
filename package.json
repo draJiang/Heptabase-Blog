@@ -1,6 +1,6 @@
 {
     "name": "heptabase_blog",
-    "version": "0.7.0",
+    "version": "1.0.0",
     "private": true,
     "proxy": "http://localhost:3000",
     "dependencies": {
