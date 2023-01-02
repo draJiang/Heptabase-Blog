@@ -19,12 +19,12 @@
     }
     /* background: linear-gradient(90deg, rgba(255, 255, 255, 0.12) 25%, rgba(255, 255, 255, 0.18) 37%, rgba(255, 255, 255, 0.12) 63%);
     background: rgba(255, 255, 255, 0.12); */
-     :where(.css-dev-only-do-not-override-acm2ia).ant-skeleton.ant-skeleton-active .ant-skeleton-title::after,
-     :where(.css-dev-only-do-not-override-acm2ia).ant-skeleton.ant-skeleton-active .ant-skeleton-paragraph>li::after,
-     :where(.css-dev-only-do-not-override-acm2ia).ant-skeleton.ant-skeleton-active .ant-skeleton-avatar::after,
-     :where(.css-dev-only-do-not-override-acm2ia).ant-skeleton.ant-skeleton-active .ant-skeleton-button::after,
-     :where(.css-dev-only-do-not-override-acm2ia).ant-skeleton.ant-skeleton-active .ant-skeleton-input::after,
-     :where(.css-dev-only-do-not-override-acm2ia).ant-skeleton.ant-skeleton-active .ant-skeleton-image::after {
+    .ant-skeleton.ant-skeleton-active .ant-skeleton-title::after,
+    .ant-skeleton.ant-skeleton-active .ant-skeleton-paragraph>li::after,
+    .ant-skeleton.ant-skeleton-active .ant-skeleton-avatar::after,
+    .ant-skeleton.ant-skeleton-active .ant-skeleton-button::after,
+    .ant-skeleton.ant-skeleton-active .ant-skeleton-input::after,
+    .ant-skeleton.ant-skeleton-active .ant-skeleton-image::after {
         background: linear-gradient(90deg, rgba(255, 255, 255, 0.12) 25%, rgba(255, 255, 255, 0.18) 37%, rgba(255, 255, 255, 0.12) 63%) !important;
     }
 }
