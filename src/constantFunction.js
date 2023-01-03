@@ -553,6 +553,10 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
 
                 break
 
+            case 'whiteboard':
+                new_node = document.createTextNode(content_list[i]['attrs']['whiteboardName'])
+                break
+
             case 'image':
                 new_node = document.createElement('img')
                 new_node.setAttribute('src', content_list[i]['attrs']['src'])
