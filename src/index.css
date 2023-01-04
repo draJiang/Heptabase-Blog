@@ -213,7 +213,7 @@ article a::after {
 
 .nav li {
     /* position: relative; */
-    margin-left: 2rem;
+    /* margin-left: 2rem; */
     list-style: none;
     margin-top: 0em !important;
 }
@@ -229,7 +229,8 @@ article a::after {
 
 .nav header {
     position: relative;
-    width: 100%;
+    flex: 1;
+    /* width: 100%; */
     /* margin-left: 2rem; */
 }
 
@@ -334,4 +335,12 @@ article a::after {
 
 .markdown-body table p {
     margin-bottom: 0;
+}
+
+.markdown-body ol li {
+    list-style: decimal;
+}
+
+.markdown-body .nav ul {
+    padding-left: 0.4rem;
 }

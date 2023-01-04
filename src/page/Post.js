@@ -239,13 +239,21 @@ class Post extends React.Component {
 
         // 根据 URL 渲染新的数据到界面上
         if (this.state.cardList !== card_list) {
+            
+            // this.setState({
+            //     cardList: []
+            //     // activeNote: activeNote
+            // })
+
+            this.state.cardList = card_list
 
             this.setState({
-                cardList: card_list
+                cardList: this.state.cardList
                 // activeNote: activeNote
             }, () => {
                 // 更新 URL
                 // this.setUrlActiveNote(activeNote)
+                console.log('this.setState done');
             })
         }
 
