@@ -643,10 +643,40 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
                                     new_node.setAttribute('parent_note_id', parent_card_id)
 
                                 } else {
-                                    // 外链
-                                    new_node = document.createElement('a')
-                                    new_node.href = mark['attrs']['href']
-                                    new_node.innerHTML = content_list[i]['text']
+
+                                    if (mark['attrs']['href'].indexOf('app.heptabase') > -1 && mark['attrs']['href'].indexOf('card/') > -1) {
+                                        // Link to block
+                                        // 获取 card ID
+                                        let card_id_index_start = mark['attrs']['href'].indexOf('card/')
+                                        let card_id_index_end = mark['attrs']['href'].indexOf('#')
+
+                                        if (card_id_index_start > -1 && card_id_index_end > -1) {
+                                            let card_id = mark['attrs']['href'].substring(card_id_index_start+5, card_id_index_end)
+
+                                            new_node = document.createElement('span')
+                                            new_node.innerHTML = content_list[i]['text']
+                                            new_node.classList.add('my_link')
+                                            new_node.classList.add('article_link')
+                                            new_node.setAttribute('path', '/post/' + card_id)
+                                            new_node.setAttribute('parent_note_id', parent_card_id)
+
+                                        } else {
+                                            // 外链
+                                            new_node = document.createElement('a')
+                                            new_node.href = mark['attrs']['href']
+                                            new_node.innerHTML = content_list[i]['text']
+                                        }
+
+                                    } else {
+                                        // 外链
+                                        new_node = document.createElement('a')
+                                        new_node.href = mark['attrs']['href']
+                                        new_node.innerHTML = content_list[i]['text']
+                                    }
+
+
+
+
                                 }
 
                                 break
@@ -679,12 +709,14 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
 
             case 'task_list':
                 new_node = document.createElement('ul')
+                new_node.classList.add('task-list')
                 break
 
             case 'list_item':
                 new_node = document.createElement('li')
+
                 // 如果是 task
-                if (content_list[i]['attrs']['checked'] !== null) {
+                if (parent_node.className.indexOf('task-list')>-1) {
                     let task_input = document.createElement('input')
                     task_input.type = 'checkbox'
                     // task_input.checked = 'true'

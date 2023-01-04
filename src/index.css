@@ -331,3 +331,7 @@ article a::after {
 .markdown-body pre {
     background: #303030 !important;
 }
+
+.markdown-body table p {
+    margin-bottom: 0;
+}
