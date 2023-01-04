@@ -18,6 +18,8 @@ import useHash from "../hooks/useHash";
 
 import { Button, message } from 'antd';
 
+import CONFIG from '../config'
+
 
 
 // 属性
@@ -239,7 +241,7 @@ class Post extends React.Component {
 
         // 根据 URL 渲染新的数据到界面上
         if (this.state.cardList !== card_list) {
-            
+
             // this.setState({
             //     cardList: []
             //     // activeNote: activeNote
@@ -365,7 +367,8 @@ class Post extends React.Component {
         let note_list = document.getElementsByClassName('container')
         for (let j = 0; j < note_list.length; j++) {
             let note = note_list[j]
-
+            console.log(CONFIG);
+            console.log(note.getElementsByTagName('h1'));
             // 定位到当前用户关注的笔记
             if (note.getAttribute('note_id') === ACTIVE_NOTE) {
 
@@ -375,7 +378,16 @@ class Post extends React.Component {
 
                 } else {
 
-                    if (sessionStorage.getItem('nav_type') > -1) {
+                    // 如果是点击头部的页面（Projects、Posts 等）则需要定位到页面顶部
+                    let bingo = false
+                    // for (let k = 0; k < CONFIG.pages.length; k++) {
+                    //     if (note.getElementsByTagName('h1')[0].innerText === CONFIG.pages[k]) {
+                    //         bingo = true
+                    //         break
+                    //     }
+                    // }
+
+                    if (sessionStorage.getItem('nav_type') > -1 || bingo) {
                         // 滚动到顶部
                         window.scrollTo(0, 0)
 
@@ -488,7 +500,7 @@ class Post extends React.Component {
                     // 前一个元素显示垂直标题
                     let note_title = document.createElement('div')
                     note_title.classList.add('note_title')
-                    
+
 
                     if (type === 1) {
                         // 左侧小标题

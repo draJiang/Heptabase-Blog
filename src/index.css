@@ -213,7 +213,7 @@ article a::after {
 
 .nav li {
     /* position: relative; */
-    /* margin-left: 2rem; */
+    margin-left: 0.2rem;
     list-style: none;
     margin-top: 0em !important;
 }

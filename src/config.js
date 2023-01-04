@@ -1,6 +1,7 @@
 const CONFIG = {
     'api_url': 'https://api.dabing.one/', // 数据请求地址
-    'title': 'Jiang 的数字花园🌱' // 站点标题
+    'title': 'Jiang 的数字花园🌱', // 站点标题
+    'pages':['About','Blog','Projects']
 }
 
 export default CONFIG
