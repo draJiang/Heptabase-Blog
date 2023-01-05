@@ -13,6 +13,11 @@ import 'highlight.js/styles/dark.css';
 // import 'highlight.js/styles/hopscotch.css'; 
 import hljs from "highlight.js";
 
+import { SearchOutlined } from '@ant-design/icons';
+import { Button, message } from 'antd';
+import Clipboard from 'clipboard';
+
+
 
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
@@ -87,7 +92,7 @@ function Container(props) {
 
                 if (node.getAttribute('addClickHandleFlag') !== '1') {
                     // 如果未绑定事件，则绑定，否则不绑定
-                    node.setAttribute('addClickHandleFlag','1')
+                    node.setAttribute('addClickHandleFlag', '1')
 
                     node.addEventListener('click', function () {
                         // 记录跳转类型
@@ -119,6 +124,20 @@ function Container(props) {
     }
 
     const { pathname } = useLocation();
+
+    // // 复制到剪切板实例化
+    // const copy = new Clipboard('.copy-btn');
+    // copy.on('success', e => {
+    //     message.open({
+    //         type: 'success',
+    //         content: 'Link copied',
+    //     });
+    // });
+    // copy.on('error', function (e) {
+    //     console.error('Action:', e.action);
+    //     console.error('Trigger:', e.trigger);
+    // });
+
     // 组件生命周期，组件载入、更新时将触发此函数
     useEffect(() => {
 
@@ -264,9 +283,11 @@ function Container(props) {
                     rehypePlugins={[rehypeRaw]}
                     remarkPlugins={[remarkGfm, { singleTilde: false }]} /> */}
             </article>
-            <div className='postTime'>
+            <div className='article_bottom'>
                 <time>Created {format(new Date(props['card']['card']['createdTime']), 'yyyy-MM-dd')}</time>
                 <time>{props['card']['card']['lastEditedTimeDiff']}</time>
+                {/* <button class="copy-btn" data-clipboard-text={window.location.origin + '/post?note-id=' + props['card']['card']['id']}>🔗</button> */}
+                <Button type="link" size="small" className="copy-btn" data-clipboard-text={window.location.origin + '/post?note-id=' + props['card']['card']['id']}>Share</Button>
             </div>
             {/* 反向链接 */}
             {backLinksBox}

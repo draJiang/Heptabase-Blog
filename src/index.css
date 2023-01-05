@@ -104,16 +104,16 @@ article a::after {
 }
 
 .post_list time,
-.postTime {
+.article_bottom {
     font-size: 0.9rem;
     color: #666;
 }
 
-.container .postTime {
+.container .article_bottom {
     margin-bottom: 1rem;
 }
 
-.postTime time {
+.article_bottom time {
     margin-right: 1rem;
 }
 
@@ -213,7 +213,7 @@ article a::after {
 
 .nav li {
     /* position: relative; */
-    margin-left: 0.2rem;
+    margin-left: 0.4rem;
     list-style: none;
     margin-top: 0em !important;
 }
@@ -346,14 +346,14 @@ article a::after {
 }
 
 .copy-btn {
-    position: absolute;
-    top: 0.3rem;
-    right: 0.3rem;
-    background: none;
-    border: none;
-    cursor: pointer;
+    /* background: none;
+    font-size: 0.6rem;
+    padding: 4px 8px 2px 8px;
+    border-radius: 2px;
+    border: 1px solid #fff;
+    cursor: pointer; */
 }
 
 .copy-btn:hover {
-    text-decoration: underline;
+    /* text-decoration: underline; */
 }

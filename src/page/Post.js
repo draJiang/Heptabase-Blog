@@ -343,7 +343,7 @@ class Post extends React.Component {
         this.setCardMiniTitleAndStyle()
 
         // 增加分享按钮
-        this.addShareBtn()
+        // this.addShareBtn()
 
 
 
