@@ -661,7 +661,7 @@ class Post extends React.Component {
                 <div className='notes'>
                     <Loading />
                 </div>
-                <Footer />
+                {/* <Footer /> */}
             </div>)
         } else {
 

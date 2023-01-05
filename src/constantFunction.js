@@ -1,5 +1,24 @@
 import React from "react";
 import CONFIG from "./config";
+import { Button, Modal } from 'antd';
+
+const { confirm } = Modal;
+
+const showConfirm = () => {
+    confirm({
+        title: 'Sorry,some ting erro😥',
+        // icon: <ExclamationCircleFilled />,
+        content: 'Please try refresh',
+        okText: 'Refresh',
+        onOk() {
+            console.log('Refresh');
+            window.location.replace(window.location.href)
+        },
+        onCancel() {
+            console.log('Cancel');
+        },
+    });
+};
 
 // 计算指定时间与当前的时间差
 const getLastEditedTime = (dateBegin) => {
@@ -458,7 +477,11 @@ const getHeptabaseData = new Promise((resolve, reject) => {
             // return heptabase_blog_data
             resolve(local_data)
         })
-        .catch(e => console.log('错误:', e))
+        .catch(e => {
+            console.log('错误:', e)
+            // 反馈错误
+            showConfirm()
+        })
 
 })
 
@@ -651,7 +674,7 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
                                         let card_id_index_end = mark['attrs']['href'].indexOf('#')
 
                                         if (card_id_index_start > -1 && card_id_index_end > -1) {
-                                            let card_id = mark['attrs']['href'].substring(card_id_index_start+5, card_id_index_end)
+                                            let card_id = mark['attrs']['href'].substring(card_id_index_start + 5, card_id_index_end)
 
                                             new_node = document.createElement('span')
                                             new_node.innerHTML = content_list[i]['text']
@@ -716,7 +739,7 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
                 new_node = document.createElement('li')
 
                 // 如果是 task
-                if (parent_node.className.indexOf('task-list')>-1) {
+                if (parent_node.className.indexOf('task-list') > -1) {
                     let task_input = document.createElement('input')
                     task_input.type = 'checkbox'
                     // task_input.checked = 'true'
