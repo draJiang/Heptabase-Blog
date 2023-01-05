@@ -237,7 +237,7 @@ function Container(props) {
 
         return <div style={props['style']} ref={post} className='markdown-body container' note_id={props['card']['card']['id']}>
 
-            <article dangerouslySetInnerHTML={{ __html: props['card']['card']['content'].innerHTML }}>
+            <article className='note_article' dangerouslySetInnerHTML={{ __html: props['card']['card']['content'].innerHTML }}>
                 {/* <div dangerouslySetInnerHTML={{ __html: props['card']['card']['content'].innerHTML }}></div> */}
 
 

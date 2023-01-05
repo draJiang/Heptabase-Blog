@@ -4,6 +4,7 @@ import { Button, Modal } from 'antd';
 
 const { confirm } = Modal;
 
+// fetch 错误时的反馈弹窗
 const showConfirm = () => {
     confirm({
         title: 'Sorry,some ting erro😥',

@@ -20,7 +20,9 @@ import { Button, message } from 'antd';
 
 import CONFIG from '../config'
 
+import copy from 'copy-to-clipboard';
 
+import Clipboard from 'clipboard';
 
 // 属性
 let ACTIVE_NOTE = ''                                            // 焦点笔记 ID 例如 38d9247c-1b0b-47ca-a119-933af80d71c2
@@ -43,6 +45,19 @@ class Post extends React.Component {
     }
 
     componentDidMount() {
+
+        // 复制到剪切板实例化
+        const copy = new Clipboard('.copy-btn');
+        copy.on('success', e => {
+            message.open({
+                type: 'success',
+                content: 'Link copied',
+            });
+        });
+        copy.on('error', function (e) {
+            console.error('Action:', e.action);
+            console.error('Trigger:', e.trigger);
+        });
 
         // 请求 hepta 数据 getHeptabaseData
         getHeptabaseData.then((res) => {
@@ -86,7 +101,6 @@ class Post extends React.Component {
                 // heptabase_blog_data.cards[i] = new_card['card']
 
                 new_card['card']['content'] = heptaToMD(new_card['card'])
-
 
                 return new_card
 
@@ -297,14 +311,6 @@ class Post extends React.Component {
                 this.herfToData()
 
             }
-
-            // setTimeout(() => {
-            //     // 定位到焦点卡片
-            //     this.ScrollToActiveNote()
-            //     // 设置样式、小标题
-            //     this.setCardMiniTitleAndStyle()
-            // }, 100);
-
         }
 
         // 焦点发生变化
@@ -335,6 +341,39 @@ class Post extends React.Component {
 
         // 设置卡片样式、小标题
         this.setCardMiniTitleAndStyle()
+
+        // 增加分享按钮
+        this.addShareBtn()
+
+
+
+    }
+
+    addShareBtn = () => {
+        // 增加分享按钮
+        // let btn = < button data-clipboard-text='这里是需要复制的文本123'
+        //     className="copy-btn"
+        //     type="button" > Copy</button >
+        let share_btn = document.createElement('button')
+        share_btn.classList.add('copy-btn')
+        share_btn.setAttribute('data-clipboard-text', '这里是需要复制的文本1232323')
+        share_btn.innerText = '🔗'
+
+
+        let notes = document.getElementsByClassName('note_article')
+
+        for (let i = 0; i < notes.length; i++) {
+            if (notes[i].getElementsByClassName('copy-btn').length > 0) {
+                // 已经有分享按钮，不用重复添加
+                continue
+            } else {
+                console.log(notes);
+                let note_link = window.location.origin + '/post?note-id=' + notes[i].parentElement.getAttribute('note_id')
+                share_btn.setAttribute('data-clipboard-text', note_link)
+                notes[i].appendChild(share_btn)
+            }
+        }
+
 
     }
 
@@ -367,8 +406,6 @@ class Post extends React.Component {
         let note_list = document.getElementsByClassName('container')
         for (let j = 0; j < note_list.length; j++) {
             let note = note_list[j]
-            console.log(CONFIG);
-            console.log(note.getElementsByTagName('h1'));
             // 定位到当前用户关注的笔记
             if (note.getAttribute('note_id') === ACTIVE_NOTE) {
 
@@ -410,8 +447,6 @@ class Post extends React.Component {
     setCardMiniTitleAndStyle = () => {
 
         let notes = document.getElementsByClassName('container')
-
-        // console.log('setCardMiniTitleAndStyle');
 
         for (let j = 0; j < notes.length; j++) {
 
@@ -721,7 +756,6 @@ class Post extends React.Component {
             }
 
             return (<div className='notes_box'>
-
                 <Nav />
                 <div className='notes'>
                     {card_list_dom}

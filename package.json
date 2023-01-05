@@ -4,10 +4,13 @@
     "private": true,
     "proxy": "http://localhost:3000",
     "dependencies": {
+        "@ant-design/icons": "^4.8.0",
         "@testing-library/jest-dom": "^5.16.5",
         "@testing-library/react": "^13.4.0",
         "@testing-library/user-event": "^13.5.0",
         "antd": "^5.1.1",
+        "clipboard": "^2.0.11",
+        "copy-to-clipboard": "^3.3.3",
         "cors": "^2.8.5",
         "date-fns": "^2.29.3",
         "express": "^4.18.2",

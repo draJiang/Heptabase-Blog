@@ -344,3 +344,16 @@ article a::after {
 .markdown-body .nav ul {
     padding-left: 0.4rem;
 }
+
+.copy-btn {
+    position: absolute;
+    top: 0.3rem;
+    right: 0.3rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.copy-btn:hover {
+    text-decoration: underline;
+}
