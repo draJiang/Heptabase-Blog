@@ -111,6 +111,7 @@ article a::after {
 
 .container .article_bottom {
     margin-bottom: 1rem;
+    display: flex;
 }
 
 .article_bottom time {
@@ -356,4 +357,9 @@ article a::after {
 
 .copy-btn:hover {
     /* text-decoration: underline; */
+}
+
+.markdown-body .task-list-item {
+    display: flex;
+    margin: 16px 0;
 }

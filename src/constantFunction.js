@@ -751,7 +751,7 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
                     task_input.disabled = true
 
                     new_node.classList.add('task-list-item')
-                    new_node.setAttribute('style', 'margin: 16px 0');
+                    // new_node.setAttribute('style', 'margin: 16px 0');
                     new_node.appendChild(task_input)
                 }
                 break

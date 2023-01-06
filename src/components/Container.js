@@ -14,7 +14,7 @@ import 'highlight.js/styles/dark.css';
 import hljs from "highlight.js";
 
 import { SearchOutlined } from '@ant-design/icons';
-import { Button, message } from 'antd';
+import { Button, message, Tooltip } from 'antd';
 import Clipboard from 'clipboard';
 
 
@@ -32,6 +32,11 @@ function Container(props) {
 
     // 记录文章的 DOM 信息，用来处理 DOM 元素，例如修改图片样式
     let post = useRef(null);
+    const { pathname } = useLocation();
+    // Tooltips 显示、隐藏
+    let [TooltipsOpen, setTooltipsOpen] = useState(false)
+    // 记录当前文章的 ID
+    let [thisPageId, setPageID] = useState('')
 
     // 当前路径信息
     let path = window.location.pathname
@@ -47,8 +52,7 @@ function Container(props) {
         path_id = path.replace('/post/', '')
     }
 
-    // 记录当前文章的 ID
-    let [thisPageId, setPageID] = useState('')
+
 
     // 记录自定义的 Link 数据，用来实现 DOM 链接的间接跳转
     // let [my_link, setLink] = useState('');
@@ -123,20 +127,21 @@ function Container(props) {
 
     }
 
-    const { pathname } = useLocation();
+    const handleCopyBtnClick = () => {
+        console.log(123);
+        // 显示 Tooltips
+        setTooltipsOpen(true)
 
-    // // 复制到剪切板实例化
-    // const copy = new Clipboard('.copy-btn');
-    // copy.on('success', e => {
-    //     message.open({
-    //         type: 'success',
-    //         content: 'Link copied',
-    //     });
-    // });
-    // copy.on('error', function (e) {
-    //     console.error('Action:', e.action);
-    //     console.error('Trigger:', e.trigger);
-    // });
+        setTimeout(() => {
+            // 隐藏 Tooltips
+            setTooltipsOpen(false)
+        }, 1400);
+    }
+
+    // Tooltips 显示、隐藏状态变化时
+    const handleTooltipOnOpenChange = () => {
+        console.log('onOpenChange');
+    }
 
     // 组件生命周期，组件载入、更新时将触发此函数
     useEffect(() => {
@@ -256,38 +261,15 @@ function Container(props) {
 
         return <div style={props['style']} ref={post} className='markdown-body container' note_id={props['card']['card']['id']}>
 
-            <article className='note_article' dangerouslySetInnerHTML={{ __html: props['card']['card']['content'].innerHTML }}>
-                {/* <div dangerouslySetInnerHTML={{ __html: props['card']['card']['content'].innerHTML }}></div> */}
-
-
-                {/* <ReactMarkdown children={props['card']['card']['content'].
-                    innerHTML}
-                    components={{
-                        code({ node, inline, className, children, ...props }) {
-                            const match = /language-(\w+)/.exec(className || '')
-                            return !inline && match ? (
-                                <SyntaxHighlighter
-                                    children={String(children).replace(/\n$/, '')}
-                                    style={atomDark}
-                                    language={match[1]}
-                                    PreTag="div"
-                                    {...props}
-                                />
-                            ) : (
-                                <code className={className} {...props}>
-                                    {children}
-                                </code>
-                            )
-                        }
-                    }}
-                    rehypePlugins={[rehypeRaw]}
-                    remarkPlugins={[remarkGfm, { singleTilde: false }]} /> */}
-            </article>
+            <article className='note_article' dangerouslySetInnerHTML={{ __html: props['card']['card']['content'].innerHTML }}></article>
             <div className='article_bottom'>
                 <time>Created {format(new Date(props['card']['card']['createdTime']), 'yyyy-MM-dd')}</time>
                 <time>{props['card']['card']['lastEditedTimeDiff']}</time>
                 {/* <button class="copy-btn" data-clipboard-text={window.location.origin + '/post?note-id=' + props['card']['card']['id']}>🔗</button> */}
-                <Button type="link" size="small" className="copy-btn" data-clipboard-text={window.location.origin + '/post?note-id=' + props['card']['card']['id']}>Share</Button>
+                <Tooltip placement="topRight" color='green' title='Link copied' trigger='click' arrowPointAtCenter={false} onOpenChange={handleTooltipOnOpenChange} open={TooltipsOpen}>
+                    <Button onClick={handleCopyBtnClick} type="link" size="small" className="copy-btn" data-clipboard-text={window.location.origin + '/post?note-id=' + props['card']['card']['id']}>Share</Button>
+                </Tooltip>
+
             </div>
             {/* 反向链接 */}
             {backLinksBox}

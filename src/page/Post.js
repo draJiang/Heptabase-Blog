@@ -16,11 +16,7 @@ import { id } from 'date-fns/locale';
 
 import useHash from "../hooks/useHash";
 
-import { Button, message } from 'antd';
-
-import CONFIG from '../config'
-
-import copy from 'copy-to-clipboard';
+import { Button, message,Tooltip } from 'antd';
 
 import Clipboard from 'clipboard';
 
@@ -49,10 +45,11 @@ class Post extends React.Component {
         // 复制到剪切板实例化
         const copy = new Clipboard('.copy-btn');
         copy.on('success', e => {
-            message.open({
-                type: 'success',
-                content: 'Link copied',
-            });
+            // message.open({
+            //     type: 'success',
+            //     content: 'Link copied',
+            // });
+            
         });
         copy.on('error', function (e) {
             console.error('Action:', e.action);
@@ -417,12 +414,6 @@ class Post extends React.Component {
 
                     // 如果是点击头部的页面（Projects、Posts 等）则需要定位到页面顶部
                     let bingo = false
-                    // for (let k = 0; k < CONFIG.pages.length; k++) {
-                    //     if (note.getElementsByTagName('h1')[0].innerText === CONFIG.pages[k]) {
-                    //         bingo = true
-                    //         break
-                    //     }
-                    // }
 
                     if (sessionStorage.getItem('nav_type') > -1 || bingo) {
                         // 滚动到顶部
