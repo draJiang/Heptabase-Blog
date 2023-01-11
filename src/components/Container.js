@@ -13,7 +13,7 @@ import 'highlight.js/styles/dark.css';
 // import 'highlight.js/styles/hopscotch.css'; 
 import hljs from "highlight.js";
 
-import { SearchOutlined } from '@ant-design/icons';
+import { ShareAltOutlined } from '@ant-design/icons';
 import { Button, message, Tooltip } from 'antd';
 import Clipboard from 'clipboard';
 
@@ -263,17 +263,15 @@ function Container(props) {
 
             <article className='note_article' dangerouslySetInnerHTML={{ __html: props['card']['card']['content'].innerHTML }}></article>
             <div className='article_bottom'>
-                <time>Created {format(new Date(props['card']['card']['createdTime']), 'yyyy-MM-dd')}</time>
-                <time>{props['card']['card']['lastEditedTimeDiff']}</time>
-                {/* <button class="copy-btn" data-clipboard-text={window.location.origin + '/post?note-id=' + props['card']['card']['id']}>🔗</button> */}
-                <Tooltip placement="topRight" color='green' title='Link copied' trigger='click' arrowPointAtCenter={false} onOpenChange={handleTooltipOnOpenChange} open={TooltipsOpen}>
-                    <Button onClick={handleCopyBtnClick} type="link" size="small" className="copy-btn" data-clipboard-text={window.location.origin + '/post?note-id=' + props['card']['card']['id']}>Share</Button>
+                <div style={{ flex: 1 }}>
+                    <time>Created {format(new Date(props['card']['card']['createdTime']), 'yyyy-MM-dd')}</time>
+                    <time>{props['card']['card']['lastEditedTimeDiff']}</time>
+                </div>
+                <Tooltip placement="left" color='green' title='Link copied' trigger='click' arrowPointAtCenter={false} onOpenChange={handleTooltipOnOpenChange} open={TooltipsOpen}>
+                    <Button onClick={handleCopyBtnClick} size="small" className="copy-btn" data-clipboard-text={window.location.origin + '/post?note-id=' + props['card']['card']['id']} icon={<ShareAltOutlined />} />
                 </Tooltip>
-
             </div>
-            {/* 反向链接 */}
             {backLinksBox}
-
 
         </div>
     }
