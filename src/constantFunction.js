@@ -365,13 +365,13 @@ const getHeptabaseData = new Promise((resolve, reject) => {
     // 若本地存在数据则不重新获取
     if (heptabase_blog_data !== undefined && heptabase_blog_data !== null) {
 
-        let createdTime = JSON.parse(heptabase_blog_data)['createdTime']
+        let frontGetTime = JSON.parse(heptabase_blog_data)['frontGetTime']
         console.log(Date.parse(new Date()) / 1000);
-        console.log(createdTime);
-        console.log(Date.parse(new Date()) / 1000 - createdTime);
+        console.log(frontGetTime);
+        console.log(Date.parse(new Date()) / 1000 - frontGetTime);
 
-        //Date.parse(new Date()) / 1000 - createdTime >= 1200 && createdTime !== undefined
-        if (Date.parse(new Date()) / 1000 - createdTime >= 1200 && createdTime !== undefined) {
+        //Date.parse(new Date()) / 1000 - frontGetTime >= 1200 && frontGetTime !== undefined
+        if (Date.parse(new Date()) / 1000 - frontGetTime >= 1200 || frontGetTime === undefined) {
             // 数据比较旧时再重新获取
             console.log('数据比较旧');
 
@@ -400,7 +400,7 @@ const getHeptabaseData = new Promise((resolve, reject) => {
             console.log(data)
 
             // 按照时间排序卡片
-            data.cards = data.cards.sort((a, b) => {
+            data.data.cards = data.data.cards.sort((a, b) => {
 
                 // 最近编辑时间
                 return b.lastEditedTime < a.lastEditedTime ? -1 : 1
@@ -417,23 +417,23 @@ const getHeptabaseData = new Promise((resolve, reject) => {
             // 存储卡片 ID，用户判断是否重复
             let cards_id = []
 
-            for (let i = 0; i < data.cards.length; i++) {
+            for (let i = 0; i < data.data.cards.length; i++) {
 
                 // About
-                if (data.cards[i]['title'] === 'About') {
+                if (data.data.cards[i]['title'] === 'About') {
 
-                    pages.about = data.cards[i]
+                    pages.about = data.data.cards[i]
 
                 }
 
                 // Projects
-                if (data.cards[i]['title'] === 'Projects') {
-                    pages.projects = data.cards[i]
+                if (data.data.cards[i]['title'] === 'Projects') {
+                    pages.projects = data.data.cards[i]
 
                 }
 
                 // 去重
-                if (cards_id.indexOf(data.cards[i]['id']) > -1) {
+                if (cards_id.indexOf(data.data.cards[i]['id']) > -1) {
                     // 已存在此卡片，则忽略
                     // console.log(data.cards[i]);
                 } else {
@@ -441,42 +441,42 @@ const getHeptabaseData = new Promise((resolve, reject) => {
                     // 不存在此卡片
 
                     // 最近编辑的时间差
-                    let timeDiff = getLastEditedTime(data.cards[i]['lastEditedTime'])
-                    data.cards[i].lastEditedTimeDiff = ''
+                    let timeDiff = getLastEditedTime(data.data.cards[i]['lastEditedTime'])
+                    data.data.cards[i].lastEditedTimeDiff = ''
                     if (timeDiff['day'] > 0) {
-                        data.cards[i].lastEditedTimeDiff = 'Edited ' + timeDiff['day'] + ' days ago'
+                        data.data.cards[i].lastEditedTimeDiff = 'Edited ' + timeDiff['day'] + ' days ago'
                     } else if (timeDiff['hours'] > 0) {
 
-                        data.cards[i].lastEditedTimeDiff = 'Edited ' + timeDiff['hours'] + ' hours ago'
+                        data.data.cards[i].lastEditedTimeDiff = 'Edited ' + timeDiff['hours'] + ' hours ago'
 
                     } else if (timeDiff['minutes'] > 0) {
 
-                        data.cards[i].lastEditedTimeDiff = 'Edited ' + timeDiff['minutes'] + ' minutes ago'
+                        data.data.cards[i].lastEditedTimeDiff = 'Edited ' + timeDiff['minutes'] + ' minutes ago'
 
                     } else {
 
-                        data.cards[i].lastEditedTimeDiff = 'Edited just'
+                        data.data.cards[i].lastEditedTimeDiff = 'Edited just'
 
                     }
 
-                    new_cards.push(data.cards[i])
-                    cards_id.push(data.cards[i]['id'])
+                    new_cards.push(data.data.cards[i])
+                    cards_id.push(data.data.cards[i]['id'])
 
                 }
 
             }
 
-            data.cards = new_cards
+            data.data.cards = new_cards
+            data.frontGetTime = Date.parse(new Date()) / 1000
+            data.pages = pages
 
-            // createdTime 记录数据获取的时间
-            const local_data = { 'createdTime': Date.parse(new Date()) / 1000, 'data': data, 'pages': pages }
             // 存储数据到本地缓存
-            localStorage.setItem("heptabase_blog_data", JSON.stringify(local_data))
+            localStorage.setItem("heptabase_blog_data", JSON.stringify(data))
             // console.log(this.state.posts);
 
             console.log('getHeptabaseData return');
             // return heptabase_blog_data
-            resolve(local_data)
+            resolve(data)
         })
         .catch(e => {
             console.log('错误:', e)
