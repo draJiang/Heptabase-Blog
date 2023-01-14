@@ -14,7 +14,8 @@
         --notes-text-bg-yellow: #564328;
         --notes-text-color-yellow: #c99849;
     }
-    .container .note_title .note_close_button svg {
+    .container .note_title .note_close_button svg,
+    .copy-btn svg {
         fill: var(--color-fg-default, #c9d1d9);
     }
     /* background: linear-gradient(90deg, rgba(255, 255, 255, 0.12) 25%, rgba(255, 255, 255, 0.18) 37%, rgba(255, 255, 255, 0.12) 63%);
@@ -26,6 +27,10 @@
     .ant-skeleton.ant-skeleton-active .ant-skeleton-input::after,
     .ant-skeleton.ant-skeleton-active .ant-skeleton-image::after {
         background: linear-gradient(90deg, rgba(255, 255, 255, 0.12) 25%, rgba(255, 255, 255, 0.18) 37%, rgba(255, 255, 255, 0.12) 63%) !important;
+    }
+    .copy-btn {
+        background: none;
+        border-color: var(--color-border-muted);
     }
 }
 
