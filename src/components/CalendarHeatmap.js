@@ -66,8 +66,9 @@ const CalendarHeatmap = () => {
         console.log('setValue(myValue)');
 
       })
+    } else if (value === undefined) {
+      setValue(myValue)
     }
-
     setMapWidth()
 
   })
