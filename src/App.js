@@ -4,6 +4,7 @@ import PostList from './page/PostList';
 import Post from './page/Post';
 import Empty from './page/404';
 import About from './page/About';
+import Activity from './page/Activity';
 
 import CONFIG from "./config";
 
@@ -18,6 +19,7 @@ class App extends React.Component {
                         <Route exact path="/" element={<Post title={CONFIG.title} />} />
                         <Route path="/post/*" element={<Post title={CONFIG.title} />} />
                         <Route path="/notes/" element={<PostList title={CONFIG.title} />} />
+                        <Route path="/activity" element={<Activity />} />
 
                         <Route path="/404/" element={<Empty title={CONFIG.title} />} />
                         <Route element={<Empty title={CONFIG.title} />} />

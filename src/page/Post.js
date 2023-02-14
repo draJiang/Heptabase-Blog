@@ -16,7 +16,7 @@ import { id } from 'date-fns/locale';
 
 import useHash from "../hooks/useHash";
 
-import { Button, message,Tooltip } from 'antd';
+import { Button, message, Tooltip } from 'antd';
 
 import Clipboard from 'clipboard';
 
@@ -49,7 +49,7 @@ class Post extends React.Component {
             //     type: 'success',
             //     content: 'Link copied',
             // });
-            
+
         });
         copy.on('error', function (e) {
             console.error('Action:', e.action);
@@ -748,7 +748,11 @@ class Post extends React.Component {
 
             return (<div className='notes_box'>
                 <Nav />
+
+                
+
                 <div className='notes'>
+
                     {card_list_dom}
                 </div>
                 {/* <Footer /> */}

@@ -32,6 +32,12 @@
         background: none;
         border-color: var(--color-border-muted);
     }
+    .w-heatmap text {
+        /* background-color: rgb(0, 0, 0); */
+        /* color: rgb(255, 255, 255); */
+        fill: currentColor;
+        color: rgb(136, 136, 136);
+    }
 }
 
 @media (width <=600px) {
@@ -237,6 +243,8 @@ article a::after {
 .nav header {
     position: relative;
     flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
     /* width: 100%; */
     /* margin-left: 2rem; */
 }
@@ -247,7 +255,7 @@ article a::after {
 }
 
 .nav header img {
-    width: 1.5rem;
+    width: 1.4rem;
 }
 
 .nav header img {
@@ -368,4 +376,13 @@ article a::after {
 .markdown-body .task-list-item {
     display: flex;
     margin: 16px 0;
+}
+
+.calendarHeatmap {
+    padding: 2rem;
+    min-width: 98%;
+}
+
+svg.w-heatmap rect {
+    cursor: auto !important;
 }
