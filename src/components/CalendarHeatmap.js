@@ -7,12 +7,11 @@ import { getHeptabaseData } from '../constantFunction'
 
 import '../index.css'
 
-let heptabase_blog_data
+let heptabase_blog_data = undefined
 
-let cards
+let cards = undefined
 let myValue = []
 let dateList = []
-
 
 // 获取 Heptabase 数据
 getHeptabaseData.then((res) => {
@@ -20,37 +19,7 @@ getHeptabaseData.then((res) => {
   heptabase_blog_data = res.data
   console.log('CalendarHeatmap getHeptabaseData');
 
-  
-  // 处理 Hepta 数据
-  cards = heptabase_blog_data['cards']
-  
-  for (let i = cards.length - 1; i > -1; i--) {
-
-    //将 TZ 时间转为本地时间 yyyy-mm-dd
-    let date = new Date(cards[i]['lastEditedTime']),
-      month = '' + (date.getMonth() + 1),
-      day = '' + date.getDate(),
-      year = date.getFullYear();
-
-    if (month.length < 2)
-      month = '0' + month;
-    if (day.length < 2)
-      day = '0' + day;
-
-    let dateStr = [year, month, day].join('/');
-
-    // 判断 value 中是否有此时间，有则追加 count
-    if (dateList.indexOf(dateStr) > -1) {
-      myValue[dateList.indexOf(dateStr)]['count'] += 1
-    } else {
-      myValue.push({ 'date': dateStr, 'count': 1 })
-      dateList.push(dateStr)
-    }
-
-  }
-
 })
-
 
 
 
@@ -58,15 +27,54 @@ console.log(heptabase_blog_data);
 
 const CalendarHeatmap = () => {
 
-
   // 开始时间
   let sd = new Date() //今天
   sd.setFullYear(sd.getFullYear() - 1) //一年前的今天
 
   const [startDate, setStartDate] = useState(sd);
-  const [value, setValue] = useState(myValue);
+  const [value, setValue] = useState();
+
+
+  
+
+
+
 
   useEffect(() => {
+    // 处理 Hepta 数据
+
+    if (myValue.length <= 0 && heptabase_blog_data !== undefined) {
+
+      cards = heptabase_blog_data['cards']
+      for (let i = cards.length - 1; i > -1; i--) {
+  
+        //将 TZ 时间转为本地时间 yyyy-mm-dd
+        let date = new Date(cards[i]['lastEditedTime']),
+          month = '' + (date.getMonth() + 1),
+          day = '' + date.getDate(),
+          year = date.getFullYear();
+  
+        if (month.length < 2)
+          month = '0' + month;
+        if (day.length < 2)
+          day = '0' + day;
+  
+        let dateStr = [year, month, day].join('/');
+  
+        // 判断 value 中是否有此时间，有则追加 count
+        if (dateList.indexOf(dateStr) > -1) {
+          myValue[dateList.indexOf(dateStr)]['count'] += 1
+        } else {
+          myValue.push({ 'date': dateStr, 'count': 1 })
+          dateList.push(dateStr)
+        }
+  
+      }
+  
+      setValue(myValue)
+  
+    }
+  
 
     setMapWidth()
 
