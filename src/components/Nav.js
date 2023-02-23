@@ -21,6 +21,29 @@ class Nav extends React.Component {
     }
 
     render() {
+        console.log(CONFIG);
+        // 加载 Tabs
+        let tabs = []
+        Object.keys(CONFIG['pages']).forEach(key => {
+
+            let page
+            if (key === 'Activity') {
+                page = <li >
+                    <Link to='/activity'>Activity</Link>
+                </li>
+            } else {
+                page = <li onClick={this.handleNavBarClick}>
+                    <Link to={'/post?note-id=' + CONFIG['pages'][key] + '&active-note-id=' + CONFIG['pages'][key]}>{key}</Link>
+                </li>
+            }
+
+
+            tabs.push(page)
+
+        });
+
+        console.log(tabs);
+
         return (
             <div className='markdown-body nav'>
                 <header>
@@ -29,19 +52,7 @@ class Nav extends React.Component {
                 <div>
                     <ul>
 
-                        <li onClick={this.handleNavBarClick}>
-                            <Link to='/post?note-id=3dd9a603-a7f3-44e9-a6d7-cd2ebda08952&active-note-id=3dd9a603-a7f3-44e9-a6d7-cd2ebda08952'>Projects</Link>
-                        </li>
-                        <li onClick={this.handleNavBarClick}>
-                            <Link to='/post?note-id=9f31ea21-90b9-4523-b8d5-cb33b7a01bda&active-note-id=9f31ea21-90b9-4523-b8d5-cb33b7a01bda'>Blog</Link>
-                        </li>
-
-                        <li >
-                            <Link to='/activity'>Activity</Link>
-                        </li>
-                        <li onClick={this.handleNavBarClick}>
-                            <Link to='/post?note-id=3a433c0b-e2e1-4722-8a88-a17e9aa2b927'>About</Link>
-                        </li>
+                        {tabs}
 
                     </ul>
                 </div>

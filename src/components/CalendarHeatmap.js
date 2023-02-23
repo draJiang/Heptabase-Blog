@@ -159,6 +159,7 @@ const CalendarHeatmap = () => {
       <HeatMap
         value={value}
         width={'100%'}
+        // panelColors={{ 0: '#EBEDF0', 8: '#7BC96F', 4: '#C6E48B', 12: '#239A3B', 32: '#196127' }}
         startDate={startDate}
         endDate={new Date()}
         weekLabels={false}
@@ -166,7 +167,7 @@ const CalendarHeatmap = () => {
         rectRender={(props, data) => {
           // if (!data.count) return <rect {...props} />;
           return (
-            <Tooltip key={props.key} autoAdjustOverflow={true} visibleArrow={false} placement="top" content={`numbers of cards: ${data.count || 0} on ${data.date}`}>
+            <Tooltip key={props.key} autoAdjustOverflow={true} visibleArrow={false} placement="left" content={`numbers of cards: ${data.count || 0} on ${data.date}`}>
               <rect {...props} />
             </Tooltip>
           );
