@@ -70,7 +70,8 @@
 
 3. 获取前面创建的公开白板 ID
 
-   ![](https://media.heptabase.com/v1/images/3120a828-7e72-4637-aaff-ff8b5d72a2b3/7c6aa4fc-e43d-4b11-8555-1ba4885bcbdf/CleanShot2023-02-2323.55.07-2x.png)
+   ![](https://jiangzilong-image.oss-cn-beijing.aliyuncs.com/uPic/hiKH8F20230319011002.png)
+
 
 4. 将白板 ID 填入 `index.py` 中的 `HEPTABASE_WHITEBOARD_ID` 
 
