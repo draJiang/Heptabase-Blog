@@ -112,12 +112,14 @@ function bash(hljs) {
     "fi",
     "for",
     "while",
+    "until",
     "in",
     "do",
     "done",
     "case",
     "esac",
-    "function"
+    "function",
+    "select"
   ];
 
   const LITERALS = [

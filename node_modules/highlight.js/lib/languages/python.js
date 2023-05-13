@@ -367,7 +367,7 @@ function python(hljs) {
     ],
     unicodeRegex: true,
     keywords: KEYWORDS,
-    illegal: /(<\/|->|\?)|=>/,
+    illegal: /(<\/|\?)|=>/,
     contains: [
       PROMPT,
       NUMBER,
