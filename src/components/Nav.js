@@ -47,7 +47,7 @@ class Nav extends React.Component {
         return (
             <div className='markdown-body nav'>
                 <header>
-                    <span onClick={this.handleNavBarClick}><Link to='/post?note-id=3a433c0b-e2e1-4722-8a88-a17e9aa2b927&active-note-id=3a433c0b-e2e1-4722-8a88-a17e9aa2b927'><img src={logo}></img></Link></span>
+                    <span onClick={this.handleNavBarClick}><Link to={'/post?whiteboard_id=' + this.props['whiteboard_id'] + '&note-id=3a433c0b-e2e1-4722-8a88-a17e9aa2b927&active-note-id=3a433c0b-e2e1-4722-8a88-a17e9aa2b927'}><img src={logo}></img></Link></span>
                 </header>
                 <div>
                     <ul>
