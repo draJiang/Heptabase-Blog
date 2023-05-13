@@ -268,7 +268,7 @@ function Container(props) {
                     <time>{props['card']['card']['lastEditedTimeDiff']}</time>
                 </div>
                 <Tooltip placement="left" color='green' title='Link copied' trigger='click' arrowPointAtCenter={false} onOpenChange={handleTooltipOnOpenChange} open={TooltipsOpen}>
-                    <Button onClick={handleCopyBtnClick} size="small" className="copy-btn" data-clipboard-text={window.location.origin + '/post?note-id=' + props['card']['card']['id']} icon={<ShareAltOutlined />} />
+                    <Button onClick={handleCopyBtnClick} size="small" className="copy-btn" data-clipboard-text={window.location.origin + '/post?whiteboard_id=' + props['whiteboard_id'] + '&note-id=' + props['card']['card']['id']} icon={<ShareAltOutlined />} />
                 </Tooltip>
             </div>
             {backLinksBox}

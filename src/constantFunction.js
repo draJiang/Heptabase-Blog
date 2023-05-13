@@ -388,9 +388,19 @@ const getHeptabaseData = new Promise((resolve, reject) => {
     console.log('heptabase_blog_data == undefined');
 
     const header = new Headers({ "Access-Control-Allow-Origin": "*" });
+    // 获取 URL 中的 whiteboard_id
+    // const url = window.location.href;
+    // const urlParams = new URLSearchParams(url.search);
+    // const whiteboard_id = urlParams.get('whiteboard_id');
+
+    const url = window.location.href;
+    const match = url.match(/[?&]whiteboard_id=([^&]+)/);
+    const whiteboardId = match ? match[1] : null;
+
+
 
     // 获取 Heptabase 数据
-    fetch(CONFIG.api_url, {
+    fetch('https://api.dabing.one/?whiteboard_id=' + whiteboardId, {
         method: "get",
         header: header
         // mode: 'no-cors'

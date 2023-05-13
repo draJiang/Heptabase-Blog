@@ -28,6 +28,7 @@ let minWidth = 600                                              // 以此宽度�
 // 数据
 let HEPTABASE_DATA                                              // hepta 数据
 let HOME_DATA                                                   // 首页数据
+let WHITEBOARD_ID
 
 // 文章页面
 class Post extends React.Component {
@@ -55,6 +56,8 @@ class Post extends React.Component {
             console.error('Action:', e.action);
             console.error('Trigger:', e.trigger);
         });
+
+        WHITEBOARD_ID = this.getWhiteboardId()
 
         // 请求 hepta 数据 getHeptabaseData
         getHeptabaseData.then((res) => {
@@ -105,6 +108,19 @@ class Post extends React.Component {
         }
 
         return new_card
+
+    }
+
+    getWhiteboardId = () => {
+
+        const urlSearch = this.getUrlSearch(window.location.search)
+        console.log(urlSearch);
+
+        if (urlSearch.url_search_list[0].indexOf('whiteboard_id' > -1)) {
+            return urlSearch.url_search_list[0].replace('whiteboard_id=', '')
+        }
+
+        return ''
 
     }
 
@@ -172,6 +188,10 @@ class Post extends React.Component {
                         continue
                     }
 
+                    if (url_search_list[i].indexOf('whiteboard_id') >= 0) {
+                        new_url_search += '?' + url_search_list[i]
+                    }
+
                     if (url_search_list[i] === current_id) {
                         // URL 参数 === current_id
                         current_page_index = i
@@ -179,11 +199,7 @@ class Post extends React.Component {
                         // URL 参数 !== current_id
                     }
 
-                    if (new_url_search == '') {
-                        new_url_search += '?note-id=' + url_search_list[i]
-                    } else {
-                        new_url_search += '&note-id=' + url_search_list[i]
-                    }
+                    new_url_search += '&note-id=' + url_search_list[i]
 
                     //如果当前 id === current_id，则忽略后面的所有 ID
                     if (current_page_index > -1) {
@@ -219,12 +235,12 @@ class Post extends React.Component {
     herfToData = () => {
 
         // 首页的情况
-        if (window.location.search === '') {
+        if (window.location.search.indexOf('note-id') < 0) {
 
             // 找到首页卡片的 ID
             let main_id = HOME_DATA['id']
             // 设置 URL
-            window.location.replace(window.location.origin + '/post?note-id=' + main_id)
+            window.location.replace(window.location.origin + '/post' + window.location.search + '&note-id=' + main_id)
 
         }
 
@@ -234,7 +250,7 @@ class Post extends React.Component {
         let url_search_list = getUrlSearch_req['url_search_list']
 
         for (let i = 0; i < url_search_list.length; i++) {
-            if (url_search_list[i] == '') {
+            if (url_search_list[i] == '' || url_search_list[i].indexOf('whiteboard_id') >= 0) {
                 continue
             }
             // 将数据保存到 card list 中
@@ -346,33 +362,35 @@ class Post extends React.Component {
 
     }
 
-    addShareBtn = () => {
-        // 增加分享按钮
-        // let btn = < button data-clipboard-text='这里是需要复制的文本123'
-        //     className="copy-btn"
-        //     type="button" > Copy</button >
-        let share_btn = document.createElement('button')
-        share_btn.classList.add('copy-btn')
-        share_btn.setAttribute('data-clipboard-text', '这里是需要复制的文本1232323')
-        share_btn.innerText = '🔗'
+    // addShareBtn = () => {
+    //     // 增加分享按钮
+    //     // let btn = < button data-clipboard-text='这里是需要复制的文本123'
+    //     //     className="copy-btn"
+    //     //     type="button" > Copy</button >
+    //     let share_btn = document.createElement('button')
+    //     share_btn.classList.add('copy-btn')
+    //     share_btn.setAttribute('data-clipboard-text', '这里是需要复制的文本1232323')
+    //     share_btn.innerText = '🔗'
 
 
-        let notes = document.getElementsByClassName('note_article')
+    //     let notes = document.getElementsByClassName('note_article')
 
-        for (let i = 0; i < notes.length; i++) {
-            if (notes[i].getElementsByClassName('copy-btn').length > 0) {
-                // 已经有分享按钮，不用重复添加
-                continue
-            } else {
-                console.log(notes);
-                let note_link = window.location.origin + '/post?note-id=' + notes[i].parentElement.getAttribute('note_id')
-                share_btn.setAttribute('data-clipboard-text', note_link)
-                notes[i].appendChild(share_btn)
-            }
-        }
+    //     this.getWhiteboardId()
+
+    //     for (let i = 0; i < notes.length; i++) {
+    //         if (notes[i].getElementsByClassName('copy-btn').length > 0) {
+    //             // 已经有分享按钮，不用重复添加
+    //             continue
+    //         } else {
+    //             console.log(notes);
+    //             let note_link = window.location.origin + '/post?note-id=' + notes[i].parentElement.getAttribute('note_id')
+    //             share_btn.setAttribute('data-clipboard-text', note_link)
+    //             notes[i].appendChild(share_btn)
+    //         }
+    //     }
 
 
-    }
+    // }
 
     // 删除 URL 中不存在的 Card
     resetCardList = () => {
@@ -714,7 +732,7 @@ class Post extends React.Component {
                 let note_style = {
                     left: 0
                 }
-                card_list_dom.push(<Container style={note_style} key={card['card']['id']} handleHashChange={this.handleHashChange} handleLinkClick={this.handleLinkClick} card={card} />)
+                card_list_dom.push(<Container style={note_style} key={card['card']['id']} whiteboard_id={WHITEBOARD_ID} handleHashChange={this.handleHashChange} handleLinkClick={this.handleLinkClick} card={card} />)
             } else {
                 for (let i = 0; i < this.state.cardList.length; i++) {
                     let card = this.state.cardList[i]
@@ -727,7 +745,7 @@ class Post extends React.Component {
                         flex: '0 0 auto'
                     }
 
-                    let note = <Container style={note_style} key={card['card']['id']} handleHashChange={this.handleHashChange} handleLinkClick={this.handleLinkClick} card={card} />
+                    let note = <Container style={note_style} key={card['card']['id']} whiteboard_id={WHITEBOARD_ID} handleHashChange={this.handleHashChange} handleLinkClick={this.handleLinkClick} card={card} />
                     card_list_dom.push(note)
                 }
             }
@@ -749,7 +767,7 @@ class Post extends React.Component {
             return (<div className='notes_box'>
                 <Nav />
 
-                
+
 
                 <div className='notes'>
 
