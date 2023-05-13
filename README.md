@@ -60,6 +60,8 @@
 
      ![](https://media.heptabase.com/v1/images/3120a828-7e72-4637-aaff-ff8b5d72a2b3/261a05fb-9ce8-43a9-9ed4-a70712340b20/image.png)
 
+5. 将项目部署到 Vercel
+
 ### 后端
 
 因为 Heptabase 还没有开放的 API，所以只能通过后端程序来避免前端直接请求数据带来的跨域问题。
