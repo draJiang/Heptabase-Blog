@@ -24,30 +24,11 @@ class Nav extends React.Component {
         console.log(CONFIG);
         // 加载 Tabs
         let tabs = []
-        // Object.keys(CONFIG['pages']).forEach(key => {
-
-        //     let page
-        //     if (key === 'Activity') {
-        //         page = <li >
-        //             <Link to='/activity'>Activity</Link>
-        //         </li>
-        //     } else {
-        //         page = <li onClick={this.handleNavBarClick}>
-        //             <Link to={'/post?note-id=' + CONFIG['pages'][key] + '&active-note-id=' + CONFIG['pages'][key]}>{key}</Link>
-        //         </li>
-        //     }
-
-
-        //     tabs.push(page)
-
-        // });
-
-        // console.log(tabs);
 
         return (
             <div className='markdown-body nav'>
                 <header>
-                    <span onClick={this.handleNavBarClick}><Link to={'/post?whiteboard_id=' + this.props['whiteboard_id'] + '&note-id=3a433c0b-e2e1-4722-8a88-a17e9aa2b927&active-note-id=3a433c0b-e2e1-4722-8a88-a17e9aa2b927'}><img src={logo}></img></Link></span>
+                    <span onClick={this.handleNavBarClick}><Link to={'/post?whiteboard_id=' + this.props['whiteboard_id']}><img src={logo}></img></Link></span>
                 </header>
                 <div>
                     <ul>

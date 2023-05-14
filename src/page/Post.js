@@ -7,11 +7,13 @@ import Nav from '../components/Nav';
 import Footer from '../components/Footer'
 import Loading from '../components/Loading'
 
+import CONFIG from "../config";
+
 import '../index.css'
 import 'github-markdown-css'
 import 'antd/dist/reset.css';
 
-import { getHeptabaseData, getClearCard, getClearImag, heptaToMD } from '../constantFunction'
+import { getHeptabaseData, getClearCard, getClearImag, heptaToMD, getWhiteboardIdFromUrl } from '../constantFunction'
 import { id } from 'date-fns/locale';
 
 import useHash from "../hooks/useHash";
@@ -38,6 +40,7 @@ class Post extends React.Component {
         this.state = {
             cardList: [] // 当前页面的卡片列表
             , activeNote: 'null' // 记录当前焦点卡片 etc 3a433c0b-e2e1-4722......
+            , status: { 'code': 200, 'msg': '' }
         };
     }
 
@@ -57,19 +60,28 @@ class Post extends React.Component {
             console.error('Trigger:', e.trigger);
         });
 
-        WHITEBOARD_ID = this.getWhiteboardId()
+        WHITEBOARD_ID = getWhiteboardIdFromUrl(window.location.href)
 
         // 请求 hepta 数据 getHeptabaseData
         getHeptabaseData.then((res) => {
 
-            let heptabase_blog_data = res.data
+            if (res.code === 200) {
+                let heptabase_blog_data = res.data
 
-            // 将数据保存到全局变量中
-            HEPTABASE_DATA = heptabase_blog_data
-            HOME_DATA = res['pages']['about']
+                // 将数据保存到全局变量中
+                HEPTABASE_DATA = heptabase_blog_data
+                HOME_DATA = res['pages']['about']
 
-            // 渲染 URL、数据
-            this.herfToData()
+                // 渲染 URL、数据
+                this.herfToData()
+            } else {
+
+            }
+
+            this.setState({
+                status: { 'code': res.code, 'msg': '' }
+            })
+
 
         })
 
@@ -111,18 +123,18 @@ class Post extends React.Component {
 
     }
 
-    getWhiteboardId = () => {
+    // getWhiteboardId = () => {
 
-        const urlSearch = this.getUrlSearch(window.location.search)
-        console.log(urlSearch);
+    //     const urlSearch = this.getUrlSearch(window.location.search)
+    //     console.log(urlSearch);
 
-        if (urlSearch.url_search_list[0].indexOf('whiteboard_id' > -1)) {
-            return urlSearch.url_search_list[0].replace('whiteboard_id=', '')
-        }
+    //     if (urlSearch.url_search_list[0].indexOf('whiteboard_id' > -1)) {
+    //         return urlSearch.url_search_list[0].replace('whiteboard_id=', '')
+    //     }
 
-        return ''
+    //     return ''
 
-    }
+    // }
 
     // 文章内链接、反向链接点击
     handleLinkClick = (link_id, current_id = undefined, type = -1) => {
@@ -234,15 +246,46 @@ class Post extends React.Component {
     // 根据 herf 渲染界面上显示的数据
     herfToData = () => {
 
-        // 首页的情况
-        if (window.location.search.indexOf('note-id') < 0) {
+        let locationSearch1 = ''
+        let locationSearch2 = ''
+
+
+        if (window.location.search.toLowerCase().indexOf('whiteboard_id') < 0) {
+
+            locationSearch1 = 'post?whiteboard_id=' + CONFIG.whiteboardId
+
+        }
+
+        if (window.location.search.toLowerCase().indexOf('note-id') < 0) {
 
             // 找到首页卡片的 ID
             let main_id = HOME_DATA['id']
             // 设置 URL
-            window.location.replace(window.location.origin + '/post' + window.location.search + '&note-id=' + main_id)
+            if (locationSearch1 === '') {
+                locationSearch2 = '?note-id=' + main_id
+            } else {
+                locationSearch2 = '&note-id=' + main_id
+            }
+
 
         }
+
+        if (locationSearch1 !== '' || locationSearch2 !== '') {
+            // 设置 URL
+            window.location.replace(window.location.href + locationSearch1 + locationSearch2)
+        }
+
+
+
+        // // 首页的情况
+        // if (window.location.search.indexOf('note-id') < 0) {
+
+        //     // 找到首页卡片的 ID
+        //     let main_id = HOME_DATA['id']
+        //     // 设置 URL
+        //     window.location.replace(window.location.origin + '/post' + window.location.search + '&note-id=' + main_id)
+
+        // }
 
         // 从 URL 中获取 note id，根据 id 获取卡片数据
         let card_list = []
@@ -678,10 +721,10 @@ class Post extends React.Component {
 
 
         // 设置 URL
-        window.history.pushState({}, '', window.location.origin + '/post' + new_url_search)
+        window.history.pushState({}, '', window.location.origin + new_url_search)
 
         // 记录 URL
-        CURRENT_URL = window.location.origin + '/post' + new_url_search
+        CURRENT_URL = window.location.origin + new_url_search
 
         // this.setState({
         //     location: window.location.href
@@ -691,17 +734,17 @@ class Post extends React.Component {
 
     render() {
 
-        // return (<div>
-        //     <Nav />
-        //     <div className='notes'>
-        //         <Loading />
-        //     </div>
-        //     <Footer />
-        // </div>)
+        // 404
+        if (this.state.status.code !== 200) {
+            return (<><Nav whiteboard_id={WHITEBOARD_ID} />
+                <div className='notes'>
+                    {this.state.status.code}
+                </div></>)
+        }
 
         if (HEPTABASE_DATA === null || this.state.cardList.length === 0) {
             return (<div>
-                <Nav />
+                <Nav whiteboard_id={WHITEBOARD_ID} />
                 <div className='notes'>
                     <Loading />
                 </div>
@@ -765,14 +808,14 @@ class Post extends React.Component {
             }
 
             return (<div className='notes_box'>
-                <Nav />
-
-
+                <Nav whiteboard_id={WHITEBOARD_ID} />
 
                 <div className='notes'>
 
                     {card_list_dom}
+
                 </div>
+
                 {/* <Footer /> */}
 
             </div>)
