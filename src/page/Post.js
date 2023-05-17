@@ -72,6 +72,15 @@ class Post extends React.Component {
                 HEPTABASE_DATA = heptabase_blog_data
                 HOME_DATA = res['pages']['about']
 
+                if (HOME_DATA === undefined) {
+                    this.setState({
+                        status: { 'code': 4004, 'msg': 'There is no card with the title "About" in the whiteboard. Please set it up and try again.' }
+                    })
+                }
+
+                // 设置网页标题为白板标题
+                document.title = res['data']['whiteboards'][0]['name']
+
                 // 渲染 URL、数据
                 this.herfToData()
             } else {
@@ -461,7 +470,7 @@ class Post extends React.Component {
     // 定位到焦点卡片
     ScrollToActiveNote = () => {
 
-        let note_list = document.getElementsByClassName('container')
+        let note_list = document.getElementsByClassName('containerBox')
         for (let j = 0; j < note_list.length; j++) {
             let note = note_list[j]
             // 定位到当前用户关注的笔记
@@ -498,7 +507,7 @@ class Post extends React.Component {
     // 设置小标题、overlay 样式
     setCardMiniTitleAndStyle = () => {
 
-        let notes = document.getElementsByClassName('container')
+        let notes = document.getElementsByClassName('containerBox')
 
         for (let j = 0; j < notes.length; j++) {
 
@@ -721,7 +730,7 @@ class Post extends React.Component {
 
 
         // 设置 URL
-        window.history.pushState({}, '', window.location.origin + new_url_search)
+        window.history.pushState({}, '', window.location.origin + window.location.pathname + new_url_search)
 
         // 记录 URL
         CURRENT_URL = window.location.origin + new_url_search
@@ -736,14 +745,21 @@ class Post extends React.Component {
 
         // 404
         if (this.state.status.code !== 200) {
-            return (<><Nav whiteboard_id={WHITEBOARD_ID} />
+            return (<div className='markdown-body notes_box'>
+                <Nav whiteboard_id={WHITEBOARD_ID} />
                 <div className='notes'>
-                    {this.state.status.code}
-                </div></>)
+                    <p style={{ marginRight: '10px' }}>
+                        {this.state.status.code}
+                    </p>
+                    <p>
+                        {this.state.status.msg}
+                        {this.state.status.code === 404 && 'The whiteboard ID does not exist or is not set to "share to web"'}
+                    </p>
+                </div></div>)
         }
 
         if (HEPTABASE_DATA === null || this.state.cardList.length === 0) {
-            return (<div>
+            return (<div className='markdown-body notes_box'>
                 <Nav whiteboard_id={WHITEBOARD_ID} />
                 <div className='notes'>
                     <Loading />
@@ -793,21 +809,21 @@ class Post extends React.Component {
                 }
             }
 
-            // 设置网页标题
-            for (let k = 0; k < this.state.cardList.length; k++) {
-                if (this.state.cardList[k]['card']['id'] === ACTIVE_NOTE) {
+            // // 设置网页标题
+            // for (let k = 0; k < this.state.cardList.length; k++) {
+            //     if (this.state.cardList[k]['card']['id'] === ACTIVE_NOTE) {
 
-                    if (this.state.cardList[k]['card']['title'] !== 'About') {
-                        document.title = this.state.cardList[k]['card']['title']
-                    } else {
-                        document.title = 'Jiang 的数字花园🌱'
-                    }
+            //         if (this.state.cardList[k]['card']['title'] !== 'About') {
+            //             document.title = this.state.cardList[k]['card']['title']
+            //         } else {
+            //             document.title = 'Jiang 的数字花园🌱'
+            //         }
 
-                    break;
-                }
-            }
+            //         break;
+            //     }
+            // }
 
-            return (<div className='notes_box'>
+            return (<div className='markdown-body notes_box'>
                 <Nav whiteboard_id={WHITEBOARD_ID} />
 
                 <div className='notes'>

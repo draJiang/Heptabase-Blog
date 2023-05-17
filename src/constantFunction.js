@@ -2,6 +2,7 @@ import React from "react";
 import CONFIG from "./config";
 import { Button, Modal } from 'antd';
 
+
 const { confirm } = Modal;
 
 const getWhiteboardIdFromUrl = (url) => {

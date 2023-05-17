@@ -1,0 +1,24 @@
+.generate {
+    background-color: #111827;
+}
+
+.generate .left>div {
+    margin-bottom: 1rem;
+}
+
+.generate input::placeholder {
+    /* padding-left: 10px; */
+}
+
+.generate footer a {
+    margin-right: 1rem;
+    margin-bottom: 1.4rem;
+}
+
+.generate footer a:hover {
+    @apply text-blue-400;
+}
+
+.generate footer a:active {
+    @apply text-blue-600;
+}

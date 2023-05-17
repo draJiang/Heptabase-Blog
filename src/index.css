@@ -14,7 +14,7 @@
         --notes-text-bg-yellow: #564328;
         --notes-text-color-yellow: #c99849;
     }
-    .container .note_title .note_close_button svg,
+    .containerBox .note_title .note_close_button svg,
     .copy-btn svg {
         fill: var(--color-fg-default, #c9d1d9);
     }
@@ -41,7 +41,7 @@
 }
 
 @media (width <=600px) {
-    #root .container {
+    #root .containerBox {
         border: none;
     }
 }
@@ -52,7 +52,7 @@
         flex-direction: column;
         height: 100vh;
     }
-    .container,
+    .containerBox,
     .post_list {
         width: 650px;
     }
@@ -121,7 +121,7 @@ article a::after {
     color: #666;
 }
 
-.container .article_bottom {
+.containerBox .article_bottom {
     margin-bottom: 1rem;
     display: flex;
 }
@@ -130,7 +130,7 @@ article a::after {
     margin-right: 1rem;
 }
 
-.container {
+.containerBox {
     position: sticky;
     padding-bottom: 1rem;
     overflow-y: auto;
@@ -139,7 +139,7 @@ article a::after {
     /* border-left: 1px solid var(--color-border-default); */
 }
 
-.container,
+.containerBox,
 .post_list {
     margin: 0 auto;
     /* width: 38rem; */
@@ -148,7 +148,7 @@ article a::after {
     padding-right: 1.4rem;
 }
 
-.container .note_title {
+.containerBox .note_title {
     display: flex;
     position: fixed;
     flex-direction: row;
@@ -162,28 +162,28 @@ article a::after {
     z-index: 999;
 }
 
-.container .note_title p {
+.containerBox .note_title p {
     cursor: pointer;
     flex: 0.9;
 }
 
-.container .note_title * {
+.containerBox .note_title * {
     margin: 0;
     padding: 4px;
 }
 
-.container .note_title .note_close_button {
+.containerBox .note_title .note_close_button {
     position: absolute;
     bottom: 8px;
     cursor: pointer;
 }
 
-.container .note_title p:hover {
+.containerBox .note_title p:hover {
     color: var(--color-accent-fg);
 }
 
-.container .note_title .note_close_button:hover,
-.container .note_title p:active,
+.containerBox .note_title .note_close_button:hover,
+.containerBox .note_title p:active,
 .my_link:active {
     opacity: 0.6;
 }
@@ -196,7 +196,7 @@ article a::after {
     flex-grow: 1;
 }
 
-.container {
+.containerBox {
     padding-bottom: 1.4rem;
 }
 
@@ -317,7 +317,7 @@ article a::after {
     color: var(--color-fg-subtle);
 }
 
-.container article pre {
+.containerBox article pre {
     /* background-color: var(--color-canvas-default, var(--notes-bg-color));
     padding: 0;
     margin: 0; */
