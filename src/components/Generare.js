@@ -41,7 +41,7 @@ export default function Generate() {
 
         {showSiteUrl && <div className='pt-6'>
             🎉<a className='underline' href={siteUrl}>Access your website</a>
-            <p className='mt-4 text-gray-700'>After Hepta is updated, the website will be automatically updated within <strong>20 minutes</strong> at the latest. <strong>If you want to update it immediately, you can click generate again here.</strong></p>
+            <p className='mt-4 text-gray-700'>After Hepta is updated, the website will be automatically updated within <strong>20 minutes</strong> at the latest. <strong>If you want to update it immediately, you can click 'Generate' again here.</strong></p>
         </div>}
 
 

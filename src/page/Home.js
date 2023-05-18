@@ -46,7 +46,7 @@ export default function Home() {
                         <div class="mt-4 flex items-center gap-x-6">
 
                             <Button onClick={showModal}>Get started</Button>
-                            <a href="https://share.dabing.one/" target='_blank' class="text-sm font-semibold leading-6 text-gray-100">View live example <span aria-hidden="true">→</span></a>
+                            <a href="https://share.dabing.one/post?whiteboard_id=12e511518f5539c9ee5bc3c02fecab6d4f78a37eb8e13a2cfec484026b0d3c55" target='_blank' class="text-sm font-semibold leading-6 text-gray-100">View live example <span aria-hidden="true">→</span></a>
 
                         </div>
 
