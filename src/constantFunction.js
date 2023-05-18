@@ -420,14 +420,14 @@ const getHeptabaseData = new Promise((resolve, reject) => {
             for (let i = 0; i < data.data.cards.length; i++) {
 
                 // About
-                if (data.data.cards[i]['title'] === 'About') {
+                if (data.data.cards[i]['title'].toLowerCase() === 'about') {
 
                     pages.about = data.data.cards[i]
 
                 }
 
                 // Projects
-                if (data.data.cards[i]['title'] === 'Projects') {
+                if (data.data.cards[i]['title'].toLowerCase() === 'projects') {
                     pages.projects = data.data.cards[i]
 
                 }
@@ -730,8 +730,8 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
             case 'toggle_list':
                 new_node = document.createElement('div')
                 break
-            
-                case 'toggle_list_item':
+
+            case 'toggle_list_item':
                 new_node = document.createElement('div')
                 break
 
