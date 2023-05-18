@@ -728,7 +728,11 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
                 break
 
             case 'toggle_list':
-                new_node = document.createElement('ul')
+                new_node = document.createElement('div')
+                break
+            
+                case 'toggle_list_item':
+                new_node = document.createElement('div')
                 break
 
             case 'task_list':
