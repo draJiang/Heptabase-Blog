@@ -250,8 +250,8 @@ const getHeptabaseData = new Promise((resolve, reject) => {
 
 
         //Date.parse(new Date()) / 1000 - frontGetTime >= 1200 && frontGetTime !== undefined
-        if (Date.parse(new Date()) / 1000 - frontGetTime >= 1200 || frontGetTime === undefined) {
-            // 数据比较旧时再重新获取
+        if (Date.parse(new Date()) / 1000 - frontGetTime >= 1200 || frontGetTime === undefined || JSON.parse(heptabase_blog_data)['pages']['about'] === undefined) {
+            // 数据比较旧或旧数据中无 about 页面时再重新获取
             console.log('数据比较旧');
 
         } else {
@@ -561,6 +561,7 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
                                 }
 
                                 new_node.innerText = content_list[i]['text']
+
                                 break
 
                             case 'link':
