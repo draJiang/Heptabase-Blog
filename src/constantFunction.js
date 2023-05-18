@@ -306,7 +306,7 @@ const getHeptabaseData = new Promise((resolve, reject) => {
                 for (let i = 0; i < data.data.cards.length; i++) {
 
                     // About
-                    if (data.data.cards[i]['title'] === 'About') {
+                    if (data.data.cards[i]['title'].toLowerCase() === 'about') {
 
                         pages.about = data.data.cards[i]
 
