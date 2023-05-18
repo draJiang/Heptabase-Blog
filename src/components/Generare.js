@@ -16,7 +16,7 @@ export default function Generate() {
         // 获取白板 ID
         const whiteboard_id = inputRef.current.value.replace('https://app.heptabase.com/w/', '')
 
-        const url = 'http://localhost:3000/post?whiteboard_id=' + whiteboard_id
+        const url = 'https://share.dabing.one/post?whiteboard_id=' + whiteboard_id
 
         console.log(url);
         //https://app.heptabase.com/w/21922130d0a9f43c68cb0cc1bfbe3ab5a5aaa29acf163c04b50b2fb78932eefb?id=7bf671f4-9433-4556-a575-91cd4d6b1c7f
