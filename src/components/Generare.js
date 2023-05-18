@@ -25,15 +25,15 @@ export default function Generate() {
     }
 
 
-    return <div className='p-4 flex flex-col  '>
+    return <div className='p-4 flex flex-col '>
 
         <input ref={inputRef} className='h-10 border mb-4 w-full md:max-w-md pl-3 text-sm text-gray-800 rounded-sm'
             placeholder='Fill in your whiteboard link.'
         />
         <Button onClick={handleGenerateBtnClick} className=''>Generate</Button>
 
-        {showSiteUrl && <div className='p-4'>
-            🎉<a href={siteUrl}>View your website.</a>🎉
+        {showSiteUrl && <div className='pt-6'>
+            🎉<a className='underline' href={siteUrl}>Access your website</a>
         </div>}
 
 
