@@ -27,9 +27,9 @@ export default function Home() {
         setIsModalOpen(false);
     };
 
-    return <div className='flex h-screen w-screen'>
+    return <div className='flex w-screen relative top-0 bottom-0 left-0 right-0 min-h-screen'>
         <div className=' generate h-auto flex flex-grouw text-gray-400 text-base flex-col justify-start'>
-            <main className='p-8 h-full md:m-auto md:py-16 md:pl-16  flex items-center flex-col md:flex-row'>
+            <main className='p-8 h-full flex-grouw md:m-auto md:py-16 md:pl-16  flex items-center flex-col md:flex-row'>
                 <div className='left flex flex-col mb-14'>
                     <div className=''>
                         <header className='mb-10'>
@@ -73,7 +73,7 @@ export default function Home() {
 
             </main >
 
-            <footer className='text-sm text-gray-500 flex flex-col md:flex-row items-center md:px-16'>
+            <footer className='text-sm sticky bottom-2 text-gray-500 flex flex-col md:flex-row items-center md:px-16'>
 
                 {/* <a href="https://github.com/draJiang/Heptabase-Blog/tree/public">🚀View in Github</a> */}
                 <a href="https://www.buymeacoffee.com/jiangzilong">☕Buy me a coffee</a>

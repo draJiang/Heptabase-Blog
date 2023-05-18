@@ -65,6 +65,10 @@ body {
     /* background-color: var(--color-canvas-default, red); */
 }
 
+.notes_box {
+    height: 100vh;
+}
+
 a {
     word-wrap: break-word;
 }
