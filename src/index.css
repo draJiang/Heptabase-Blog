@@ -352,8 +352,12 @@ article a::after {
     margin-bottom: 0;
 }
 
-.markdown-body ol li {
+.notes article ol>li {
     list-style: decimal;
+}
+
+.notes article ul>li {
+    list-style: disc;
 }
 
 .markdown-body .nav ul {

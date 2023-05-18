@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Generate from '../components/Generare'
 import Screenshot from '../resources/Screenshot.png'
 import Screenshot_ShareToWeb from '../resources/Screenshot_ShareToWeb.png'
+import Screenshot_AboutName from '../resources/Screenshot_AboutName.png'
 
 import { Modal } from 'antd';
 import { Button } from '../components/Button'
@@ -79,7 +80,9 @@ export default function Home() {
 
             </footer>
 
-            <Modal title="Generate your site" footer={null} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+            <Modal title="Generate your site"
+                bodyStyle={{ maxHeight: '80%', overflow: 'scroll' }}
+                footer={null} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
 
                 <div className='p-2 text-gray-800'>
                     <div className='mb-4'>
@@ -93,7 +96,6 @@ export default function Home() {
                         <p>
                             2. Create a card in the above whiteboard and set the title to “About”.
                         </p>
-
                     </div>
                     <div className='mb-4'>
                         <p>3. Generate your link.</p>
