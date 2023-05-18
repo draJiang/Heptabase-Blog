@@ -5,6 +5,20 @@ import { Button, Modal } from 'antd';
 
 const { confirm } = Modal;
 
+const getCardName = (cardId) => {
+    const whiteboardId = getWhiteboardIdFromUrl(window.location.href)
+    const heptabase_blog_data = JSON.parse(localStorage.getItem(whiteboardId))
+    const cards = heptabase_blog_data.data.cards
+    for (let i = 0; i < cards.length; i++) {
+        if (cards[i]['id'] === cardId) {
+            return cards[i]
+        }
+    }
+
+    return null
+
+}
+
 const getWhiteboardIdFromUrl = (url) => {
 
     const match = url.match(/whiteboard_id=([a-fA-F0-9]+)/);
@@ -192,160 +206,6 @@ const getClearCard = (card, cards) => {
     // // 如果找到匹配的卡片：修改上述字符串的地址为 /post/post.id
     // let content = card['content']
     let this_card_id = card['id']
-
-
-    // // 获取 {{ 符号
-    // let card_keyword_index = content.indexOf('{{')
-
-    // while (card_keyword_index !== -1) {
-
-    //     //获取卡片末尾的索引
-    //     let card_end_inex = content.indexOf('}}', card_keyword_index)
-
-    //     if (card_keyword_index === -1 || card_end_inex === -1) {
-    //         break
-    //     }
-
-    //     let old_card = content.substring(card_keyword_index, card_end_inex + 2)
-    //     // {{card xxxx-xxx-xxxx}}
-    //     let new_card = '<span class="unknown_card">{{未知卡片}}</span>'
-
-    //     // 检验一下的确是 card
-    //     if (old_card.indexOf('card ') >= 0) {
-
-    //         // 根据 ID 匹配数据中是否存在此卡片
-
-    //         for (let i = 0; i < cards.length; i++) {
-
-    //             // 处理当前卡片信息
-    //             if (old_card.indexOf(cards[i]['id']) >= 0) {
-    //                 // 存在：设置卡片链接
-    //                 // new_card = '[' + cards[i]['title'] + ']' + '(' + '/post/' + cards[i]['id'] + ')'
-
-    //                 // path 参数用于点击时加载对应笔记的数据，只有 my_link 类可点击
-    //                 new_card = '<span class="my_link article_link" parent_note_id=' + this_card_id + ' path=/post/' + cards[i]['id'] + '>' + cards[i]['title'] + '</span>'
-    //                 break
-    //             }
-
-
-    //         }
-
-    //         content = content.replace(old_card, new_card)
-
-
-    //     } else {
-
-    //     }
-
-    //     card_keyword_index = content.indexOf('{{', card_keyword_index + 1)
-
-    // }
-
-
-    // // 获取拥有别名的卡片
-    // let custom_card_keyword_index = content.indexOf('[')
-    // // console.log(custom_card_keyword_index);
-    // while (custom_card_keyword_index !== -1) {
-
-
-    //     if (content[custom_card_keyword_index - 1] === '!') {
-    //         // 如果是图片则忽略
-
-    //     } else {
-
-    //         // ] 符号
-    //         let custom_card_name_end_inex = content.indexOf(']', custom_card_keyword_index)
-
-    //         //获取卡片末尾的索引
-    //         let custom_card_end_inex = content.indexOf(')', custom_card_keyword_index)
-
-    //         let custom_old_card = content.substring(custom_card_keyword_index, custom_card_end_inex + 1)
-
-    //         if (custom_old_card.indexOf(']') < 0 || content[custom_card_name_end_inex + 1] !== '(') {
-
-
-
-    //         } else {
-
-    //             let custom_card_name = content.substring(custom_card_keyword_index + 1, custom_card_name_end_inex)
-    //             let custom_card_url = content.substring(custom_card_name_end_inex, custom_card_end_inex)
-    //             // [name](./url)
-
-    //             if (custom_card_url.indexOf('./') < 0 || custom_card_url.indexOf('.md') < 0) {
-    //                 // 如果不是 Heptabase 内部链接，则判断是否为音乐链接
-    //                 if (custom_old_card.indexOf('https://music.163.com/') > -1) {
-    //                     // 网易云音乐
-    //                     let netease_music_iframe = setNeteaseMusic(custom_old_card)
-    //                     if (netease_music_iframe !== undefined) {
-    //                         content = content.replace(custom_old_card, netease_music_iframe)
-    //                     }
-
-    //                 }
-
-
-    //             } else {
-    //                 // 卡片默认跳转到 404 页面
-    //                 let custom_new_card = '<a class="unknown_card" href=/404/>' + custom_card_name + '</a>'
-
-    //                 // 根据 ID 匹配数据中是否存在此卡片
-
-    //                 for (let i = 0; i < cards.length; i++) {
-
-    //                     if (custom_old_card.indexOf(cards[i]['id']) >= 0) {
-    //                         // 存在：设置卡片链接
-    //                         custom_new_card = '<span class="my_link article_link" parent_note_id=' + this_card_id + ' path=/post/' + cards[i]['id'] + '>' + custom_card_name + '</span>'
-    //                         break
-    //                     }
-
-    //                 }
-
-    //                 // console.log('custom_new_card:');
-    //                 // console.log(custom_new_card);
-
-    //                 content = content.replace(custom_old_card, custom_new_card)
-    //             }
-
-    //         }
-
-
-
-    //     }
-
-    //     custom_card_keyword_index = content.indexOf('[', custom_card_keyword_index + 1)
-
-    // }
-
-    // // 处理网易云音乐
-    // let netease_music_keyword_index = content.indexOf('<https://music.163.com/')
-    // while (netease_music_keyword_index > -1) {
-    //     // 获取链接的结尾
-    //     let netease_music_end_inex = content.indexOf('>', netease_music_keyword_index)
-    //     // 原始文本
-    //     let netease_music_old_url = content.substring(netease_music_keyword_index, netease_music_end_inex + 1)
-
-    //     // // 获取歌曲 ID
-    //     // let music_id_reg = /[0-9]{4,14}/g
-    //     // let music_id_list = netease_music_old_url.match(music_id_reg)
-
-    //     // if (music_id_list !== []) {
-    //     //     // 匹配到 ID
-    //     //     let music_id = music_id_list[0]
-    //     //     let netease_music_iframe = '<div class="music netease_music"><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" height=52 style="width: 100%; " src="//music.163.com/outchain/player?type=2&id=' + music_id + '&auto=0&height=32"></iframe></div>'
-    //     //     content = content.replace(netease_music_old_url, netease_music_iframe)
-    //     //     // 
-    //     // }
-
-    //     // 网易云音乐
-    //     let netease_music_iframe = setNeteaseMusic(netease_music_old_url)
-    //     if (netease_music_iframe !== undefined) {
-    //         content = content.replace(netease_music_old_url, netease_music_iframe)
-    //     }
-
-
-    //     netease_music_keyword_index = content.indexOf('<https://music.163.com/song?', netease_music_keyword_index + 1)
-
-
-    // }
 
     // 处理反向连接
     // 如果 A 卡片中存在当前笔记的 ID，则 A 卡片为当前笔记的反向链接之一
@@ -566,6 +426,15 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
             case 'card':
                 new_node = document.createElement('span')
                 new_node.innerHTML = content_list[i]['attrs']['cardTitle']
+                if (content_list[i]['attrs']['cardTitle'] === undefined) {
+                    // 找不到卡片标题，根据卡片 ID 匹配标题
+                    const card = getCardName(content_list[i]['attrs']['cardId'])
+
+                    if (card) {
+                        new_node.innerHTML = card.title
+                    }
+
+                }
 
                 let bingo = false
 
@@ -626,11 +495,15 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
 
             case 'paragraph':
                 // 如果父元素不是 task-list-item ，则创建 P 元素
-                if (parent_node['className'] !== 'task-list-item') {
-                    new_node = document.createElement('p')
-                } else {
-                    new_node = document.createElement('span')
-                    new_node.setAttribute('style', 'margin-left:4px');
+                if (parent_node) {
+
+                    if (parent_node['className'] !== 'task-list-item') {
+                        new_node = document.createElement('p')
+                    } else {
+                        new_node = document.createElement('span')
+                        new_node.setAttribute('style', 'margin-left:4px');
+                    }
+
                 }
 
                 break
@@ -671,15 +544,20 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
                                 break
 
                             case 'color':
+
                                 new_node = document.createElement('span')
 
-                                if (mark['attrs']['type'] === 'background') {
-                                    // new_node.setAttribute('style', 'background-color: ' + mark['attrs']['color']);
+                                if (mark['attrs']['color']) {
 
-                                    new_node.classList.add('highlight_bg')
-                                } else {
-                                    // new_node.setAttribute('style', 'color: ' + mark['attrs']['color']);
-                                    new_node.classList.add('highlight_color')
+                                    if (mark['attrs']['type'] === 'background') {
+                                        // new_node.setAttribute('style', 'background-color: ' + mark['attrs']['color']);
+
+                                        new_node.classList.add('highlight_bg')
+                                    } else {
+                                        // new_node.setAttribute('style', 'color: ' + mark['attrs']['color']);
+                                        new_node.classList.add('highlight_color')
+                                    }
+
                                 }
 
                                 new_node.innerText = content_list[i]['text']

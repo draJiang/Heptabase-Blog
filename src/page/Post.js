@@ -211,6 +211,7 @@ class Post extends React.Component {
 
                     if (url_search_list[i].indexOf('whiteboard_id') >= 0) {
                         new_url_search += '?' + url_search_list[i]
+                        continue
                     }
 
                     if (url_search_list[i] === current_id) {
@@ -270,7 +271,7 @@ class Post extends React.Component {
             // 找到首页卡片的 ID
             let main_id = HOME_DATA['id']
             // 设置 URL
-            if (locationSearch1 === '') {
+            if (locationSearch1 === '' && window.location.search.toLowerCase().indexOf('whiteboard_id') < 0) {
                 locationSearch2 = '?note-id=' + main_id
             } else {
                 locationSearch2 = '&note-id=' + main_id
