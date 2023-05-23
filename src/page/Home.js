@@ -53,6 +53,7 @@ export default function Home() {
 
                     </div>
 
+
                 </div>
 
                 <div className='right grow md:relative  md:flex md:w-3/5 md:pt-20 md:pl-20 items-center'
