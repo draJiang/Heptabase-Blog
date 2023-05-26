@@ -75,9 +75,17 @@ export default function Home() {
             </main >
 
             <footer className='text-sm sticky bottom-2 text-gray-500 flex flex-col md:flex-row items-center md:px-16'>
+                
+                <a href="https://www.producthunt.com/posts/share-your-knowledge?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-share&#0045;your&#0045;knowledge" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=395211&theme=dark" alt="Share&#0032;your&#0032;knowledge - based&#0032;on&#0032;your&#0032;Heptabase&#0032;data | Product Hunt" style={{
+                    height: '44px'
+                }} /></a>
+
+                <a href="https://www.buymeacoffee.com/jiangzilong" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style={{
+                    height: '44px'
+                }} /></a>
 
                 {/* <a href="https://github.com/draJiang/Heptabase-Blog/tree/public">🚀View in Github</a> */}
-                <a href="https://www.buymeacoffee.com/jiangzilong">☕Buy me a coffee</a>
+                {/* <a href="https://www.buymeacoffee.com/jiangzilong">☕Buy me a coffee</a> */}
 
             </footer>
 

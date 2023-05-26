@@ -4,6 +4,7 @@
     "private": true,
     "proxy": "http://localhost:3000",
     "dependencies": {
+        "@alloc/quick-lru": "^5.2.0",
         "@ant-design/icons": "^4.8.0",
         "@testing-library/jest-dom": "^5.16.5",
         "@testing-library/react": "^13.4.0",
