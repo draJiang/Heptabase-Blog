@@ -673,14 +673,6 @@ class Post extends React.Component {
 
     render() {
 
-        // return (<div>
-        //     <Nav />
-        //     <div className='notes'>
-        //         <Loading />
-        //     </div>
-        //     <Footer />
-        // </div>)
-
         if (HEPTABASE_DATA === null || this.state.cardList.length === 0) {
             return (<div>
                 <Nav />
