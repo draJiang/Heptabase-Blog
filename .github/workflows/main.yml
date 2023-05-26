@@ -20,4 +20,4 @@ jobs:
         - run: |
             echo "Hello"
             # 更新 hepta 数据
-            curl https://api.dabing.one/update
+            curl https://api.dabing.one/
