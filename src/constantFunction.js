@@ -5,7 +5,7 @@ import { Button, Modal } from 'antd';
 const { confirm } = Modal;
 
 const getCardName = (cardId) => {
-    
+
     const heptabase_blog_data = JSON.parse(localStorage.getItem('heptabase_blog_data'))
     const cards = heptabase_blog_data.data.cards
     for (let i = 0; i < cards.length; i++) {
@@ -745,10 +745,16 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
                 new_node.src = content_list[i]['attrs']['url']
                 break
 
+            case 'math_inline':
+                new_node = document.createElement('span')
+                break
+
             default:
                 break
 
         }
+
+
 
         if (new_node !== undefined && parent_node !== undefined) {
 
