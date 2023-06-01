@@ -553,8 +553,8 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
                                         let card_id_index_start = mark['attrs']['href'].indexOf('card/')
                                         let card_id_index_end = mark['attrs']['href'].indexOf('#')
 
-                                        if (card_id_index_start > -1 && card_id_index_end > -1) {
-                                            let card_id = mark['attrs']['href'].substring(card_id_index_start + 5, card_id_index_end)
+                                        if (card_id_index_start > -1) {
+                                            let card_id = mark['attrs']['href'].substring(card_id_index_start + 5, card_id_index_end > -1 ? card_id_index_end : mark['attrs']['href'].length)
 
                                             new_node = document.createElement('span')
                                             new_node.innerHTML = content_list[i]['text']
