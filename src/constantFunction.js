@@ -5,10 +5,10 @@ import { Button, Modal } from 'antd';
 const { confirm } = Modal;
 
 // import { db } from '@vercel/postgres';
- 
+
 // export default async function handler(request, response) {
 //   const client = await db.connect();
- 
+
 //   try {
 //     await client.sql`CREATE TABLE Pets ( Name varchar(255), Owner varchar(255) );`;
 //     const names = ['Fiona', 'Lucy'];
@@ -16,13 +16,13 @@ const { confirm } = Modal;
 //   } catch (error) {
 //     return response.status(500).json({ error });
 //   }
- 
+
 //   const pets = await client.sql`SELECT * FROM Pets;`;
 //   return response.status(200).json({ pets });
 // }
 
 const getCardName = (cardId) => {
-    
+
     const heptabase_blog_data = JSON.parse(localStorage.getItem('heptabase_blog_data'))
     const cards = heptabase_blog_data.data.cards
     for (let i = 0; i < cards.length; i++) {
@@ -696,13 +696,25 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
                 new_node.src = content_list[i]['attrs']['url']
                 break
 
+            case 'math_inline':
+                new_node = document.createElement('span')
+                break
+
             default:
                 break
 
         }
 
+
+
         if (new_node !== undefined && parent_node !== undefined) {
-            parent_node.appendChild(new_node)
+
+            try {
+                parent_node.appendChild(new_node)
+            } catch (error) {
+                console.log(parent_node);
+            }
+
         } else {
             console.log(parent_node);
         }
