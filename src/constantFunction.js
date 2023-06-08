@@ -649,6 +649,12 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
 
                 break
 
+            case 'bullet_list_item':
+                // 如果父元素不是 ul/ol 元素，则创建 ul/ol 元素
+                
+                new_node = document.createElement('div')
+                break
+
             case 'ordered_list':
                 new_node = document.createElement('ol')
                 break
