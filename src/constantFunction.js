@@ -428,6 +428,7 @@ const heptaToMD = (Hpeta_card_data) => {
 const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
 
     let new_node
+    let number_list_index = 1
 
     //遍历 content list
     for (let i = 0; i < content_list.length; i++) {
@@ -650,9 +651,72 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
                 break
 
             case 'bullet_list_item':
-                // 如果父元素不是 ul/ol 元素，则创建 ul/ol 元素
-                
+                // List 容器
+                const bulletListBox = document.createElement('div')
+                bulletListBox.classList.add('listBox')
+
+                // List 手柄
+                const bulletHand = document.createElement('div')
+                bulletHand.classList.add('listBullet')
+
+                // List 内容
                 new_node = document.createElement('div')
+
+                bulletListBox.appendChild(bulletHand)
+                bulletListBox.appendChild(new_node)
+
+                parent_node.appendChild(bulletListBox)
+
+                break
+
+            case 'numbered_list_item':
+
+                // 如果上一个节点不是 number_list 则此节点的 index 为 1，否则 index +=1
+                if (i > 0) {
+                    if (content_list[i - 1]['type'] !== 'numbered_list_item') {
+                        number_list_index = 1
+                    } else {
+                        number_list_index += 1
+                    }
+                }
+
+                // List 容器
+                const numberListBox = document.createElement('div')
+                numberListBox.classList.add('listBox')
+
+                // List 手柄
+                const numberHand = document.createElement('div')
+                // numberHand.classList.add('listBullet')
+                numberHand.classList.add('numberListBullet')
+                numberHand.setAttribute('data-before', number_list_index + '.')
+                console.log(i);
+                // numberHand.attr('--before-content', beforeContent)
+
+                // List 内容
+                new_node = document.createElement('div')
+
+                numberListBox.appendChild(numberHand)
+                numberListBox.appendChild(new_node)
+
+                parent_node.appendChild(numberListBox)
+
+                break
+
+            case 'todo_list_item':
+                new_node = document.createElement('li')
+
+                let task_input = document.createElement('input')
+                task_input.type = 'checkbox'
+                // task_input.checked = 'true'
+                if (content_list[i]['attrs']['checked']) {
+                    task_input.setAttribute("checked", content_list[i]['attrs']['checked']);
+                }
+
+                task_input.disabled = true
+
+                new_node.classList.add('task-list-item')
+                // new_node.setAttribute('style', 'margin: 16px 0');
+                new_node.appendChild(task_input)
                 break
 
             case 'ordered_list':
@@ -751,7 +815,13 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
         if (new_node !== undefined && parent_node !== undefined) {
 
             try {
-                parent_node.appendChild(new_node)
+                if (content_list[i]['type'] === 'numbered_list_item' || content_list[i]['type'] === 'bullet_list_item') {
+                    // parent_node.appendChild(new_node)
+                } else {
+                    parent_node.appendChild(new_node)
+                }
+
+
             } catch (error) {
                 console.log(parent_node);
             }
