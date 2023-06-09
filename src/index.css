@@ -344,6 +344,26 @@ article a::after {
     color: var(--notes-text-color-yellow);
 }
 
+.listBox {
+    display: flex;
+}
+
+.listBullet {
+    line-height: 1.3em;
+}
+
+.numberListBullet::before {
+    content: attr(data-before);
+    margin-right: 0.2em;
+    /* font-size: 1.57em; */
+}
+
+.listBullet::before {
+    content: "•";
+    margin-right: 0.2em;
+    font-size: 1.57em;
+}
+
 .markdown-body pre {
     background: #303030 !important;
 }
