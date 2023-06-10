@@ -11,6 +11,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:
+          ref:'jiang'
 
       - name: Fetch JSON data
         run: |
