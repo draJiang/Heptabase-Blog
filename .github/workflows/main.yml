@@ -1,23 +1,28 @@
-# This is a basic workflow to help you get started with Actions
+name: Fetch JSON Data
 
-name: CI
-
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
   schedule:
-    - cron: "*/59 * * * *"
-
-  # Allows you to run this workflow manually from the Actions tab
+    - cron: '0 20 * * *' # 每天 UTC 时间 04:00 执行
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-    say_hello:
-        runs-on: ubuntu-latest
-        steps:
-        - run: |
-            echo "Hello"
-            # 更新 hepta 数据
-            curl https://api.dabing.one/update
+  fetch-json:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Fetch JSON data
+        run: |
+          curl https://api.dabing.one > data.json
+
+      - name: Save JSON data to repository
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "GitHub Actions"
+          git checkout -b jiang
+          git add data.json
+          git commit -m "Update data.json"
+          git push origin jiang
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACTION_TOKEN }}
