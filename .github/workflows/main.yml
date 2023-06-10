@@ -21,7 +21,7 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "GitHub Actions"
           git checkout -b jiang
-          git add data.json
+          git add src/resources/data.json
           git commit -m "Update data.json"
           git push origin jiang
         env:
