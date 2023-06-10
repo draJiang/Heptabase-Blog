@@ -2,7 +2,7 @@ name: Fetch JSON Data
 
 on:
   schedule:
-    - cron: '0 20 * * *' # 每天 UTC 时间 04:00 执行
+    - cron: '*/5  * * * *' # 每天 UTC 时间 04:00 执行
   workflow_dispatch:
 
 jobs:
