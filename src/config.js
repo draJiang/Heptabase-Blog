@@ -1,5 +1,5 @@
 const CONFIG = {
-    'api_url': 'https://raw.githubusercontent.com/draJiang/heptabase-api/main/data.json', // 数据请求地址
+    'api_url': 'https://api.dabing.one', // 数据请求地址
     'title': 'Jiang 的数字花园🌱', // 站点标题
     'pages': {
         'Articles': '9f31ea21-90b9-4523-b8d5-cb33b7a01bda',
