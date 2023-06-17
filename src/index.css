@@ -69,17 +69,30 @@ a {
     word-wrap: break-word;
 }
 
-img {
+article .htmlBox {
+    margin-bottom: 16px;
+}
+
+article .htmlBox {
+    /* text-align: center; */
+}
+
+article .imgBox {
+    text-align: center;
+    margin: 32px 0 32px 0;
+}
+
+article .imgBox img {
     width: 100%;
     max-width: 800px;
-    margin-bottom: 16px;
+    border-radius: 2px;
 }
 
 article {
     margin-bottom: 2rem;
 }
 
-article a::after {
+article .external_link::after {
     /* text-decoration: underline !important; */
     content: "↗";
 }

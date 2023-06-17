@@ -1,6 +1,9 @@
 import React from "react";
+import { createRoot } from 'react-dom/client';
 import CONFIG from "./config";
 import { Button, Modal } from 'antd';
+
+import CalendarHeatmap from './components/CalendarHeatmap'
 
 const { confirm } = Modal;
 
@@ -377,7 +380,6 @@ const heptaToMD = (Hpeta_card_data) => {
 
     let parent_card_id = Hpeta_card_data['id']
     let box = document.createElement('div')
-    console.log(JSON.parse(Hpeta_card_data['content'])['content']);
     box = heptaContentTomd(JSON.parse(Hpeta_card_data['content'])['content'], box, parent_card_id)
     return box
 
@@ -405,6 +407,7 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
             case 'heading':
 
                 new_node = document.createElement('H' + content_list[i]['attrs']['level'])
+
                 break
 
             case 'card':
@@ -469,12 +472,18 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
                 break
 
             case 'image':
-                new_node = document.createElement('img')
-                new_node.setAttribute('src', content_list[i]['attrs']['src'])
+
+                new_node = document.createElement('div')
+                let imgBox = document.createElement('img')
+                imgBox.setAttribute('src', content_list[i]['attrs']['src'])
+                new_node.classList.add('imgBox')
+                new_node.appendChild(imgBox)
 
                 if (content_list[i]['attrs']['width'] !== null) {
-                    new_node.setAttribute('style', 'width: ' + content_list[i]['attrs']['width']);
+                    imgBox.setAttribute('style', 'width: ' + content_list[i]['attrs']['width']);
                 }
+
+
                 break
 
             case 'paragraph':
@@ -494,6 +503,11 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
 
             case 'text':
                 // 普通文本
+                if (content_list[i]['text'].indexOf('{HTML}') > -1) {
+                    break
+                }
+
+
                 // 判断是否有行内样式，例如 strong、mark
 
                 if ('marks' in content_list[i]) {
@@ -583,6 +597,7 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
                                         } else {
                                             // 外链
                                             new_node = document.createElement('a')
+                                            new_node.classList.add('external_link')
                                             new_node.href = mark['attrs']['href']
                                             new_node.innerHTML = content_list[i]['text']
                                         }
@@ -590,6 +605,7 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
                                     } else {
                                         // 外链
                                         new_node = document.createElement('a')
+                                        new_node.classList.add('external_link')
                                         new_node.href = mark['attrs']['href']
                                         new_node.innerHTML = content_list[i]['text']
                                     }
@@ -610,7 +626,9 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
                     // 无行内样式
                     // new_node = document.createElement('span')
                     // new_node.innerText = new_node.innerText + content_list[i]['text']
+
                     new_node = document.createTextNode(content_list[i]['text'])
+
                 }
 
                 break
@@ -626,6 +644,7 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
 
                 // List 内容
                 new_node = document.createElement('div')
+                new_node.setAttribute('style', 'flex: 1');
 
                 bulletListBox.appendChild(bulletHand)
                 bulletListBox.appendChild(new_node)
@@ -654,11 +673,11 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
                 // numberHand.classList.add('listBullet')
                 numberHand.classList.add('numberListBullet')
                 numberHand.setAttribute('data-before', number_list_index + '.')
-                console.log(i);
                 // numberHand.attr('--before-content', beforeContent)
 
                 // List 内容
                 new_node = document.createElement('div')
+                new_node.setAttribute('style', 'flex: 1');
 
                 numberListBox.appendChild(numberHand)
                 numberListBox.appendChild(new_node)
@@ -740,9 +759,17 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
                 new_node.classList.add('language-' + content_list[i]['attrs']['params'])
 
                 // new_node = React.createElement('SyntaxHighlighter')
-                console.log(new_node);
 
-                // <SyntaxHighlighter language="javascript" style={dark}>{codeString}</SyntaxHighlighter>
+                // 直接渲染 code block 内的 HTML
+                if ('content' in content_list[i] && content_list[i]['attrs']['params'] === 'html') {
+                    if (content_list[i]['content'][0]['text'].indexOf('{HTML}') > -1) {
+                        new_node = document.createElement('div')
+                        new_node.classList.add('htmlBox')
+                        new_node.innerHTML = content_list[i]['content'][0]['text'].replace('{HTML}', '')
+                        // new_node.innerHTML = '<iframe style="border: 0; width: 100%; height: 120px;" src="https://bandcamp.com/EmbeddedPlayer/album=2906945127/size=large/bgcol=ffffff/linkcol=0687f5/tracklist=false/artwork=small/transparent=true/" seamless><a href="https://rhodadakar.bandcamp.com/album/as-tears-go-by">As Tears Go By by Rhoda Dakar</a></iframe>'
+                    }
+                }
+
                 break
 
             case 'table':
