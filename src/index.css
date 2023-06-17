@@ -73,8 +73,8 @@ article .htmlBox {
     margin-bottom: 16px;
 }
 
-article .htmlBox {
-    /* text-align: center; */
+article .htmlBox * {
+    max-width: 100%;
 }
 
 article .imgBox {
