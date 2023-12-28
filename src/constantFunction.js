@@ -89,7 +89,7 @@ const setNeteaseMusic = (custom_old_card) => {
     let music_id_reg = /[0-9]{4,14}/g
     let music_id_list = custom_old_card.match(music_id_reg)
 
-    if (music_id_list !== [] && music_id_list !== null) {
+    if (music_id_list) {
         // 匹配到 ID
         let music_id = music_id_list[0]
         let netease_music_iframe = '<div class="music netease_music"><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" height=' + height_1 + ' style="width: 100%; " src="//music.163.com/outchain/player?type=' + type + '&id=' + music_id + '&auto=0&height=' + height_2 + '"></iframe></div>'
