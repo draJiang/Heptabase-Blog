@@ -29,11 +29,11 @@ class Nav extends React.Component {
             let page
             if (key === 'Activity') {
                 page = <li >
-                    <Link to='/activity'>Activity</Link>
+                    <Link key={CONFIG['pages']} to='/activity'>Activity</Link>
                 </li>
             } else {
                 page = <li onClick={this.handleNavBarClick}>
-                    <Link to={'/post?note-id=' + CONFIG['pages'][key] + '&active-note-id=' + CONFIG['pages'][key]}>{key}</Link>
+                    <Link key={CONFIG['pages']} to={'/post?note-id=' + CONFIG['pages'][key] + '&active-note-id=' + CONFIG['pages'][key]}>{key}</Link>
                 </li>
             }
 
