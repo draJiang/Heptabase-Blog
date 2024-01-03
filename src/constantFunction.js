@@ -6,10 +6,10 @@ import { Button, Modal } from 'antd';
 const { confirm } = Modal;
 
 // import { db } from '@vercel/postgres';
- 
+
 // export default async function handler(request, response) {
 //   const client = await db.connect();
- 
+
 //   try {
 //     await client.sql`CREATE TABLE Pets ( Name varchar(255), Owner varchar(255) );`;
 //     const names = ['Fiona', 'Lucy'];
@@ -17,7 +17,7 @@ const { confirm } = Modal;
 //   } catch (error) {
 //     return response.status(500).json({ error });
 //   }
- 
+
 //   const pets = await client.sql`SELECT * FROM Pets;`;
 //   return response.status(200).json({ pets });
 // }
@@ -122,7 +122,7 @@ const setNeteaseMusic = (custom_old_card) => {
     let music_id_reg = /[0-9]{4,14}/g
     let music_id_list = custom_old_card.match(music_id_reg)
 
-    if (music_id_list !== [] && music_id_list !== null) {
+    if (music_id_list.length > 0 && music_id_list !== null) {
         // 匹配到 ID
         let music_id = music_id_list[0]
         let netease_music_iframe = '<div class="music netease_music"><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" height=' + height_1 + ' style="width: 100%; " src="//music.163.com/outchain/player?type=' + type + '&id=' + music_id + '&auto=0&height=' + height_2 + '"></iframe></div>'

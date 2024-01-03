@@ -36,6 +36,7 @@ let WHITEBOARD_ID
 function Post(props) {
     const [cardList, setCardList] = useState([]);
     const [activeNote, setActiveNote] = useState('null');
+    // const [activeNote, setActiveNote] = useState('null');
 
     let { param1 } = useParams();
     let location = useLocation();
@@ -104,9 +105,9 @@ function Post(props) {
                 HOME_DATA = res['pages']['about']
 
                 if (HOME_DATA === undefined) {
-                    this.setState({
-                        status: { 'code': 4004, 'msg': 'There is no card with the title "About" in the whiteboard. Please set it up and try again.' }
-                    })
+                    // this.setState({
+                    //     status: { 'code': 4004, 'msg': 'There is no card with the title "About" in the whiteboard. Please set it up and try again.' }
+                    // })
                 }
 
                 // 设置网页标题为白板标题
@@ -118,12 +119,12 @@ function Post(props) {
 
             }
 
-            this.setState({
-                status: { 'code': res.code, 'msg': '' }
-            })
+            // this.setState({
+            //     status: { 'code': res.code, 'msg': '' }
+            // })
 
             // 渲染 URL、数据
-            herfToData()
+            // herfToData()
 
         })
 
@@ -277,6 +278,9 @@ function Post(props) {
                 // window.history.pushState({}, '', window.location.origin + '/post' + new_url_search)
                 navigate('/post' + new_url_search)
 
+                console.log('new_url_search:');
+                console.log(new_url_search);
+
                 // 记录 URL
                 CURRENT_URL = window.location.origin + '/post' + new_url_search
 
@@ -293,9 +297,7 @@ function Post(props) {
     // 根据 herf 渲染界面上显示的数据
     const herfToData = () => {
 
-        let locationSearch1 = ''
-        let locationSearch2 = ''
-
+        let locationSearch1 = '', locationSearch2 = ''
 
         if (window.location.search.toLowerCase().indexOf('whiteboard_id') < 0) {
 
@@ -319,7 +321,9 @@ function Post(props) {
 
         if (locationSearch1 !== '' || locationSearch2 !== '') {
             // 设置 URL
-            window.location.replace(window.location.href + locationSearch1 + locationSearch2)
+            // window.location.replace(window.location.href + locationSearch1 + locationSearch2)
+
+            navigate(window.location.search + locationSearch1 + locationSearch2, { replace: true })
         }
 
 
@@ -353,7 +357,9 @@ function Post(props) {
         if (getUrlSearch_req['active_str'] !== '') {
             activeNote = getUrlSearch_req['active_str'].replace('active-note-id=', '')
         } else {
-            activeNote = card_list[card_list.length - 1]['card']['id']
+            if (card_list.length > 0) {
+                activeNote = card_list[card_list.length - 1]['card']['id']
+            }
         }
 
         // 根据 URL 渲染新的数据到界面上
@@ -674,6 +680,8 @@ function Post(props) {
         // 设置新的 URL
         // window.history.pushState({}, '', new_url)
         navigate(new_url)
+        console.log('new_url:');
+        console.log(new_url);
 
         // 记录 URL
         CURRENT_URL = window.location.href
@@ -742,6 +750,8 @@ function Post(props) {
         // window.history.pushState({}, '', window.location.origin + '/post' + new_url_search)
         const newURL = '/post' + new_url_search;
         navigate(newURL)
+        console.log('newURL:');
+        console.log(newURL);
 
         // 记录 URL
         CURRENT_URL = window.location.origin + new_url_search
@@ -787,7 +797,7 @@ function Post(props) {
             let note_style = {
                 left: 0
             }
-            card_list_dom.push(<Container style={note_style} key={card['card']['id']} handleHashChange={handleHashChange} handleLinkClick={handleLinkClick} card={card} />)
+            card_list_dom.push(<Container style={note_style} key={card['card']['id']} whiteboard_id={WHITEBOARD_ID} handleHashChange={handleHashChange} handleLinkClick={handleLinkClick} card={card} />)
         } else {
             for (let i = 0; i < cardList.length; i++) {
                 let card = cardList[i]
@@ -800,7 +810,7 @@ function Post(props) {
                     flex: '0 0 auto'
                 }
 
-                let note = <Container style={note_style} key={card['card']['id']} handleHashChange={handleHashChange} handleLinkClick={handleLinkClick} card={card} />
+                let note = <Container style={note_style} key={card['card']['id']} whiteboard_id={WHITEBOARD_ID} handleHashChange={handleHashChange} handleLinkClick={handleLinkClick} card={card} />
                 card_list_dom.push(note)
             }
         }
@@ -832,6 +842,7 @@ function Post(props) {
 
         </div>)
     }
+    // }
 
 
 }
