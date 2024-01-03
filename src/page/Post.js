@@ -260,7 +260,8 @@ function Post(props) {
             // 找到首页卡片的 ID
             let main_id = HOME_DATA['id']
             // 设置 URL
-            window.location.replace(window.location.origin + '/post?note-id=' + main_id)
+            // window.location.replace(window.location.origin + '/post?note-id=' + main_id)
+            navigate('/post?note-id=' + main_id, { replace: true });
 
         }
 
