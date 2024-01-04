@@ -28,6 +28,10 @@
     .ant-skeleton.ant-skeleton-active .ant-skeleton-image::after {
         background: linear-gradient(90deg, rgba(255, 255, 255, 0.12) 25%, rgba(255, 255, 255, 0.18) 37%, rgba(255, 255, 255, 0.12) 63%) !important;
     }
+    .ant-skeleton-title,
+    .ant-skeleton-paragraph li {
+        background: linear-gradient(90deg, rgba(255, 255, 255, 0.12) 25%, rgba(255, 255, 255, 0.18) 37%, rgba(255, 255, 255, 0.12) 63%) !important;
+    }
     .copy-btn {
         background: none;
         border-color: var(--color-border-muted);
