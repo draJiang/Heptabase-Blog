@@ -766,7 +766,7 @@ function Post(props) {
 
     if (HEPTABASE_DATA === null || cardList.length === 0) {
         return (<div>
-            <Nav />
+            <Nav  whiteboard_id={WHITEBOARD_ID} />
             <div className='notes'>
                 <Loading />
             </div>
@@ -830,7 +830,7 @@ function Post(props) {
         }
 
         return (<div className='notes_box'>
-            <Nav />
+            <Nav  whiteboard_id={WHITEBOARD_ID} />
 
 
 
