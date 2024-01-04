@@ -38,7 +38,7 @@ const MODES = (hljs) => {
     },
     CSS_VARIABLE: {
       className: "attr",
-      begin: /--[A-Za-z][A-Za-z0-9_-]*/
+      begin: /--[A-Za-z_][A-Za-z0-9_-]*/
     }
   };
 };
@@ -606,6 +606,7 @@ Author: Kurt Emch <kurt@kurtemch.com>
 Website: https://sass-lang.com
 Category: common, css, web
 */
+
 
 /** @type LanguageFn */
 function scss(hljs) {

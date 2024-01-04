@@ -169,7 +169,7 @@ declare module 'highlight.js' {
         disableAutodetect?: boolean
         contains: (Mode)[]
         case_insensitive?: boolean
-        keywords?: Record<string, any> | string
+        keywords?: string | string[] | Record<string, string | string[]>
         isCompiled?: boolean,
         exports?: any,
         classNameAliases?: Record<string, string>
@@ -180,14 +180,12 @@ declare module 'highlight.js' {
     // technically private, but exported for convenience as this has
     // been a pretty stable API and is quite useful
     export interface Emitter {
-        addKeyword(text: string, kind: string): void
+        startScope(name: string): void
+        endScope(): void
         addText(text: string): void
         toHTML(): string
         finalize(): void
-        closeAllNodes(): void
-        openNode(kind: string): void
-        closeNode(): void
-        addSublanguage(emitter: Emitter, subLanguageName: string): void
+        __addSublanguage(emitter: Emitter, subLanguageName: string): void
     }
 
     export type HighlightedHTMLElement = HTMLElement & {result?: object, secondBest?: object, parentNode: HTMLElement}
@@ -250,7 +248,7 @@ declare module 'highlight.js' {
         parent?: Mode
         starts?:Mode
         lexemes?: string | RegExp
-        keywords?: Record<string, any> | string
+        keywords?: string | string[] | Record<string, string | string[]>
         beginKeywords?: string
         relevance?: number
         illegal?: string | RegExp | Array<string | RegExp>
@@ -272,5 +270,3 @@ declare module 'highlight.js/lib/languages/*' {
     const defineLanguage: LanguageFn;
     export default defineLanguage;
 }
-
-

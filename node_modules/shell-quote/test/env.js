@@ -23,6 +23,15 @@ test('expand environment variables', function (t) {
 	t.end();
 });
 
+test('expand environment variables within here-strings', function (t) {
+	t.same(parse('a <<< $x', { x: 'Joe' }), ['a', { op: '<<<' }, 'Joe']);
+	t.same(parse('a <<< ${x}', { x: 'Joe' }), ['a', { op: '<<<' }, 'Joe']);
+	t.same(parse('a <<< "$x"', { x: 'Joe' }), ['a', { op: '<<<' }, 'Joe']);
+	t.same(parse('a <<< "${x}"', { x: 'Joe' }), ['a', { op: '<<<' }, 'Joe']);
+
+	t.end();
+});
+
 test('environment variables with metacharacters', function (t) {
 	t.same(parse('a $XYZ c', { XYZ: '"b"' }), ['a', '"b"', 'c']);
 	t.same(parse('a $XYZ c', { XYZ: '$X', X: 5 }), ['a', '$X', 'c']);

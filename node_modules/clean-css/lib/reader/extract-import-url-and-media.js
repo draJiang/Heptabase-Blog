@@ -11,18 +11,18 @@ var URL_SUFFIX_PATTERN = /\s{0,31}\)/i;
 function extractImportUrlAndMedia(atRuleValue) {
   var uri;
   var mediaQuery;
-  var stripped;
+  var normalized;
   var parts;
 
-  stripped = atRuleValue
+  normalized = atRuleValue
     .replace(IMPORT_PREFIX_PATTERN, '')
     .trim()
     .replace(URL_PREFIX_PATTERN, '(')
-    .replace(URL_SUFFIX_PATTERN, ')')
+    .replace(URL_SUFFIX_PATTERN, ') ')
     .replace(QUOTE_PREFIX_PATTERN, '')
     .replace(QUOTE_SUFFIX_PATTERN, '');
 
-  parts = split(stripped, ' ');
+  parts = split(normalized, ' ');
 
   uri = parts[0]
     .replace(BRACE_PREFIX, '')

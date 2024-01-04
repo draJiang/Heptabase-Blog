@@ -6,7 +6,7 @@
 // For more information, the home page:
 // http://pieroxy.net/blog/pages/lz-string/testing.html
 //
-// LZ-based compression algorithm, version 1.4.4
+// LZ-based compression algorithm, version 1.4.5
 var LZString = (function() {
 
 // private property
@@ -498,4 +498,9 @@ if (typeof define === 'function' && define.amd) {
   define(function () { return LZString; });
 } else if( typeof module !== 'undefined' && module != null ) {
   module.exports = LZString
+} else if( typeof angular !== 'undefined' && angular != null ) {
+  angular.module('LZString', [])
+  .factory('LZString', function () {
+    return LZString;
+  });
 }

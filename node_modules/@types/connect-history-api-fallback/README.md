@@ -8,15 +8,9 @@ This package contains type definitions for connect-history-api-fallback (https:/
 Files were exported from https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/connect-history-api-fallback.
 ## [index.d.ts](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/connect-history-api-fallback/index.d.ts)
 ````ts
-// Type definitions for connect-history-api-fallback 1.3
-// Project: https://github.com/bripkens/connect-history-api-fallback#readme
-// Definitions by: Douglas Duteil <https://github.com/douglasduteil>
-// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
-// TypeScript Version: 2.3
-
 /// <reference types="node" />
 
-import { Url } from 'url';
+import { Url } from "url";
 
 import * as core from "express-serve-static-core";
 
@@ -27,16 +21,17 @@ declare function historyApiFallback(options?: historyApiFallback.Options): core.
 declare namespace historyApiFallback {
     interface Options {
         readonly disableDotRule?: true | undefined;
-        readonly htmlAcceptHeaders?: ReadonlyArray<string> | undefined;
+        readonly htmlAcceptHeaders?: readonly string[] | undefined;
         readonly index?: string | undefined;
         readonly logger?: typeof console.log | undefined;
-        readonly rewrites?: ReadonlyArray<Rewrite> | undefined;
+        readonly rewrites?: readonly Rewrite[] | undefined;
         readonly verbose?: boolean | undefined;
     }
 
     interface Context {
         readonly match: RegExpMatchArray;
         readonly parsedUrl: Url;
+        readonly request: core.Request;
     }
     type RewriteTo = (context: Context) => string;
 
@@ -49,9 +44,8 @@ declare namespace historyApiFallback {
 ````
 
 ### Additional Details
- * Last updated: Tue, 06 Jul 2021 18:05:59 GMT
+ * Last updated: Mon, 20 Nov 2023 23:36:24 GMT
  * Dependencies: [@types/express-serve-static-core](https://npmjs.com/package/@types/express-serve-static-core), [@types/node](https://npmjs.com/package/@types/node)
- * Global values: none
 
 # Credits
 These definitions were written by [Douglas Duteil](https://github.com/douglasduteil).

@@ -40,3 +40,4 @@ function StyleToObject(style, iterator) {
 }
 
 module.exports = StyleToObject;
+module.exports.default = StyleToObject; // ESM support

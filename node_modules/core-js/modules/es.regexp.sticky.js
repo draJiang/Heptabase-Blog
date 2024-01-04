@@ -1,3 +1,4 @@
+'use strict';
 var DESCRIPTORS = require('../internals/descriptors');
 var MISSED_STICKY = require('../internals/regexp-sticky-helpers').MISSED_STICKY;
 var classof = require('../internals/classof-raw');
@@ -13,13 +14,13 @@ if (DESCRIPTORS && MISSED_STICKY) {
   defineBuiltInAccessor(RegExpPrototype, 'sticky', {
     configurable: true,
     get: function sticky() {
-      if (this === RegExpPrototype) return undefined;
+      if (this === RegExpPrototype) return;
       // We can't use InternalStateModule.getterFor because
       // we don't add metadata for regexps created by a literal.
       if (classof(this) === 'RegExp') {
         return !!getInternalState(this).sticky;
       }
-      throw $TypeError('Incompatible receiver, RegExp required');
+      throw new $TypeError('Incompatible receiver, RegExp required');
     }
   });
 }

@@ -6,6 +6,13 @@ declare interface SelfsignedOptions {
    *
    * @default 365 */
   days?: number
+
+  /**
+   * The date before which the certificate should not be valid
+   *
+   * @default now */
+  notBeforeDate?: Date
+
   /**
    * the size for the private key in bits
    * @default 1024
@@ -29,12 +36,17 @@ declare interface SelfsignedOptions {
    * generate client cert signed by the original key
    * @default false
    */
-  clientCertificate?: undefined
+  clientCertificate?: boolean
   /**
    * client certificate's common name
    * @default "John Doe jdoe123"
    */
   clientCertificateCN?: string
+  /**
+   * the size for the client private key in bits
+   * @default 1024
+   */
+   clientCertificateKeySize?: number
 }
 
 declare interface GenerateResult {

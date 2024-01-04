@@ -1,4 +1,3 @@
-import { flagEnabled } from '../featureFlags'
 import * as regex from './regex'
 
 export function defaultExtractor(context) {
@@ -12,16 +11,17 @@ export function defaultExtractor(context) {
     let results = []
 
     for (let pattern of patterns) {
-      results = [...results, ...(content.match(pattern) ?? [])]
+      for (let result of content.match(pattern) ?? []) {
+        results.push(clipAtBalancedParens(result))
+      }
     }
 
-    return results.filter((v) => v !== undefined).map(clipAtBalancedParens)
+    return results
   }
 }
 
 function* buildRegExps(context) {
   let separator = context.tailwindConfig.separator
-  let variantGroupingEnabled = flagEnabled(context.tailwindConfig, 'variantGrouping')
   let prefix =
     context.tailwindConfig.prefix !== ''
       ? regex.optional(regex.pattern([/-?/, regex.escape(context.tailwindConfig.prefix)]))
@@ -35,19 +35,29 @@ function* buildRegExps(context) {
     // This is a targeted fix to continue to allow theme()
     // with square brackets to work in arbitrary properties
     // while fixing a problem with the regex matching too much
-    /\[[^\s:'"`]+:[^\s]+?\[[^\s]+\][^\s]+?\]/,
+    /\[[^\s:'"`\]]+:[^\s]+?\[[^\s]+\][^\s]+?\]/,
 
     // Utilities
     regex.pattern([
       // Utility Name / Group Name
-      /-?(?:\w+)/,
+      regex.any([
+        /-?(?:\w+)/,
+
+        // This is here to make sure @container supports everything that other utilities do
+        /@(?:\w+)/,
+      ]),
 
       // Normal/Arbitrary values
       regex.optional(
         regex.any([
           regex.pattern([
             // Arbitrary values
-            /-(?:\w+-)*\[[^\s:]+\]/,
+            regex.any([
+              /-(?:\w+-)*\['[^\s]+'\]/,
+              /-(?:\w+-)*\["[^\s]+"\]/,
+              /-(?:\w+-)*\[`[^\s]+`\]/,
+              /-(?:\w+-)*\[(?:[^\s\[\]]+\[[^\s\[\]]+\])*[^\s:\[\]]+\]/,
+            ]),
 
             // Not immediately followed by an `{[(`
             /(?![{([]])/,
@@ -58,7 +68,12 @@ function* buildRegExps(context) {
 
           regex.pattern([
             // Arbitrary values
-            /-(?:\w+-)*\[[^\s]+\]/,
+            regex.any([
+              /-(?:\w+-)*\['[^\s]+'\]/,
+              /-(?:\w+-)*\["[^\s]+"\]/,
+              /-(?:\w+-)*\[`[^\s]+`\]/,
+              /-(?:\w+-)*\[(?:[^\s\[\]]+\[[^\s\[\]]+\])*[^\s\[\]]+\]/,
+            ]),
 
             // Not immediately followed by an `{[(`
             /(?![{([]])/,
@@ -80,12 +95,18 @@ function* buildRegExps(context) {
       // This is here to provide special support for the `@` variant
       regex.pattern([/@\[[^\s"'`]+\](\/[^\s"'`]+)?/, separator]),
 
+      // With variant modifier (e.g.: group-[..]/modifier)
+      regex.pattern([/([^\s"'`\[\\]+-)?\[[^\s"'`]+\]\/\w+/, separator]),
+
       regex.pattern([/([^\s"'`\[\\]+-)?\[[^\s"'`]+\]/, separator]),
       regex.pattern([/[^\s"'`\[\\]+/, separator]),
     ]),
 
     // With quotes allowed
     regex.any([
+      // With variant modifier (e.g.: group-[..]/modifier)
+      regex.pattern([/([^\s"'`\[\\]+-)?\[[^\s`]+\]\/\w+/, separator]),
+
       regex.pattern([/([^\s"'`\[\\]+-)?\[[^\s`]+\]/, separator]),
       regex.pattern([/[^\s`\[\\]+/, separator]),
     ]),
@@ -103,15 +124,7 @@ function* buildRegExps(context) {
 
       prefix,
 
-      variantGroupingEnabled
-        ? regex.any([
-            // Or any of those things but grouped separated by commas
-            regex.pattern([/\(/, utility, regex.zeroOrMore([/,/, utility]), /\)/]),
-
-            // Arbitrary properties, constrained utilities, arbitrary values, etc…
-            utility,
-          ])
-        : utility,
+      utility,
     ])
   }
 

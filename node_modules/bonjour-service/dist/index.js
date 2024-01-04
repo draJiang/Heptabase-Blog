@@ -11,7 +11,7 @@ exports.Browser = browser_1.default;
 const service_1 = __importDefault(require("./lib/service"));
 exports.Service = service_1.default;
 class Bonjour {
-    constructor(opts, errorCallback) {
+    constructor(opts = {}, errorCallback) {
         this.server = new mdns_server_1.default(opts, errorCallback);
         this.registry = new registry_1.default(this.server);
     }
@@ -21,10 +21,10 @@ class Bonjour {
     unpublishAll(callback) {
         return this.registry.unpublishAll(callback);
     }
-    find(opts = undefined, onup) {
+    find(opts = null, onup) {
         return new browser_1.default(this.server.mdns, opts, onup);
     }
-    findOne(opts = undefined, timeout = 10000, callback) {
+    findOne(opts = null, timeout = 10000, callback) {
         const browser = new browser_1.default(this.server.mdns, opts);
         var timer;
         browser.once('up', (service) => {
@@ -41,9 +41,9 @@ class Bonjour {
         }, timeout);
         return browser;
     }
-    destroy() {
+    destroy(callback) {
         this.registry.destroy();
-        this.server.mdns.destroy();
+        this.server.mdns.destroy(callback);
     }
 }
 exports.Bonjour = Bonjour;

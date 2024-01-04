@@ -101,12 +101,16 @@ const keywords = [
   /as\?/, // operator
   /as!/, // operator
   'as', // operator
+  'borrowing', // contextual
   'break',
   'case',
   'catch',
   'class',
+  'consume', // contextual
+  'consuming', // contextual
   'continue',
   'convenience', // contextual
+  'copy', // contextual
   'default',
   'defer',
   'deinit',
@@ -114,6 +118,7 @@ const keywords = [
   'distributed',
   'do',
   'dynamic', // contextual
+  'each',
   'else',
   'enum',
   'extension',
@@ -140,6 +145,7 @@ const keywords = [
   'nonisolated', // contextual
   'lazy', // contextual
   'let',
+  'macro',
   'mutating', // contextual
   'nonmutating', // contextual
   /open\(set\)/, // contextual
@@ -224,7 +230,6 @@ const numberSignKeywords = [
   '#line',
   '#selector',
   '#sourceLocation',
-  '#warn_unqualified_access',
   '#warning'
 ];
 
@@ -338,13 +343,16 @@ const typeIdentifier = concat(/[A-Z]/, identifierCharacter, '*');
 
 // Built-in attributes, which are highlighted as keywords.
 // @available is handled separately.
+// https://docs.swift.org/swift-book/documentation/the-swift-programming-language/attributes
 const keywordAttributes = [
+  'attached',
   'autoclosure',
   concat(/convention\(/, either('swift', 'block', 'c'), /\)/),
   'discardableResult',
   'dynamicCallable',
   'dynamicMemberLookup',
   'escaping',
+  'freestanding',
   'frozen',
   'GKInspectable',
   'IBAction',
@@ -364,10 +372,13 @@ const keywordAttributes = [
   'propertyWrapper',
   'requires_stored_property_inits',
   'resultBuilder',
+  'Sendable',
   'testable',
   'UIApplicationMain',
+  'unchecked',
   'unknown',
-  'usableFromInline'
+  'usableFromInline',
+  'warn_unqualified_access'
 ];
 
 // Contextual keywords used in @available and #(un)available.
@@ -393,6 +404,7 @@ Contributors: Chris Eidhof <chris@eidhof.nl>, Nate Cook <natecook@gmail.com>, Al
 Website: https://swift.org
 Category: common, system
 */
+
 
 /** @type LanguageFn */
 function swift(hljs) {
@@ -560,6 +572,50 @@ function swift(hljs) {
     ]
   };
 
+  const REGEXP_CONTENTS = [
+    hljs.BACKSLASH_ESCAPE,
+    {
+      begin: /\[/,
+      end: /\]/,
+      relevance: 0,
+      contains: [ hljs.BACKSLASH_ESCAPE ]
+    }
+  ];
+
+  const BARE_REGEXP_LITERAL = {
+    begin: /\/[^\s](?=[^/\n]*\/)/,
+    end: /\//,
+    contains: REGEXP_CONTENTS
+  };
+
+  const EXTENDED_REGEXP_LITERAL = (rawDelimiter) => {
+    const begin = concat(rawDelimiter, /\//);
+    const end = concat(/\//, rawDelimiter);
+    return {
+      begin,
+      end,
+      contains: [
+        ...REGEXP_CONTENTS,
+        {
+          scope: "comment",
+          begin: `#(?!.*${end})`,
+          end: /$/,
+        },
+      ],
+    };
+  };
+
+  // https://docs.swift.org/swift-book/documentation/the-swift-programming-language/lexicalstructure/#Regular-Expression-Literals
+  const REGEXP = {
+    scope: "regexp",
+    variants: [
+      EXTENDED_REGEXP_LITERAL('###'),
+      EXTENDED_REGEXP_LITERAL('##'),
+      EXTENDED_REGEXP_LITERAL('#'),
+      BARE_REGEXP_LITERAL
+    ]
+  };
+
   // https://docs.swift.org/swift-book/ReferenceManual/LexicalStructure.html#ID412
   const QUOTED_IDENTIFIER = { match: concat(/`/, identifier, /`/) };
   const IMPLICIT_PARAMETER = {
@@ -579,7 +635,7 @@ function swift(hljs) {
   // https://docs.swift.org/swift-book/ReferenceManual/Attributes.html
   const AVAILABLE_ATTRIBUTE = {
     match: /(@|#(un)?)available/,
-    className: "keyword",
+    scope: 'keyword',
     starts: { contains: [
       {
         begin: /\(/,
@@ -594,11 +650,11 @@ function swift(hljs) {
     ] }
   };
   const KEYWORD_ATTRIBUTE = {
-    className: 'keyword',
+    scope: 'keyword',
     match: concat(/@/, either(...keywordAttributes))
   };
   const USER_DEFINED_ATTRIBUTE = {
-    className: 'meta',
+    scope: 'meta',
     match: concat(/@/, identifier)
   };
   const ATTRIBUTES = [
@@ -666,6 +722,7 @@ function swift(hljs) {
       'self',
       TUPLE_ELEMENT_NAME,
       ...COMMENTS,
+      REGEXP,
       ...KEYWORD_MODES,
       ...BUILT_INS,
       ...OPERATORS,
@@ -680,6 +737,7 @@ function swift(hljs) {
   const GENERIC_PARAMETERS = {
     begin: /</,
     end: />/,
+    keywords: 'repeat each',
     contains: [
       ...COMMENTS,
       TYPE
@@ -722,9 +780,10 @@ function swift(hljs) {
     illegal: /["']/
   };
   // https://docs.swift.org/swift-book/ReferenceManual/Declarations.html#ID362
-  const FUNCTION = {
+  // https://docs.swift.org/swift-book/documentation/the-swift-programming-language/declarations/#Macro-Declaration
+  const FUNCTION_OR_MACRO = {
     match: [
-      /func/,
+      /(func|macro)/,
       /\s+/,
       either(QUOTED_IDENTIFIER.match, identifier, operator)
     ],
@@ -821,7 +880,7 @@ function swift(hljs) {
     keywords: KEYWORDS,
     contains: [
       ...COMMENTS,
-      FUNCTION,
+      FUNCTION_OR_MACRO,
       INIT_SUBSCRIPT,
       {
         beginKeywords: 'struct protocol class extension enum actor',
@@ -844,6 +903,7 @@ function swift(hljs) {
         contains: [ ...COMMENTS ],
         relevance: 0
       },
+      REGEXP,
       ...KEYWORD_MODES,
       ...BUILT_INS,
       ...OPERATORS,

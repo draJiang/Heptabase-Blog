@@ -1,3 +1,4 @@
+'use strict';
 var Queue = function () {
   this.head = null;
   this.tail = null;
@@ -6,15 +7,16 @@ var Queue = function () {
 Queue.prototype = {
   add: function (item) {
     var entry = { item: item, next: null };
-    if (this.head) this.tail.next = entry;
+    var tail = this.tail;
+    if (tail) tail.next = entry;
     else this.head = entry;
     this.tail = entry;
   },
   get: function () {
     var entry = this.head;
     if (entry) {
-      this.head = entry.next;
-      if (this.tail === entry) this.tail = null;
+      var next = this.head = entry.next;
+      if (next === null) this.tail = null;
       return entry.item;
     }
   }

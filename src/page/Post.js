@@ -33,18 +33,6 @@ let HOME_DATA                                                   // 首页数据
 let WHITEBOARD_ID
 
 // 文章页面
-<<<<<<< HEAD
-class Post extends React.Component {
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            cardList: [] // 当前页面的卡片列表
-            , activeNote: 'null' // 记录当前焦点卡片 etc 3a433c0b-e2e1-4722......
-            , status: { 'code': 200, 'msg': '' }
-        };
-    }
-=======
 function Post(props) {
     const [cardList, setCardList] = useState([]);
     const [activeNote, setActiveNote] = useState('null');
@@ -75,7 +63,7 @@ function Post(props) {
         // const url = window.location.href
         // const activeCardId = getUrlSearch(url)['active_str'].replace('active-note-id=', '')
         // 渲染 URL、数据
-        
+
         if (HOME_DATA) {
             herfToData()
         }
@@ -84,7 +72,6 @@ function Post(props) {
 
         // 在此可以处理查询参数 myQueryParam 的变化
     }, [location.search]);
->>>>>>> a66da76f... 修复导航 bug
 
 
     useEffect(() => {
@@ -126,7 +113,7 @@ function Post(props) {
                 document.title = res['data']['whiteboards'][0]['name']
 
                 // 渲染 URL、数据
-                this.herfToData()
+                herfToData()
             } else {
 
             }
@@ -135,11 +122,8 @@ function Post(props) {
                 status: { 'code': res.code, 'msg': '' }
             })
 
-<<<<<<< HEAD
-=======
             // 渲染 URL、数据
             herfToData()
->>>>>>> a66da76f... 修复导航 bug
 
         })
 
@@ -459,17 +443,6 @@ function Post(props) {
 
     }
 
-<<<<<<< HEAD
-    // addShareBtn = () => {
-    //     // 增加分享按钮
-    //     // let btn = < button data-clipboard-text='这里是需要复制的文本123'
-    //     //     className="copy-btn"
-    //     //     type="button" > Copy</button >
-    //     let share_btn = document.createElement('button')
-    //     share_btn.classList.add('copy-btn')
-    //     share_btn.setAttribute('data-clipboard-text', '这里是需要复制的文本1232323')
-    //     share_btn.innerText = '🔗'
-=======
     const addShareBtn = () => {
         // 增加分享按钮
         // let btn = < button data-clipboard-text='这里是需要复制的文本123'
@@ -479,27 +452,7 @@ function Post(props) {
         share_btn.classList.add('copy-btn')
         share_btn.setAttribute('data-clipboard-text', '这里是需要复制的文本1232323')
         share_btn.innerText = '🔗'
->>>>>>> a66da76f... 修复导航 bug
-
-
-    //     let notes = document.getElementsByClassName('note_article')
-
-    //     this.getWhiteboardId()
-
-    //     for (let i = 0; i < notes.length; i++) {
-    //         if (notes[i].getElementsByClassName('copy-btn').length > 0) {
-    //             // 已经有分享按钮，不用重复添加
-    //             continue
-    //         } else {
-    //             console.log(notes);
-    //             let note_link = window.location.origin + '/post?note-id=' + notes[i].parentElement.getAttribute('note_id')
-    //             share_btn.setAttribute('data-clipboard-text', note_link)
-    //             notes[i].appendChild(share_btn)
-    //         }
-    //     }
-
-
-    // }
+    }
 
     // 删除 URL 中不存在的 Card
     const resetCardList = () => {
@@ -786,13 +739,9 @@ function Post(props) {
 
 
         // 设置 URL
-<<<<<<< HEAD
-        window.history.pushState({}, '', window.location.origin + window.location.pathname + new_url_search)
-=======
         // window.history.pushState({}, '', window.location.origin + '/post' + new_url_search)
         const newURL = '/post' + new_url_search;
         navigate(newURL)
->>>>>>> a66da76f... 修复导航 bug
 
         // 记录 URL
         CURRENT_URL = window.location.origin + new_url_search
@@ -805,32 +754,6 @@ function Post(props) {
 
     // return() {
 
-<<<<<<< HEAD
-        // 404
-        if (this.state.status.code !== 200) {
-            return (<div className='markdown-body notes_box'>
-                <Nav whiteboard_id={WHITEBOARD_ID} />
-                <div className='notes'>
-                    <p style={{ marginRight: '10px' }}>
-                        {this.state.status.code}
-                    </p>
-                    <p>
-                        {this.state.status.msg}
-                        {this.state.status.code === 404 && 'The whiteboard ID does not exist or is not set to "share to web"'}
-                    </p>
-                </div></div>)
-        }
-
-        if (HEPTABASE_DATA === null || this.state.cardList.length === 0) {
-            return (<div className='markdown-body notes_box'>
-                <Nav whiteboard_id={WHITEBOARD_ID} />
-                <div className='notes'>
-                    <Loading />
-                </div>
-                {/* <Footer /> */}
-            </div>)
-        } else {
-=======
     if (HEPTABASE_DATA === null || cardList.length === 0) {
         return (<div>
             <Nav />
@@ -840,7 +763,6 @@ function Post(props) {
             {/* <Footer /> */}
         </div>)
     } else {
->>>>>>> a66da76f... 修复导航 bug
 
         // console.log(state.activeNote);
 
@@ -877,49 +799,12 @@ function Post(props) {
                     right: -694.8 + (cardList.length - i) * 40 + 'px',
                     flex: '0 0 auto'
                 }
-<<<<<<< HEAD
-                card_list_dom.push(<Container style={note_style} key={card['card']['id']} whiteboard_id={WHITEBOARD_ID} handleHashChange={this.handleHashChange} handleLinkClick={this.handleLinkClick} card={card} />)
-            } else {
-                for (let i = 0; i < this.state.cardList.length; i++) {
-                    let card = this.state.cardList[i]
-
-                    //设置笔记样式
-                    // left = index*40px; right = index*-40-400
-                    let note_style = {
-                        left: i * 40 + 'px',
-                        right: -694.8 + (this.state.cardList.length - i) * 40 + 'px',
-                        flex: '0 0 auto'
-                    }
-
-                    let note = <Container style={note_style} key={card['card']['id']} whiteboard_id={WHITEBOARD_ID} handleHashChange={this.handleHashChange} handleLinkClick={this.handleLinkClick} card={card} />
-                    card_list_dom.push(note)
-                }
-=======
 
                 let note = <Container style={note_style} key={card['card']['id']} handleHashChange={handleHashChange} handleLinkClick={handleLinkClick} card={card} />
                 card_list_dom.push(note)
->>>>>>> a66da76f... 修复导航 bug
             }
         }
 
-<<<<<<< HEAD
-            // // 设置网页标题
-            // for (let k = 0; k < this.state.cardList.length; k++) {
-            //     if (this.state.cardList[k]['card']['id'] === ACTIVE_NOTE) {
-
-            //         if (this.state.cardList[k]['card']['title'] !== 'About') {
-            //             document.title = this.state.cardList[k]['card']['title']
-            //         } else {
-            //             document.title = 'Jiang 的数字花园🌱'
-            //         }
-
-            //         break;
-            //     }
-            // }
-
-            return (<div className='markdown-body notes_box'>
-                <Nav whiteboard_id={WHITEBOARD_ID} />
-=======
         // 设置网页标题
         for (let k = 0; k < cardList.length; k++) {
             if (cardList[k]['card']['id'] === ACTIVE_NOTE) {
@@ -937,18 +822,9 @@ function Post(props) {
         return (<div className='notes_box'>
             <Nav />
 
->>>>>>> a66da76f... 修复导航 bug
 
 
-<<<<<<< HEAD
-                    {card_list_dom}
-
-                </div>
-
-                {/* <Footer /> */}
-=======
             <div className='notes'>
->>>>>>> a66da76f... 修复导航 bug
 
                 {card_list_dom}
             </div>
@@ -956,7 +832,7 @@ function Post(props) {
 
         </div>)
     }
-    // }
+
 
 }
 

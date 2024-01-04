@@ -163,6 +163,7 @@ Category: common, scripting, web
 Website: https://developer.mozilla.org/en-US/docs/Web/JavaScript
 */
 
+
 /** @type LanguageFn */
 function javascript(hljs) {
   const regex = hljs.regex;

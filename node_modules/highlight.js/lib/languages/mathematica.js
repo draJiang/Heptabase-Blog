@@ -7242,6 +7242,7 @@ Website: https://www.wolfram.com/mathematica/
 Category: scientific
 */
 
+
 /** @type LanguageFn */
 function mathematica(hljs) {
   const regex = hljs.regex;

@@ -38,7 +38,7 @@ const MODES = (hljs) => {
     },
     CSS_VARIABLE: {
       className: "attr",
-      begin: /--[A-Za-z][A-Za-z0-9_-]*/
+      begin: /--[A-Za-z_][A-Za-z0-9_-]*/
     }
   };
 };
@@ -609,6 +609,7 @@ Author:   Max Mikhailov <seven.phases.max@gmail.com>
 Website: http://lesscss.org
 Category: common, css, web
 */
+
 
 /** @type LanguageFn */
 function less(hljs) {

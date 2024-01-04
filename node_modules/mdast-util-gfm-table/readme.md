@@ -19,8 +19,11 @@
 *   [API](#api)
     *   [`gfmTableFromMarkdown`](#gfmtablefrommarkdown)
     *   [`gfmTableToMarkdown(options?)`](#gfmtabletomarkdownoptions)
+    *   [`Options`](#options)
 *   [Examples](#examples)
     *   [Example: `stringLength`](#example-stringlength)
+*   [HTML](#html)
+*   [Syntax](#syntax)
 *   [Syntax tree](#syntax-tree)
     *   [Nodes](#nodes)
     *   [Enumeration](#enumeration)
@@ -33,29 +36,39 @@
 
 ## What is this?
 
-This package contains extensions that add support for the table syntax enabled
-by GFM to [`mdast-util-from-markdown`][mdast-util-from-markdown] and
-[`mdast-util-to-markdown`][mdast-util-to-markdown].
+This package contains two extensions that add support for GFM table syntax in
+markdown to [mdast][].
+These extensions plug into
+[`mdast-util-from-markdown`][mdast-util-from-markdown] (to support parsing
+tables in markdown into a syntax tree) and
+[`mdast-util-to-markdown`][mdast-util-to-markdown] (to support serializing
+tables in syntax trees to markdown).
 
 ## When to use this
 
-These tools are all rather low-level.
-In most cases, you’d want to use [`remark-gfm`][remark-gfm] with remark instead.
+You can use these extensions when you are working with
+`mdast-util-from-markdown` and `mdast-util-to-markdown` already.
+
+When working with `mdast-util-from-markdown`, you must combine this package
+with [`micromark-extension-gfm-table`][extension].
+
+When you don’t need a syntax tree, you can use [`micromark`][micromark]
+directly with `micromark-extension-gfm-table`.
 
 When you are working with syntax trees and want all of GFM, use
 [`mdast-util-gfm`][mdast-util-gfm] instead.
 
-When working with `mdast-util-from-markdown`, you must combine this package with
-[`micromark-extension-gfm-table`][extension].
+All these packages are used [`remark-gfm`][remark-gfm], which
+focusses on making it easier to transform content by abstracting these
+internals away.
 
 This utility does not handle how markdown is turned to HTML.
 That’s done by [`mdast-util-to-hast`][mdast-util-to-hast].
-If your content is not in English, you should configure that utility.
 
 ## Install
 
 This package is [ESM only][esm].
-In Node.js (version 12.20+, 14.14+, or 16.0+), install with [npm][]:
+In Node.js (version 14.14+ and 16.0+), install with [npm][]:
 
 ```sh
 npm install mdast-util-gfm-table
@@ -160,43 +173,44 @@ console.log(out)
 
 ## API
 
-This package exports the identifiers `gfmTableFromMarkdown` and
-`gfmTableToMarkdown`.
+This package exports the identifiers
+[`gfmTableFromMarkdown`][api-gfmtablefrommarkdown] and
+[`gfmTableToMarkdown`][api-gfmtabletomarkdown].
 There is no default export.
 
 ### `gfmTableFromMarkdown`
 
-Extension for [`mdast-util-from-markdown`][mdast-util-from-markdown].
+Extension for [`mdast-util-from-markdown`][mdast-util-from-markdown] to enable
+GFM tables ([`FromMarkdownExtension`][frommarkdownextension]).
 
 ### `gfmTableToMarkdown(options?)`
 
-Function that can be called to get an extension for
-[`mdast-util-to-markdown`][mdast-util-to-markdown].
+Create an extension for [`mdast-util-to-markdown`][mdast-util-to-markdown] to
+enable GFM tables in markdown.
 
-##### `options`
+###### Parameters
 
-Configuration (optional).
+*   `options` ([`Options`][api-options], optional)
+    — configuration
 
-###### `options.tableCellPadding`
+###### Returns
 
-Serialize tables with a space between delimiters (`|`) and cell content
-(`boolean`, default: `true`).
+Extension for `mdast-util-to-markdown` to enable GFM tables
+([`ToMarkdownExtension`][tomarkdownextension]).
 
-###### `options.tablePipeAlign`
+### `Options`
 
-Serialize by aligning the delimiters (`|`) between table cells so that they all
-align nicely and form a grid (`boolean`, default: `true`).
+Configuration (TypeScript type).
 
-###### `options.stringLength`
+###### Fields
 
-Function to detect the length of table cell content (`Function`, default:
-`s => s.length`).
-This is used when aligning the delimiters (`|`) between table cells.
-Full-width characters and emoji mess up delimiter alignment when viewing the
-markdown source.
-To fix this, you can pass this function, which receives the cell content and
-returns its “visible” size.
-Note that what is and isn’t visible depends on where the text is displayed.
+*   `tableCellPadding` (`boolean`, default: `true`)
+    — whether to add a space of padding between delimiters and cells
+*   `tablePipeAlign` (`boolean`, default: `true`)
+    — whether to align the delimiters
+*   `stringLength` (`((value: string) => number)`, default: `s => s.length`)
+    — function to detect the length of table cell content, used when aligning
+    the delimiters between cells
 
 ## Examples
 
@@ -269,6 +283,15 @@ The output of our code with these changes is as follows:
 | 👩‍❤️‍👩    | Delta   |
 ```
 
+## HTML
+
+This utility does not handle how markdown is turned to HTML.
+That’s done by [`mdast-util-to-hast`][mdast-util-to-hast].
+
+## Syntax
+
+See [Syntax in `micromark-extension-gfm-table`][syntax].
+
 ## Syntax tree
 
 The following interfaces are added to **[mdast][]** by this utility.
@@ -285,15 +308,15 @@ interface Table <: Parent {
 }
 ```
 
-**Table** ([**Parent**][dfn-parent]) represents two-dimensional data.
+**Table** (**[Parent][dfn-parent]**) represents two-dimensional data.
 
-**Table** can be used where [**flow**][dfn-flow-content] content is expected.
-Its content model is [**table**][dfn-table-content] content.
+**Table** can be used where **[flow][dfn-flow-content]** content is expected.
+Its content model is **[table][dfn-table-content]** content.
 
-The [*head*][term-head] of the node represents the labels of the columns.
+The *[head][term-head]* of the node represents the labels of the columns.
 
 An `align` field can be present.
-If present, it must be a list of [**alignType**s][dfn-enum-align-type].
+If present, it must be a list of **[alignTypes][dfn-enum-align-type]**.
 It represents how cells in columns are aligned.
 
 For example, the following markdown:
@@ -350,16 +373,16 @@ interface TableRow <: Parent {
 }
 ```
 
-**TableRow** ([**Parent**][dfn-parent]) represents a row of cells in a table.
+**TableRow** (**[Parent][dfn-parent]**) represents a row of cells in a table.
 
-**TableRow** can be used where [**table**][dfn-table-content] content is
+**TableRow** can be used where **[table][dfn-table-content]** content is
 expected.
-Its content model is [**row**][dfn-row-content] content.
+Its content model is **[row][dfn-row-content]** content.
 
-If the node is a [*head*][term-head], it represents the labels of the columns
-for its parent [**Table**][dfn-table].
+If the node is a *[head][term-head]*, it represents the labels of the columns
+for its parent **[Table][dfn-table]**.
 
-For an example, see [**Table**][dfn-table].
+For an example, see **[Table][dfn-table]**.
 
 #### `TableCell`
 
@@ -370,15 +393,15 @@ interface TableCell <: Parent {
 }
 ```
 
-**TableCell** ([**Parent**][dfn-parent]) represents a header cell in a
-[**Table**][dfn-table], if its parent is a [*head*][term-head], or a data
+**TableCell** (**[Parent][dfn-parent]**) represents a header cell in a
+**[Table][dfn-table]**, if its parent is a *[head][term-head]*, or a data
 cell otherwise.
 
-**TableCell** can be used where [**row**][dfn-row-content] content is expected.
-Its content model is [**phrasing**][dfn-phrasing-content] content excluding
-[**Break**][dfn-break] nodes.
+**TableCell** can be used where **[row][dfn-row-content]** content is expected.
+Its content model is **[phrasing][dfn-phrasing-content]** content excluding
+**[Break][dfn-break]** nodes.
 
-For an example, see [**Table**][dfn-table].
+For an example, see **[Table][dfn-table]**.
 
 ### Enumeration
 
@@ -428,16 +451,16 @@ type RowContent = TableCell
 ## Types
 
 This package is fully typed with [TypeScript][].
-It exports the additional type `Options`.
+It exports the additional type [`Options`][api-options].
 
-The `Table`, `TableRow`, and `TableCell` node types are supported in
-`@types/mdast` by default.
+The `Table`, `TableRow`, and `TableCell` types of the mdast nodes are exposed
+from `@types/mdast`.
 
 ## Compatibility
 
 Projects maintained by the unified collective are compatible with all maintained
 versions of Node.js.
-As of now, that is Node.js 12.20+, 14.14+, and 16.0+.
+As of now, that is Node.js 14.14+ and 16.0+.
 Our projects sometimes work with older versions, but this is not guaranteed.
 
 This plugin works with `mdast-util-from-markdown` version 1+ and
@@ -527,7 +550,11 @@ abide by its terms.
 
 [mdast-util-to-hast]: https://github.com/syntax-tree/mdast-util-to-hast
 
+[micromark]: https://github.com/micromark/micromark
+
 [extension]: https://github.com/micromark/micromark-extension-gfm-table
+
+[syntax]: https://github.com/micromark/micromark-extension-gfm-table#syntax
 
 [gfm]: https://github.github.com/gfm/
 
@@ -548,6 +575,16 @@ abide by its terms.
 [dfn-phrasing-content]: https://github.com/syntax-tree/mdast#phrasingcontent
 
 [dfn-break]: https://github.com/syntax-tree/mdast#break
+
+[frommarkdownextension]: https://github.com/syntax-tree/mdast-util-from-markdown#extension
+
+[tomarkdownextension]: https://github.com/syntax-tree/mdast-util-to-markdown#options
+
+[api-gfmtablefrommarkdown]: #gfmtablefrommarkdown
+
+[api-gfmtabletomarkdown]: #gfmtabletomarkdownoptions
+
+[api-options]: #options
 
 [dfn-flow-content]: #flowcontent-gfm-table
 

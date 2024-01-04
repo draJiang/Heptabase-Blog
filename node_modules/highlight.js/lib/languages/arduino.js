@@ -572,6 +572,7 @@ Description: The Arduino® Language is a superset of C++. This rules are designe
 Website: https://www.arduino.cc
 */
 
+
 /** @type LanguageFn */
 function arduino(hljs) {
   const ARDUINO_KW = {

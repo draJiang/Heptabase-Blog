@@ -4,11 +4,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Registry = void 0;
-const array_flatten_1 = __importDefault(require("array-flatten"));
-const dns_equal_1 = __importDefault(require("dns-equal"));
+const dns_equal_1 = __importDefault(require("./utils/dns-equal"));
 const service_1 = __importDefault(require("./service"));
 const REANNOUNCE_MAX_MS = 60 * 60 * 1000;
 const REANNOUNCE_FACTOR = 3;
+const noop = function () { };
 class Registry {
     constructor(server) {
         this.services = [];
@@ -22,10 +22,11 @@ class Registry {
             registry.services.push(service);
             if (!(service instanceof service_1.default))
                 return;
-            if (opts.probe) {
+            if (opts === null || opts === void 0 ? void 0 : opts.probe) {
                 registry.probe(registry.server.mdns, service, (exists) => {
                     if (exists) {
-                        service.stop();
+                        if (service.stop !== undefined)
+                            service.stop();
                         console.log(new Error('Service name is already in use on the network'));
                         return;
                     }
@@ -37,10 +38,12 @@ class Registry {
             }
         }
         function stop(service, registry, callback) {
+            if (!callback)
+                callback = noop;
             if (!service.activated)
-                return;
+                return process.nextTick(callback);
             if (!(service instanceof service_1.default))
-                return;
+                return process.nextTick(callback);
             registry.teardown(registry.server, service, callback);
             const index = registry.services.indexOf(service);
             if (index !== -1)
@@ -114,16 +117,16 @@ class Registry {
         if (!Array.isArray(services))
             services = [services];
         services = services.filter((service) => service.activated);
-        var records = array_flatten_1.default.depth(services.map(function (service) {
+        var records = services.flatMap(function (service) {
             service.activated = false;
             var records = service.records();
             records.forEach((record) => {
                 record.ttl = 0;
             });
             return records;
-        }), 1);
+        });
         if (records.length === 0)
-            return callback && callback();
+            return callback && process.nextTick(callback);
         server.unregister(records);
         server.mdns.respond(records, function () {
             services.forEach(function (service) {

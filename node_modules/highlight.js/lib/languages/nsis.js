@@ -5,6 +5,7 @@ Author: Jan T. Sott <jan.sott@gmail.com>
 Website: https://nsis.sourceforge.io/Main_Page
 */
 
+
 function nsis(hljs) {
   const regex = hljs.regex;
   const LANGUAGE_CONSTANTS = [
@@ -112,6 +113,7 @@ function nsis(hljs) {
     "addincludedir",
     "addplugindir",
     "appendfile",
+    "assert",
     "cd",
     "define",
     "delfile",

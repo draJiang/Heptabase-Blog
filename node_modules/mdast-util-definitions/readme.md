@@ -17,8 +17,8 @@
 *   [Install](#install)
 *   [Use](#use)
 *   [API](#api)
-    *   [`definitions(node)`](#definitionsnode)
-    *   [`definition(identifier)`](#definitionidentifier)
+    *   [`definitions(tree)`](#definitionstree)
+    *   [`GetDefinition`](#getdefinition)
 *   [Types](#types)
 *   [Compatibility](#compatibility)
 *   [Security](#security)
@@ -39,7 +39,7 @@ It’s small and protects against prototype pollution.
 ## Install
 
 This package is [ESM only][esm].
-In Node.js (version 12.20+, 14.14+, or 16.0+), install with [npm][]:
+In Node.js (version 14.14+ and 16.0+), install with [npm][]:
 
 ```sh
 npm install mdast-util-definitions
@@ -78,37 +78,49 @@ definition('foo')
 
 ## API
 
-This package exports the identifier `definitions`.
+This package exports the identifier [`definitions`][api-definitions].
 There is no default export.
 
-### `definitions(node)`
+### `definitions(tree)`
 
-Find [definition][]s in `node` ([`Node`][node]).
-Uses CommonMark precedence, which means that earlier definitions are preferred
-over duplicate later definitions.
+Find definitions in `tree`.
 
-###### Returns
+Uses CommonMark precedence, which means that earlier definitions are
+preferred over duplicate later definitions.
 
-`definition` ([`Function`][fn-definition]).
+###### Parameters
 
-### `definition(identifier)`
-
-Get a node from the bound definition cache by its `identifier` (`string`).
+*   `tree` ([`Node`][node])
+    — tree to check
 
 ###### Returns
 
-[Definition][], if found ([`Node?`][node])
+Getter ([`GetDefinition`][api-getdefinition]).
+
+### `GetDefinition`
+
+Get a definition by identifier (TypeScript type).
+
+###### Parameters
+
+*   `identifier` (`string`, optional)
+    — identifier of definition
+
+###### Returns
+
+Definition corresponding to `identifier` ([`Definition`][definition]) or
+`null`.
 
 ## Types
 
 This package is fully typed with [TypeScript][].
-There are no additional exported types.
+It exports the additional type  [`GetDefinition`][api-getdefinition].
 
 ## Compatibility
 
 Projects maintained by the unified collective are compatible with all maintained
 versions of Node.js.
-As of now, that is Node.js 12.20+, 14.14+, and 16.0+.
+As of now, that is Node.js 14.14+ and 16.0+.
 Our projects sometimes work with older versions, but this is not guaranteed.
 
 ## Security
@@ -188,10 +200,12 @@ abide by its terms.
 
 [node]: https://github.com/syntax-tree/unist#node
 
-[fn-definition]: #definitionidentifier
-
 [definition]: https://github.com/syntax-tree/mdast#definition
 
 [xss]: https://en.wikipedia.org/wiki/Cross-site_scripting
 
 [hast]: https://github.com/syntax-tree/hast
+
+[api-definitions]: #definitionstree
+
+[api-getdefinition]: #getdefinition

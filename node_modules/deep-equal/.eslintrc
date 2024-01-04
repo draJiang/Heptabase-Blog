@@ -15,12 +15,17 @@
     "no-magic-numbers": [2, { "ignore": [0, 1] }],
   },
 
+  "globals": {
+    "Int8Array": false,
+    "Uint8Array": false,
+  },
+
   "overrides": [
     {
       "files": "example/**",
       "rules": {
         "no-console": 0,
-		"no-magic-numbers": 0,
+        "no-magic-numbers": 0,
       }
     },
     {

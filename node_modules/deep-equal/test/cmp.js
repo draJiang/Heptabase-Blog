@@ -7,6 +7,10 @@ var gOPDs = require('object.getownpropertydescriptors');
 var hasSymbols = require('has-symbols')();
 var hasTypedArrays = require('has-typed-arrays')();
 var semver = require('semver');
+var keys = require('object-keys');
+var availableTypedArrays = require('available-typed-arrays')();
+var forEach = require('for-each');
+var hasProto = require('has-proto')();
 
 var safeBuffer = typeof Buffer === 'function' ? Buffer.from && Buffer.from.length > 1 ? Buffer.from : Buffer : null;
 var buffersAreTypedArrays = typeof Buffer === 'function' && new Buffer(0) instanceof Uint8Array;
@@ -22,9 +26,6 @@ function tag(obj, value) {
   return obj;
 }
 
-// eslint-disable-next-line no-proto
-var hasDunderProto = [].__proto__ === Array.prototype;
-
 test('equal', function (t) {
   t.deepEqualTest(
     { a: [2, 3], b: [4] },
@@ -33,6 +34,18 @@ test('equal', function (t) {
     true,
     true,
     false
+  );
+
+  var obj1 = { a: [2, 3], b: [4] };
+  var obj2 = { b: [4], a: [2, 3] };
+  t.notDeepEqual(keys(obj1), keys(obj2), 'keys are in a different order');
+  t.deepEqual(keys(obj1), keys(obj2).reverse(), 'keys are in opposite order');
+  t.deepEqualTest(
+    obj1,
+    obj2,
+    'two equal objects, in different order',
+    true,
+    true
   );
 
   t.deepEqualTest(
@@ -423,7 +436,7 @@ test('Dates', function (t) {
     st.end();
   });
 
-  t.test('fake Date', { skip: !hasDunderProto }, function (st) {
+  t.test('fake Date', { skip: !hasProto }, function (st) {
     var a = new Date(2000);
     var b = tag(Object.create(
       a.__proto__, // eslint-disable-line no-proto
@@ -824,7 +837,7 @@ test('regexen', function (t) {
   t.deepEqualTest(/abc/, /abc/, 'two abc regexes', true, true, false);
   t.deepEqualTest(/xyz/, /xyz/, 'two xyz regexes', true, true, false);
 
-  t.test('fake RegExp', { skip: !hasDunderProto }, function (st) {
+  t.test('fake RegExp', { skip: !hasProto }, function (st) {
     var a = /abc/g;
     var b = tag(Object.create(
       a.__proto__, // eslint-disable-line no-proto
@@ -929,7 +942,7 @@ test('Errors', function (t) {
     false
   );
 
-  t.test('fake error', { skip: !process.env.ASSERT || !hasDunderProto }, function (st) {
+  t.test('fake error', { skip: !process.env.ASSERT || !hasProto }, function (st) {
     var a = tag({
       __proto__: null
     }, 'Error');
@@ -984,7 +997,7 @@ test('[[Prototypes]]', function (t) {
 
   t.deepEqualTest({}, instance, 'two identical objects with different [[Prototypes]]', true, false);
 
-  t.test('Dates with different prototypes', { skip: !hasDunderProto }, function (st) {
+  t.test('Dates with different prototypes', { skip: !hasProto }, function (st) {
     var d1 = new Date(0);
     var d2 = new Date(0);
 
@@ -1067,7 +1080,7 @@ test('getters', { skip: !Object.defineProperty }, function (t) {
 });
 
 var isBrokenNode = isNode && process.env.ASSERT && semver.satisfies(process.version, '<= 13.3.0');
-test('fake arrays: extra keys will be tested', { skip: !hasDunderProto || isBrokenNode }, function (t) {
+test('fake arrays: extra keys will be tested', { skip: !hasProto || isBrokenNode }, function (t) {
   var a = tag({
     __proto__: Array.prototype,
     0: 1,
@@ -1135,7 +1148,7 @@ var isNodeWhereBufferBreaks = isNode && semver.satisfies(process.version, '< 3')
 var isNode06 = isNode && semver.satisfies(process.version, '<= 0.6'); // segfaults in node 0.6, it seems
 
 test('TypedArrays', { skip: !hasTypedArrays }, function (t) {
-  t.test('Buffer faked as Uint8Array', { skip: typeof Buffer !== 'function' || !Object.create || !hasDunderProto || isNode06 }, function (st) {
+  t.test('Buffer faked as Uint8Array', { skip: typeof Buffer !== 'function' || !Object.create || !hasProto || isNode06 }, function (st) {
     var a = safeBuffer('test');
     var b = tag(Object.create(
       a.__proto__, // eslint-disable-line no-proto
@@ -1158,8 +1171,33 @@ test('TypedArrays', { skip: !hasTypedArrays }, function (t) {
     st.end();
   });
 
-  t.test('one TypedArray faking as another', { skip: !hasDunderProto }, function (st) {
-    /* globals Uint8Array, Int8Array */
+  forEach(availableTypedArrays, function (name) {
+    t.test(name + 's', function (st) {
+      var TA = global[name];
+      var isBigInt = name.slice(0, 3) === 'Big';
+      var Z = isBigInt ? BigInt : Number;
+
+      st.deepEqualTest(
+        new TA([Z(1), Z(2), Z(3)]),
+        new TA([Z(1), Z(2), Z(3)]),
+        'two ' + name + 's with the same contents',
+        true,
+        true
+      );
+
+      st.deepEqualTest(
+        new TA([Z(1), Z(2), Z(3)]),
+        new TA([Z(1), Z(2), Z(4)]),
+        'two ' + name + 's with different contents',
+        false,
+        false
+      );
+
+      st.end();
+    });
+  });
+
+  t.test('one TypedArray faking as another', { skip: !hasProto }, function (st) {
     var a = new Uint8Array(10);
     var b = tag(new Int8Array(10), 'Uint8Array');
     b.__proto__ = Uint8Array.prototype; // eslint-disable-line no-proto
@@ -1218,6 +1256,7 @@ test('TypedArrays', { skip: !hasTypedArrays }, function (t) {
       false
     );
 
+    // node < 0.11 has a nonconfigurable own byteLength property
     t.test('lies about byteLength', { skip: !('byteLength' in ArrayBuffer.prototype) }, function (s2t) {
       var empty4 = new ArrayBuffer(4);
       var empty6 = new ArrayBuffer(6);
@@ -1227,6 +1266,67 @@ test('TypedArrays', { skip: !hasTypedArrays }, function (t) {
         empty4,
         empty6,
         'different-length ArrayBuffers, one lying',
+        false,
+        false
+      );
+      s2t.end();
+    });
+
+    st.end();
+  });
+
+  t.test('SharedArrayBuffers', { skip: typeof SharedArrayBuffer !== 'function' }, function (st) {
+    var buffer1 = new SharedArrayBuffer(8); // initial value of 0's
+    var buffer2 = new SharedArrayBuffer(8); // initial value of 0's
+
+    var view1 = new Int8Array(buffer1);
+    var view2 = new Int8Array(buffer2);
+
+    st.deepEqualTest(
+      view1,
+      view2,
+      'Int8Arrays of similar SharedArrayBuffers',
+      true,
+      true
+    );
+
+    st.deepEqualTest(
+      buffer1,
+      buffer2,
+      'similar SharedArrayBuffers',
+      true,
+      true
+    );
+
+    for (var i = 0; i < view1.byteLength; i += 1) {
+      view1[i] = 9; // change all values to 9's
+    }
+
+    st.deepEqualTest(
+      view1,
+      view2,
+      'Int8Arrays of different SharedArrayBuffers',
+      false,
+      false
+    );
+
+    st.deepEqualTest(
+      buffer1,
+      buffer2,
+      'different SharedArrayBuffers',
+      false,
+      false
+    );
+
+    t.test('lies about byteLength', { skip: !('byteLength' in SharedArrayBuffer.prototype) }, function (s2t) {
+      var empty4 = new SharedArrayBuffer(4);
+      var empty6 = new SharedArrayBuffer(6);
+      Object.defineProperty(empty6, 'byteLength', { value: 4 });
+
+      s2t.deepEqualTest(
+        empty4,
+        empty6,
+        'different-length SharedArrayBuffers, one lying',
         false,
         false
       );

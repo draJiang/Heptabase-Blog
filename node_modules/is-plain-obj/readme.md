@@ -1,4 +1,4 @@
-# is-plain-obj [![Build Status](https://travis-ci.com/sindresorhus/is-plain-obj.svg?branch=master)](https://travis-ci.com/github/sindresorhus/is-plain-obj)
+# is-plain-obj
 
 > Check if a value is a plain object
 
@@ -13,7 +13,8 @@ $ npm install is-plain-obj
 ## Usage
 
 ```js
-const isPlainObject = require('is-plain-obj');
+import isPlainObject from 'is-plain-obj';
+import {runInNewContext} from 'node:vm';
 
 isPlainObject({foo: 'bar'});
 //=> true
@@ -24,11 +25,18 @@ isPlainObject(new Object());
 isPlainObject(Object.create(null));
 //=> true
 
+// This works across realms
+isPlainObject(runInNewContext('({})'));
+//=> true
+
 isPlainObject([1, 2, 3]);
 //=> false
 
 class Unicorn {}
 isPlainObject(new Unicorn());
+//=> false
+
+isPlainObject(Math);
 //=> false
 ```
 
@@ -36,7 +44,6 @@ isPlainObject(new Unicorn());
 
 - [is-obj](https://github.com/sindresorhus/is-obj) - Check if a value is an object
 - [is](https://github.com/sindresorhus/is) - Type check values
-
 
 ---
 

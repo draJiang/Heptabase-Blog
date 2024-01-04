@@ -1,8 +1,11 @@
 /**
  * @typedef {import('mdast-util-from-markdown').Extension} FromMarkdownExtension
  * @typedef {import('mdast-util-to-markdown').Options} ToMarkdownExtension
- *
+ */
+
+/**
  * @typedef {import('mdast-util-gfm-table').Options} Options
+ *   Configuration.
  */
 
 import {
@@ -24,7 +27,12 @@ import {
 } from 'mdast-util-gfm-task-list-item'
 
 /**
+ * Create an extension for `mdast-util-from-markdown` to enable GFM (autolink
+ * literals, footnotes, strikethrough, tables, tasklists).
+ *
  * @returns {Array<FromMarkdownExtension>}
+ *   Extension for `mdast-util-from-markdown` to enable GFM (autolink literals,
+ *   footnotes, strikethrough, tables, tasklists).
  */
 export function gfmFromMarkdown() {
   return [
@@ -37,8 +45,14 @@ export function gfmFromMarkdown() {
 }
 
 /**
- * @param {Options} [options]
+ * Create an extension for `mdast-util-to-markdown` to enable GFM (autolink
+ * literals, footnotes, strikethrough, tables, tasklists).
+ *
+ * @param {Options | null | undefined} [options]
+ *   Configuration.
  * @returns {ToMarkdownExtension}
+ *   Extension for `mdast-util-to-markdown` to enable GFM (autolink literals,
+ *   footnotes, strikethrough, tables, tasklists).
  */
 export function gfmToMarkdown(options) {
   return {

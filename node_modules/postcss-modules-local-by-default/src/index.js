@@ -149,9 +149,19 @@ function localizeNode(rule, mode, localAliasMap) {
               hasLocals: false,
               explicit: context.explicit,
             };
-            newNodes = node.map((childNode) =>
-              transform(childNode, childContext)
-            );
+            newNodes = node.map((childNode) => {
+              const newContext = {
+                ...childContext,
+                enforceNoSpacing: false,
+              };
+
+              const result = transform(childNode, newContext);
+
+              childContext.global = newContext.global;
+              childContext.hasLocals = newContext.hasLocals;
+
+              return result;
+            });
 
             node = node.clone();
             node.nodes = normalizeNodeArray(newNodes);
@@ -292,19 +302,34 @@ function localizeDeclNode(node, context) {
   return node;
 }
 
-function isWordAFunctionArgument(wordNode, functionNode) {
-  return functionNode
-    ? functionNode.nodes.some(
-        (functionNodeChild) =>
-          functionNodeChild.sourceIndex === wordNode.sourceIndex
-      )
-    : false;
-}
+// `none` is special value, other is global values
+const specialKeywords = [
+  "none",
+  "inherit",
+  "initial",
+  "revert",
+  "revert-layer",
+  "unset",
+];
 
 function localizeDeclarationValues(localize, declaration, context) {
   const valueNodes = valueParser(declaration.value);
 
   valueNodes.walk((node, index, nodes) => {
+    if (
+      node.type === "function" &&
+      (node.value.toLowerCase() === "var" || node.value.toLowerCase() === "env")
+    ) {
+      return false;
+    }
+
+    if (
+      node.type === "word" &&
+      specialKeywords.includes(node.value.toLowerCase())
+    ) {
+      return;
+    }
+
     const subContext = {
       options: context.options,
       global: context.global,
@@ -321,63 +346,84 @@ function localizeDeclaration(declaration, context) {
   const isAnimation = /animation$/i.test(declaration.prop);
 
   if (isAnimation) {
-    const validIdent = /^-?[_a-z][_a-z0-9-]*$/i;
+    // letter
+    // An uppercase letter or a lowercase letter.
+    //
+    // ident-start code point
+    // A letter, a non-ASCII code point, or U+005F LOW LINE (_).
+    //
+    // ident code point
+    // An ident-start code point, a digit, or U+002D HYPHEN-MINUS (-).
+
+    // We don't validate `hex digits`, because we don't need it, it is work of linters.
+    const validIdent =
+      /^-?([a-z\u0080-\uFFFF_]|(\\[^\r\n\f])|-)((\\[^\r\n\f])|[a-z\u0080-\uFFFF_0-9-])*$/i;
 
     /*
     The spec defines some keywords that you can use to describe properties such as the timing
     function. These are still valid animation names, so as long as there is a property that accepts
     a keyword, it is given priority. Only when all the properties that can take a keyword are
     exhausted can the animation name be set to the keyword. I.e.
-  
+
     animation: infinite infinite;
-  
+
     The animation will repeat an infinite number of times from the first argument, and will have an
     animation name of infinite from the second.
     */
     const animationKeywords = {
+      // animation-direction
+      $normal: 1,
+      $reverse: 1,
       $alternate: 1,
       "$alternate-reverse": 1,
+      // animation-fill-mode
+      $forwards: 1,
       $backwards: 1,
       $both: 1,
+      // animation-iteration-count
+      $infinite: 1,
+      // animation-play-state
+      $paused: 1,
+      $running: 1,
+      // animation-timing-function
       $ease: 1,
       "$ease-in": 1,
-      "$ease-in-out": 1,
       "$ease-out": 1,
-      $forwards: 1,
-      $infinite: 1,
+      "$ease-in-out": 1,
       $linear: 1,
-      $none: Infinity, // No matter how many times you write none, it will never be an animation name
-      $normal: 1,
-      $paused: 1,
-      $reverse: 1,
-      $running: 1,
       "$step-end": 1,
       "$step-start": 1,
+      // Special
+      $none: Infinity, // No matter how many times you write none, it will never be an animation name
+      // Global values
       $initial: Infinity,
       $inherit: Infinity,
       $unset: Infinity,
+      $revert: Infinity,
+      "$revert-layer": Infinity,
     };
-
-    const didParseAnimationName = false;
     let parsedAnimationKeywords = {};
-    let stepsFunctionNode = null;
     const valueNodes = valueParser(declaration.value).walk((node) => {
-      /* If div-token appeared (represents as comma ','), a possibility of an animation-keywords should be reflesh. */
+      // If div-token appeared (represents as comma ','), a possibility of an animation-keywords should be reflesh.
       if (node.type === "div") {
         parsedAnimationKeywords = {};
+
+        return;
       }
-      if (node.type === "function" && node.value.toLowerCase() === "steps") {
-        stepsFunctionNode = node;
+      // Do not handle nested functions
+      else if (node.type === "function") {
+        return false;
       }
-      const value =
-        node.type === "word" &&
-        !isWordAFunctionArgument(node, stepsFunctionNode)
-          ? node.value.toLowerCase()
-          : null;
+      // Ignore all except word
+      else if (node.type !== "word") {
+        return;
+      }
+
+      const value = node.type === "word" ? node.value.toLowerCase() : null;
 
       let shouldParseAnimationName = false;
 
-      if (!didParseAnimationName && value && validIdent.test(value)) {
+      if (value && validIdent.test(value)) {
         if ("$" + value in animationKeywords) {
           parsedAnimationKeywords["$" + value] =
             "$" + value in parsedAnimationKeywords
@@ -398,6 +444,7 @@ function localizeDeclaration(declaration, context) {
         localizeNextItem: shouldParseAnimationName && !context.global,
         localAliasMap: context.localAliasMap,
       };
+
       return localizeDeclNode(node, subContext);
     });
 

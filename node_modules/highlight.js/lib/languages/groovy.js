@@ -66,7 +66,7 @@ function groovy(hljs) {
 
   const CLASS_DEFINITION = {
     match: [
-      /(class|interface|trait|enum|extends|implements)/,
+      /(class|interface|trait|enum|record|extends|implements)/,
       /\s+/,
       hljs.UNDERSCORE_IDENT_RE
     ],
@@ -126,7 +126,8 @@ function groovy(hljs) {
     "import",
     "package",
     "return",
-    "instanceof"
+    "instanceof",
+    "var"
   ];
 
   return {

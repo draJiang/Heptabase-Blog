@@ -48,6 +48,10 @@ postcss([
 
 See [PostCSS](https://github.com/postcss/postcss) documentation for examples for your environment.
 
+### `postcss-preset-env`
+
+If you are using [`postcss-preset-env@>=7.3.0`](https://github.com/csstools/postcss-plugins/blob/main/plugin-packs/postcss-preset-env/CHANGELOG.md#730-january-31-2022), you already have this plugin installed via this package.
+
 ## Options
 
 ### `preserve`

@@ -1,11 +1,11 @@
 'use strict';
 
-var functionsHaveConfigurableNames = require('functions-have-names').functionsHaveConfigurableNames();
+var setFunctionName = require('set-function-name');
 
 var $Object = Object;
 var $TypeError = TypeError;
 
-module.exports = function flags() {
+module.exports = setFunctionName(function flags() {
 	if (this != null && this !== $Object(this)) {
 		throw new $TypeError('RegExp.prototype.flags getter called on non-object');
 	}
@@ -28,12 +28,12 @@ module.exports = function flags() {
 	if (this.unicode) {
 		result += 'u';
 	}
+	if (this.unicodeSets) {
+		result += 'v';
+	}
 	if (this.sticky) {
 		result += 'y';
 	}
 	return result;
-};
+}, 'get flags', true);
 
-if (functionsHaveConfigurableNames && Object.defineProperty) {
-	Object.defineProperty(module.exports, 'name', { value: 'get flags' });
-}

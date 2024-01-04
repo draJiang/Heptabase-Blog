@@ -1,8 +1,4 @@
-require('../../modules/es.object.to-string');
-require('../../modules/es.promise');
-require('../../modules/esnext.async-iterator.constructor');
-require('../../modules/esnext.async-iterator.take');
+'use strict';
+var parent = require('../../actual/async-iterator/take');
 
-var entryUnbind = require('../../internals/entry-unbind');
-
-module.exports = entryUnbind('AsyncIterator', 'take');
+module.exports = parent;

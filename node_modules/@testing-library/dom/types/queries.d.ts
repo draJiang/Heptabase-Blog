@@ -66,7 +66,9 @@ export type FindByText<T extends HTMLElement = HTMLElement> = (
   waitForElementOptions?: waitForOptions,
 ) => Promise<T>
 
-export interface ByRoleOptions extends MatcherOptions {
+export interface ByRoleOptions {
+  /** suppress suggestions for a specific query */
+  suggest?: boolean
   /**
    * If true includes elements in the query set that are usually excluded from
    * the accessibility tree. `role="none"` or `role="presentation"` are included
@@ -78,6 +80,11 @@ export interface ByRoleOptions extends MatcherOptions {
    * selected in the accessibility tree, i.e., `aria-selected="true"`
    */
   selected?: boolean
+  /**
+   * If true only includes elements in the query set that are marked as
+   * busy in the accessibility tree, i.e., `aria-busy="true"`
+   */
+  busy?: boolean
   /**
    * If true only includes elements in the query set that are marked as
    * checked in the accessibility tree, i.e., `aria-checked="true"`
@@ -103,6 +110,12 @@ export interface ByRoleOptions extends MatcherOptions {
    * the `aria-level` attribute.
    */
   level?: number
+  value?: {
+    now?: number
+    min?: number
+    max?: number
+    text?: Matcher
+  }
   /**
    * Includes every role used in the `role` attribute
    * For example *ByRole('progressbar', {queryFallbacks: true})` will find <div role="meter progressbar">`.

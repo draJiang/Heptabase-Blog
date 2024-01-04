@@ -1,5 +1,7 @@
 import type {Literal} from 'hast'
 
+/* eslint-disable @typescript-eslint/consistent-type-definitions */
+
 export interface Raw extends Literal {
   type: 'raw'
 }
@@ -13,3 +15,5 @@ declare module 'hast' {
     raw: Raw
   }
 }
+
+/* eslint-enable @typescript-eslint/consistent-type-definitions */

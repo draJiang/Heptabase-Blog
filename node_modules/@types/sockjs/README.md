@@ -8,14 +8,9 @@ This package contains type definitions for sockjs (https://github.com/sockjs/soc
 Files were exported from https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/sockjs.
 ## [index.d.ts](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/sockjs/index.d.ts)
 ````ts
-// Type definitions for sockjs 0.3
-// Project: https://github.com/sockjs/sockjs-node
-// Definitions by: Phil McCloghry-Laing <https://github.com/pmccloghrylaing>
-// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
-
 /// <reference types="node" />
 
-import http = require('http');
+import http = require("http");
 
 export interface ServerOptions {
     sockjs_url?: string | undefined;
@@ -33,7 +28,7 @@ export function createServer(options?: ServerOptions): Server;
 export interface Server extends NodeJS.EventEmitter {
     installHandlers(server: http.Server, options?: ServerOptions): any;
 
-    on(event: 'connection', listener: (conn: Connection) => any): this;
+    on(event: "connection", listener: (conn: Connection) => any): this;
     on(event: string, listener: Function): this;
 }
 
@@ -59,17 +54,16 @@ export interface Connection extends NodeJS.ReadWriteStream {
     close(code?: string, reason?: string): boolean;
     destroy(): void;
 
-    on(event: 'data', listener: (message: string) => any): this;
-    on(event: 'close', listener: () => void): this;
+    on(event: "data", listener: (message: string) => any): this;
+    on(event: "close", listener: () => void): this;
     on(event: string, listener: Function): this;
 }
 
 ````
 
 ### Additional Details
- * Last updated: Tue, 06 Jul 2021 16:35:05 GMT
+ * Last updated: Tue, 07 Nov 2023 15:11:36 GMT
  * Dependencies: [@types/node](https://npmjs.com/package/@types/node)
- * Global values: none
 
 # Credits
 These definitions were written by [Phil McCloghry-Laing](https://github.com/pmccloghrylaing).

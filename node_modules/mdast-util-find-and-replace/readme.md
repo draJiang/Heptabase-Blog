@@ -18,6 +18,14 @@
 *   [Use](#use)
 *   [API](#api)
     *   [`findAndReplace(tree, find, replace[, options])`](#findandreplacetree-find-replace-options)
+    *   [`Find`](#find)
+    *   [`FindAndReplaceList`](#findandreplacelist)
+    *   [`FindAndReplaceSchema`](#findandreplaceschema)
+    *   [`FindAndReplaceTuple`](#findandreplacetuple)
+    *   [`Options`](#options)
+    *   [`RegExpMatchObject`](#regexpmatchobject)
+    *   [`Replace`](#replace)
+    *   [`ReplaceFunction`](#replacefunction)
 *   [Types](#types)
 *   [Compatibility](#compatibility)
 *   [Security](#security)
@@ -42,7 +50,7 @@ does the same but on [hast][].
 ## Install
 
 This package is [ESM only][esm].
-In Node.js (version 12.20+, 14.14+, or 16.0+), install with [npm][]:
+In Node.js (version 14.14+ and or 16.0+), install with [npm][]:
 
 ```sh
 npm install mdast-util-find-and-replace
@@ -112,12 +120,13 @@ paragraph[8]
 
 ## API
 
-This package exports the identifier `findAndReplace`.
+This package exports the identifier [`findAndReplace`][api-findandreplace].
 There is no default export.
 
 ### `findAndReplace(tree, find, replace[, options])`
 
 Find patterns in a tree and replace them.
+
 The algorithm searches the tree in *[preorder][]* for complete values in
 [`Text`][text] nodes.
 Partial matches are not supported.
@@ -130,39 +139,144 @@ Partial matches are not supported.
 ###### Parameters
 
 *   `tree` ([`Node`][node])
-*   `find` (`string` or `RegExp`)
-    — value to find and remove (`string`s are escaped and turned into a global
-    `RegExp`)
-*   `replace` (`string` or `Function`)
-    — value to insert.
-    `string`s are turned into a [`Text`][text] node,
-    `Function`s are called with the results of calling `RegExp.exec` as
-    arguments, and they can return a [`Node`][node], a `string` (which is
-    wrapped in a [`Text`][text] node), or `false` to not replace
-*   `search` (`Array` or `Object`)
-    — perform multiple find-and-replaces.
-    Either an `Array` of tuples (`Array`s) with `find` (at `0`) and `replace`
-    (at `1`), or an `Object` where each key is `find` and each value is
-    the corresponding `replace`
-*   `options.ignore` (`Test`, default: `[]`)
-    — any [`unist-util-is`][test] compatible test.
+    — tree to change
+*   `find` ([`Find`][api-find])
+    — value to find and remove
+*   `replace` ([`Replace`][api-replace])
+    — thing to replace with
+*   `search` ([`FindAndReplaceSchema`][api-findandreplaceschema] or
+    [`FindAndReplaceList`][api-findandreplacelist])
+    — several find and replaces
+*   `options` ([`Options`][api-options])
+    — configuration
 
 ###### Returns
 
-The given `tree` ([`Node`][node]).
+Given, modified, tree ([`Node`][node]).
+
+### `Find`
+
+Pattern to find (TypeScript type).
+
+Strings are escaped and then turned into global expressions.
+
+###### Type
+
+```ts
+type Find = string | RegExp
+```
+
+### `FindAndReplaceList`
+
+Several find and replaces, in array form (TypeScript type).
+
+###### Type
+
+```ts
+type FindAndReplaceList = Array<FindAndReplaceTuple>
+```
+
+See [`FindAndReplaceTuple`][api-findandreplacetuple].
+
+### `FindAndReplaceSchema`
+
+Several find and replaces, in object form (TypeScript type).
+
+###### Type
+
+```ts
+type FindAndReplaceSchema = Record<string, Replace>
+```
+
+See [`Replace`][api-replace].
+
+### `FindAndReplaceTuple`
+
+Find and replace in tuple form (TypeScript type).
+
+###### Type
+
+```ts
+type FindAndReplaceTuple = [Find, Replace]
+```
+
+See [`Find`][api-find] and [`Replace`][api-replace].
+
+### `Options`
+
+Configuration (TypeScript type).
+
+###### Fields
+
+*   `ignore` ([`Test`][test], optional)
+    — test for which elements to ignore
+
+### `RegExpMatchObject`
+
+Info on the match (TypeScript type).
+
+###### Fields
+
+*   `index` (`number`)
+    — the index of the search at which the result was found
+*   `input` (`string`)
+    — a copy of the search string in the text node
+*   `stack` ([`Array<Node>`][node])
+    — all ancestors of the text node, where the last node is the text itself
+
+### `Replace`
+
+Thing to replace with (TypeScript type).
+
+###### Type
+
+```ts
+type Replace = string | ReplaceFunction
+```
+
+See [`ReplaceFunction`][api-replacefunction].
+
+### `ReplaceFunction`
+
+Callback called when a search matches (TypeScript type).
+
+###### Parameters
+
+The parameters are the result of corresponding search expression:
+
+*   `value` (`string`)
+    — whole match
+*   `...capture` (`Array<string>`)
+    — matches from regex capture groups
+*   `match` ([`RegExpMatchObject`][api-regexpmatchobject])
+    — info on the match
+
+###### Returns
+
+Thing to replace with:
+
+*   when `null`, `undefined`, `''`, remove the match
+*   …or when `false`, do not replace at all
+*   …or when `string`, replace with a text node of that value
+*   …or when `Node` or `Array<Node>`, replace with those nodes
 
 ## Types
 
 This package is fully typed with [TypeScript][].
-It exports the types `Find`, `Replace`, `ReplaceFunction`,
-`FindAndReplaceTuple`, `FindAndReplaceSchema`, `FindAndReplaceList`,
-`RegExpMatchObject`, and `Options`.
+It exports the additional types [`Find`][api-find],
+[`FindAndReplaceList`][api-findandreplacelist],
+[`FindAndReplaceSchema`][api-findandreplaceschema],
+[`FindAndReplaceTuple`][api-findandreplacetuple],
+[`Options`][api-options],
+[`RegExpMatchObject`][api-regexpmatchobject],
+[`Replace`][api-replace], and
+[`ReplaceFunction`][api-replacefunction].
 
 ## Compatibility
 
 Projects maintained by the unified collective are compatible with all maintained
 versions of Node.js.
-As of now, that is Node.js 12.20+, 14.14+, and 16.0+.
+As of now, that is Node.js 14.14+ and 16.0+.
 Our projects sometimes work with older versions, but this is not guaranteed.
 
 ## Security
@@ -245,7 +359,7 @@ abide by its terms.
 
 [mdast]: https://github.com/syntax-tree/mdast
 
-[node]: https://github.com/syntax-tree/mdast#ndoes
+[node]: https://github.com/syntax-tree/mdast#nodes
 
 [preorder]: https://github.com/syntax-tree/unist#preorder
 
@@ -256,3 +370,21 @@ abide by its terms.
 [test]: https://github.com/syntax-tree/unist-util-is#api
 
 [hast-util-find-and-replace]: https://github.com/syntax-tree/hast-util-find-and-replace
+
+[api-findandreplace]: #findandreplacetree-find-replace-options
+
+[api-options]: #options
+
+[api-find]: #find
+
+[api-replace]: #replace
+
+[api-replacefunction]: #replacefunction
+
+[api-findandreplacelist]: #findandreplacelist
+
+[api-findandreplaceschema]: #findandreplaceschema
+
+[api-findandreplacetuple]: #findandreplacetuple
+
+[api-regexpmatchobject]: #regexpmatchobject

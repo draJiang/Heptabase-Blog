@@ -152,6 +152,7 @@ Website: https://livescript.net
 Category: scripting
 */
 
+
 function livescript(hljs) {
   const LIVESCRIPT_BUILT_INS = [
     'npm',

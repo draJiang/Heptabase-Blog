@@ -1,8 +1,7 @@
-var global = require('../internals/global');
-
+'use strict';
 module.exports = function (a, b) {
-  var console = global.console;
-  if (console && console.error) {
-    arguments.length == 1 ? console.error(a) : console.error(a, b);
-  }
+  try {
+    // eslint-disable-next-line no-console -- safe
+    arguments.length === 1 ? console.error(a) : console.error(a, b);
+  } catch (error) { /* empty */ }
 };

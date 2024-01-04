@@ -1,25 +1,33 @@
 /**
- * @typedef {Object} StringifyOptions
- * @property {boolean} [padLeft=true] Whether to pad a space before a token (`boolean`, default: `true`).
- * @property {boolean} [padRight=false] Whether to pad a space after a token (`boolean`, default: `false`).
+ * @typedef Options
+ *   Configuration for `stringify`.
+ * @property {boolean} [padLeft=true]
+ *   Whether to pad a space before a token.
+ * @property {boolean} [padRight=false]
+ *   Whether to pad a space after a token.
  */
 
 /**
- * Parse comma separated tokens to an array.
+ * @typedef {Options} StringifyOptions
+ *   Please use `StringifyOptions` instead.
+ */
+
+/**
+ * Parse comma-separated tokens to an array.
  *
  * @param {string} value
- * @returns {Array.<string>}
+ *   Comma-separated tokens.
+ * @returns {Array<string>}
+ *   List of tokens.
  */
 export function parse(value) {
-  /** @type {Array.<string>} */
-  var tokens = []
-  var input = String(value || '')
-  var index = input.indexOf(',')
-  var start = 0
+  /** @type {Array<string>} */
+  const tokens = []
+  const input = String(value || '')
+  let index = input.indexOf(',')
+  let start = 0
   /** @type {boolean} */
-  var end
-  /** @type {string} */
-  var token
+  let end = false
 
   while (!end) {
     if (index === -1) {
@@ -27,7 +35,7 @@ export function parse(value) {
       end = true
     }
 
-    token = input.slice(start, index).trim()
+    const token = input.slice(start, index).trim()
 
     if (token || !end) {
       tokens.push(token)
@@ -41,21 +49,22 @@ export function parse(value) {
 }
 
 /**
- * Serialize an array of strings to comma separated tokens.
+ * Serialize an array of strings or numbers to comma-separated tokens.
  *
- * @param {Array.<string|number>} values
- * @param {StringifyOptions} [options]
+ * @param {Array<string|number>} values
+ *   List of tokens.
+ * @param {Options} [options]
+ *   Configuration for `stringify` (optional).
  * @returns {string}
+ *   Comma-separated tokens.
  */
 export function stringify(values, options) {
-  var settings = options || {}
+  const settings = options || {}
 
   // Ensure the last empty entry is seen.
-  if (values[values.length - 1] === '') {
-    values = values.concat('')
-  }
+  const input = values[values.length - 1] === '' ? [...values, ''] : values
 
-  return values
+  return input
     .join(
       (settings.padRight ? ' ' : '') +
         ',' +

@@ -4,10 +4,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Server = void 0;
-const array_flatten_1 = __importDefault(require("array-flatten"));
-const es6_1 = __importDefault(require("fast-deep-equal/es6"));
 const multicast_dns_1 = __importDefault(require("multicast-dns"));
-const dns_equal_1 = __importDefault(require("dns-equal"));
+const es6_1 = __importDefault(require("fast-deep-equal/es6"));
+const dns_equal_1 = __importDefault(require("./utils/dns-equal"));
 class Server {
     constructor(opts, errorCallback) {
         this.registry = {};
@@ -55,7 +54,7 @@ class Server {
             var type = question.type;
             var name = question.name;
             var answers = type === 'ANY'
-                ? array_flatten_1.default.depth(Object.keys(self.registry).map(self.recordsFor.bind(self, name)), 1)
+                ? Object.keys(self.registry).map(self.recordsFor.bind(self, name)).flat(1)
                 : self.recordsFor(name, type);
             if (answers.length === 0)
                 return;

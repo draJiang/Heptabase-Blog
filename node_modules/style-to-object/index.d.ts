@@ -2,37 +2,44 @@
  * Parses inline style to object.
  *
  * @example
- * import StyleToObject from 'style-to-object';
- * StyleToObject('line-height: 42;');
+ *
+ * ```ts
+ * import parse from 'style-to-object';
+ * parse('line-height: 42;'); // { 'line-height': '42' }
+ * ```
  */
-declare function StyleToObject(
+export default function StyleToObject(
   style: string,
-  iterator?: StyleToObject.Iterator
+  iterator?: Iterator
 ): { [name: string]: string } | null;
 
-export = StyleToObject;
-
-declare namespace StyleToObject {
-  interface DeclarationPos {
+interface Position {
+  start: {
     line: number;
     column: number;
-  }
-
-  // declaration is an object from module `inline-style-parser`
-  interface Declaration {
-    type: string;
-    property: string;
-    value: string;
-    position: {
-      start: DeclarationPos;
-      end: DeclarationPos;
-      source: any;
-    };
-  }
-
-  type Iterator = (
-    property: string,
-    value: string,
-    declaration: Declaration
-  ) => void;
+  };
+  end: {
+    line: number;
+    column: number;
+  };
+  source?: string;
 }
+
+export interface Declaration {
+  type: 'declaration';
+  property: string;
+  value: string;
+  position: Position;
+}
+
+export interface Comment {
+  type: 'comment';
+  comment: string;
+  position: Position;
+}
+
+type Iterator = (
+  property: string,
+  value: string,
+  declaration: Declaration | Comment
+) => void;

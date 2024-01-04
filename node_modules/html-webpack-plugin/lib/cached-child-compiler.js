@@ -21,41 +21,40 @@
     });
  * ```
  */
+'use strict';
 
 // Import types
-/** @typedef {import("webpack/lib/Compiler.js")} WebpackCompiler */
-/** @typedef {import("webpack/lib/Compilation.js")} WebpackCompilation */
-/** @typedef {{hash: string, entry: any, content: string }} ChildCompilationResultEntry */
-/** @typedef {import("./file-watcher-api").Snapshot} Snapshot */
+/** @typedef {import("webpack").Compiler} Compiler */
+/** @typedef {import("webpack").Compilation} Compilation */
+/** @typedef {import("webpack/lib/FileSystemInfo").Snapshot} Snapshot */
+/** @typedef {import("./child-compiler").ChildCompilationTemplateResult} ChildCompilationTemplateResult */
 /** @typedef {{fileDependencies: string[], contextDependencies: string[], missingDependencies: string[]}} FileDependencies */
 /** @typedef {{
   dependencies: FileDependencies,
-  compiledEntries: {[entryName: string]: ChildCompilationResultEntry}
+  compiledEntries: {[entryName: string]: ChildCompilationTemplateResult}
 } | {
   dependencies: FileDependencies,
   error: Error
 }} ChildCompilationResult */
-'use strict';
 
 const { HtmlWebpackChildCompiler } = require('./child-compiler');
-const fileWatcherApi = require('./file-watcher-api');
 
 /**
  * This plugin is a singleton for performance reasons.
  * To keep track if a plugin does already exist for the compiler they are cached
  * in this map
- * @type {WeakMap<WebpackCompiler, PersistentChildCompilerSingletonPlugin>}}
+ * @type {WeakMap<Compiler, PersistentChildCompilerSingletonPlugin>}}
  */
 const compilerMap = new WeakMap();
 
 class CachedChildCompilation {
   /**
-   * @param {WebpackCompiler} compiler
+   * @param {Compiler} compiler
    */
   constructor (compiler) {
     /**
      * @private
-     * @type {WebpackCompiler}
+     * @type {Compiler}
      */
     this.compiler = compiler;
     // Create a singleton instance for the compiler
@@ -97,7 +96,7 @@ class CachedChildCompilation {
    * @param {string} entry
    * @returns {
       | { mainCompilationHash: string, error: Error }
-      | { mainCompilationHash: string, compiledEntry: ChildCompilationResultEntry }
+      | { mainCompilationHash: string, compiledEntry: ChildCompilationTemplateResult }
     }
    */
   getCompilationEntryResult (entry) {
@@ -114,6 +113,61 @@ class CachedChildCompilation {
 }
 
 class PersistentChildCompilerSingletonPlugin {
+  /**
+   *
+   * @param {{fileDependencies: string[], contextDependencies: string[], missingDependencies: string[]}} fileDependencies
+   * @param {Compilation} mainCompilation
+   * @param {number} startTime
+   */
+  static createSnapshot (fileDependencies, mainCompilation, startTime) {
+    return new Promise((resolve, reject) => {
+      mainCompilation.fileSystemInfo.createSnapshot(
+        startTime,
+        fileDependencies.fileDependencies,
+        fileDependencies.contextDependencies,
+        fileDependencies.missingDependencies,
+        // @ts-ignore
+        null,
+        (err, snapshot) => {
+          if (err) {
+            return reject(err);
+          }
+          resolve(snapshot);
+        }
+      );
+    });
+  }
+
+  /**
+   * Returns true if the files inside this snapshot
+   * have not been changed
+   *
+   * @param {Snapshot} snapshot
+   * @param {Compilation} mainCompilation
+   * @returns {Promise<boolean | undefined>}
+   */
+  static isSnapshotValid (snapshot, mainCompilation) {
+    return new Promise((resolve, reject) => {
+      mainCompilation.fileSystemInfo.checkSnapshotValid(
+        snapshot,
+        (err, isValid) => {
+          if (err) {
+            reject(err);
+          }
+          resolve(isValid);
+        }
+      );
+    });
+  }
+
+  static watchFiles (mainCompilation, fileDependencies) {
+    Object.keys(fileDependencies).forEach((depencyTypes) => {
+      fileDependencies[depencyTypes].forEach(fileDependency => {
+        mainCompilation[depencyTypes].add(fileDependency);
+      });
+    });
+  }
+
   constructor () {
     /**
      * @private
@@ -158,7 +212,7 @@ class PersistentChildCompilerSingletonPlugin {
 
   /**
    * apply is called by the webpack main compiler during the start phase
-   * @param {WebpackCompiler} compiler
+   * @param {Compiler} compiler
    */
   apply (compiler) {
     /** @type Promise<ChildCompilationResult> */
@@ -174,8 +228,9 @@ class PersistentChildCompilerSingletonPlugin {
      * The main compilation hash which will only be updated
      * if the childCompiler changes
      */
+    /** @type {string} */
     let mainCompilationHashOfLastChildRecompile = '';
-    /** @typedef{Snapshot|undefined} */
+    /** @type {Snapshot | undefined} */
     let previousFileSystemSnapshot;
     let compilationStartTime = new Date().getTime();
 
@@ -216,7 +271,7 @@ class PersistentChildCompilerSingletonPlugin {
           // this might possibly cause bugs if files were changed inbetween
           // compilation start and snapshot creation
           compiledEntriesPromise.then((childCompilationResult) => {
-            return fileWatcherApi.createSnapshot(childCompilationResult.dependencies, mainCompilation, compilationStartTime);
+            return PersistentChildCompilerSingletonPlugin.createSnapshot(childCompilationResult.dependencies, mainCompilation, compilationStartTime);
           }).then((snapshot) => {
             previousFileSystemSnapshot = snapshot;
           });
@@ -234,6 +289,7 @@ class PersistentChildCompilerSingletonPlugin {
                   childCompilationResult.dependencies
                 );
               });
+            // @ts-ignore
             handleCompilationDonePromise.then(() => callback(null, chunks, modules), callback);
           }
         );
@@ -253,7 +309,7 @@ class PersistentChildCompilerSingletonPlugin {
               ([childCompilationResult, didRecompile]) => {
                 // Update hash and snapshot if childCompilation changed
                 if (didRecompile) {
-                  mainCompilationHashOfLastChildRecompile = mainCompilation.hash;
+                  mainCompilationHashOfLastChildRecompile = /** @type {string} */ (mainCompilation.hash);
                 }
                 this.compilationState = {
                   isCompiling: false,
@@ -309,8 +365,8 @@ class PersistentChildCompilerSingletonPlugin {
    * Verify that the cache is still valid
    * @private
    * @param {Snapshot | undefined} snapshot
-   * @param {WebpackCompilation} mainCompilation
-   * @returns {Promise<boolean>}
+   * @param {Compilation} mainCompilation
+   * @returns {Promise<boolean | undefined>}
    */
   isCacheValid (snapshot, mainCompilation) {
     if (!this.compilationState.isVerifyingCache) {
@@ -328,14 +384,15 @@ class PersistentChildCompilerSingletonPlugin {
     if (!snapshot) {
       return Promise.resolve(false);
     }
-    return fileWatcherApi.isSnapShotValid(snapshot, mainCompilation);
+
+    return PersistentChildCompilerSingletonPlugin.isSnapshotValid(snapshot, mainCompilation);
   }
 
   /**
    * Start to compile all templates
    *
    * @private
-   * @param {WebpackCompilation} mainCompilation
+   * @param {Compilation} mainCompilation
    * @param {string[]} entries
    * @returns {Promise<ChildCompilationResult>}
    */
@@ -366,11 +423,11 @@ class PersistentChildCompilerSingletonPlugin {
 
   /**
    * @private
-   * @param {WebpackCompilation} mainCompilation
+   * @param {Compilation} mainCompilation
    * @param {FileDependencies} files
    */
   watchFiles (mainCompilation, files) {
-    fileWatcherApi.watchFiles(mainCompilation, files);
+    PersistentChildCompilerSingletonPlugin.watchFiles(mainCompilation, files);
   }
 }
 

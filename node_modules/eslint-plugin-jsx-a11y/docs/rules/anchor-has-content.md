@@ -1,8 +1,14 @@
-# anchor-has-content
+# jsx-a11y/anchor-has-content
+
+💼 This rule is enabled in the following configs: ☑️ `recommended`, 🔒 `strict`.
+
+<!-- end auto-generated rule header -->
 
 Enforce that anchors have content and that the content is accessible to screen readers. Accessible means that it is not hidden using the `aria-hidden` prop. Refer to the references to learn about why this is important.
 
-## Rule details
+Alternatively, you may use the `title` prop or the `aria-label` prop.
+
+## Rule options
 
 This rule takes one optional object argument of type object:
 
@@ -41,6 +47,8 @@ return (
 <a>Anchor Content!</a>
 <a><TextWrapper /></a>
 <a dangerouslySetInnerHTML={{ __html: 'foo' }} />
+<a title='foo' />
+<a aria-label='foo' />
 ```
 
 ### Fail

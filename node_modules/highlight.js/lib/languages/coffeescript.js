@@ -151,6 +151,7 @@ Category: scripting
 Website: https://coffeescript.org
 */
 
+
 /** @type LanguageFn */
 function coffeescript(hljs) {
   const COFFEE_BUILT_INS = [

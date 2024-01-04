@@ -11,7 +11,7 @@ const doNothingValues = new Set([
 module.exports = ({preserve = false} = {}) => ({
 	postcssPlugin: 'postcss-opacity-percentage',
 	Declaration: {
-		opacity: decl => {
+		opacity(decl) {
 			if (!decl.value || decl.value.startsWith('var(') || !decl.value.endsWith('%') || doNothingValues.has(decl.value)) {
 				return;
 			}

@@ -5,6 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.1.13](https://github.com/inspect-js/which-typed-array/compare/v1.1.12...v1.1.13) - 2023-10-19
+
+### Commits
+
+- [Refactor] avoid call-binding entirely when there is no method to bind [`9ff452b`](https://github.com/inspect-js/which-typed-array/commit/9ff452b88fbd8e4419bd768d86d0ea9a87d7e310)
+
+## [v1.1.12](https://github.com/inspect-js/which-typed-array/compare/v1.1.11...v1.1.12) - 2023-10-19
+
+### Commits
+
+- [Fix] somehow node 0.12 - 3 can hit here, and they lack slice but have set [`c28e9b8`](https://github.com/inspect-js/which-typed-array/commit/c28e9b84d6d68ad5f52236ba59c26b06cde6300b)
+- [Deps] update `call-bind` [`a648554`](https://github.com/inspect-js/which-typed-array/commit/a64855495106235352ebb3550a860d3bfd4a1ce1)
+- [Dev Deps] update `tape` [`7a094d6`](https://github.com/inspect-js/which-typed-array/commit/7a094d6f9219b903c9a9e13c559e68f0e9672b59)
+
+## [v1.1.11](https://github.com/inspect-js/which-typed-array/compare/v1.1.10...v1.1.11) - 2023-07-17
+
+### Commits
+
+- [Fix] `node &lt; v0.6` lacks proper Object toString behavior [`b8fd654`](https://github.com/inspect-js/which-typed-array/commit/b8fd65479c0bd18385378cfae79750ebf7cb6ee7)
+- [Dev Deps] update `tape` [`e1734c9`](https://github.com/inspect-js/which-typed-array/commit/e1734c99d79880ab11efa55220498a7a1e887834)
+
+## [v1.1.10](https://github.com/inspect-js/which-typed-array/compare/v1.1.9...v1.1.10) - 2023-07-10
+
+### Commits
+
+- [actions] update rebase action to use reusable workflow [`2c10582`](https://github.com/inspect-js/which-typed-array/commit/2c105820d77274c079cb6d040cb348396e516ef5)
+- [Robustness] use `call-bind` [`b2335fd`](https://github.com/inspect-js/which-typed-array/commit/b2335fdfca80840995eea5e6fcfffc6d712279a1)
+- [Dev Deps] update `@ljharb/eslint-config`, `aud`, `tape` [`ad5e41b`](https://github.com/inspect-js/which-typed-array/commit/ad5e41ba18e7d23af1f9b211215c43a64bf75d70)
+
 ## [v1.1.9](https://github.com/inspect-js/which-typed-array/compare/v1.1.8...v1.1.9) - 2022-11-02
 
 ### Commits

@@ -163,6 +163,7 @@ Category: common, scripting, web
 Website: https://developer.mozilla.org/en-US/docs/Web/JavaScript
 */
 
+
 /** @type LanguageFn */
 function javascript(hljs) {
   const regex = hljs.regex;
@@ -770,6 +771,7 @@ Description: TypeScript is a strict superset of JavaScript
 Website: https://www.typescriptlang.org
 Category: common, scripting
 */
+
 
 /** @type LanguageFn */
 function typescript(hljs) {

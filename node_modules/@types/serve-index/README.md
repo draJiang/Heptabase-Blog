@@ -8,13 +8,8 @@ This package contains type definitions for serve-index (https://github.com/expre
 Files were exported from https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/serve-index.
 ## [index.d.ts](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/serve-index/index.d.ts)
 ````ts
-// Type definitions for serve-index 1.9
-// Project: https://github.com/expressjs/serve-index
-// Definitions by: Tanguy Krotoff <https://github.com/tkrotoff>
-// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
-
-import { Handler } from 'express';
-import { Stats } from 'fs';
+import { Handler } from "express";
+import { Stats } from "fs";
 
 /** Serves pages that contain directory listings for a given path. */
 declare function serveIndex(path: string, options?: serveIndex.Options): Handler;
@@ -53,9 +48,8 @@ export = serveIndex;
 ````
 
 ### Additional Details
- * Last updated: Tue, 06 Jul 2021 16:34:37 GMT
+ * Last updated: Tue, 07 Nov 2023 15:11:36 GMT
  * Dependencies: [@types/express](https://npmjs.com/package/@types/express)
- * Global values: none
 
 # Credits
 These definitions were written by [Tanguy Krotoff](https://github.com/tkrotoff).

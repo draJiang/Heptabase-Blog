@@ -5,6 +5,74 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v2.2.3](https://github.com/inspect-js/node-deep-equal/compare/v2.2.2...v2.2.3) - 2023-11-08
+
+### Fixed
+
+- [readme] remove performance comment and highlight robustness instead [`#76`](https://github.com/inspect-js/node-deep-equal/issues/76) [`#106`](https://github.com/inspect-js/node-deep-equal/issues/106)
+
+### Commits
+
+- Merge tag 'v1.1.2' [`c90525f`](https://github.com/inspect-js/node-deep-equal/commit/c90525fe8380c8f6680d534eff4f189c33fb1601)
+- [Tests] port tests from main; only diff should be true/falses [`e02cadb`](https://github.com/inspect-js/node-deep-equal/commit/e02cadb650ef9d75684c015a35d2c59e029d5174)
+- [Dev Deps] update `@ljharb/eslint-config`, `auto-changelog`, `aud`, `eslint`, `set-publish-latest`, `tape` [`11bd45b`](https://github.com/inspect-js/node-deep-equal/commit/11bd45b63943466c13a5ae97276796396a8f2619)
+- [Tests] update `.github` from default branch [`58885d3`](https://github.com/inspect-js/node-deep-equal/commit/58885d3280fd25909ca5a17c7cec1e54bdd25233)
+- [readme] update readme from default branch [`b0bca9a`](https://github.com/inspect-js/node-deep-equal/commit/b0bca9a1158a9596ec51a0404a6a8272b70ee204)
+- [Tests] add `nyc` for coverage [`e25bc37`](https://github.com/inspect-js/node-deep-equal/commit/e25bc3716c7ec0390b06bd7b6fac0c9ab0968ab4)
+- [readme] update badge URLs, fix line breaking [`1d58c6e`](https://github.com/inspect-js/node-deep-equal/commit/1d58c6ecbab5275e17735d352ac7fa4a1af40aca)
+- [Tests] use `Buffer.from` when available [`f0d4a42`](https://github.com/inspect-js/node-deep-equal/commit/f0d4a42fb87854e17d78cb2d6e9ec0156ea3d2f3)
+- [Tests] use `has-proto` [`0263fb9`](https://github.com/inspect-js/node-deep-equal/commit/0263fb9170a4e6a400c3b628cfba902ebaf59df5)
+- [Deps] update `is-arguments`, `is-date-object`, `is-regex`, `object-is`, `regexp.prototype.flags` [`80c15ca`](https://github.com/inspect-js/node-deep-equal/commit/80c15cae82164c888de8635287c3b44ab84b3fd4)
+- [meta] add missing `engines.node` [`e1d08a8`](https://github.com/inspect-js/node-deep-equal/commit/e1d08a818fdb69e4f39b7aa23dc88092d3339c43)
+- [meta] use `npmignore` to autogenerate an npmignore file [`e0770e5`](https://github.com/inspect-js/node-deep-equal/commit/e0770e594ec683ded32fd1b14e876f087fc04f4a)
+- [Deps] update `is-date-object`, `is-regex`, `object-is`, `regexp.prototype.flags` [`e4fb8c6`](https://github.com/inspect-js/node-deep-equal/commit/e4fb8c6459aa13d3a110b45e5612c31890a5d94e)
+- [Tests] handle ported test failures in iojs v2 [`3798ff4`](https://github.com/inspect-js/node-deep-equal/commit/3798ff490286ee9ba70cf50c339914be355eea18)
+- [Deps] update `call-bind`, `regexp.prototype.flags`, `which-typed-array` [`540e3a1`](https://github.com/inspect-js/node-deep-equal/commit/540e3a119dcd94b30253ad380fde69d5531cf0ac)
+- [Dev Deps] update `eslint`, `@ljharb/eslint-config`, `tape` [`0f8ca75`](https://github.com/inspect-js/node-deep-equal/commit/0f8ca7575e44c66fdf1dc2b6ad4e69e1b549369f)
+- [Tests] handle some additional test differences in node &lt;= 0.10 [`197a220`](https://github.com/inspect-js/node-deep-equal/commit/197a2203f0a95828c62ff2b3c980ddf16736913c)
+- [Dev Deps] update `object.getownpropertydescriptors`, `tape` [`21851a6`](https://github.com/inspect-js/node-deep-equal/commit/21851a62cda0b832800de3070d9fbb7216e43284)
+- [Dev Deps] update `semver`, `tape` [`dd440b2`](https://github.com/inspect-js/node-deep-equal/commit/dd440b2267ac8fa496b907369d3e0b73f9439e87)
+- [meta] add missing `engines.node` [`e158993`](https://github.com/inspect-js/node-deep-equal/commit/e158993fcf913aca8a1ffdc037abfeeb3a5cb4e5)
+- [meta] update `.gitignore` from default branch [`6ee186b`](https://github.com/inspect-js/node-deep-equal/commit/6ee186bd39199a1c05421e200b1e8e31a83cf363)
+- [Deps] update `get-intrinsic` [`6da4b86`](https://github.com/inspect-js/node-deep-equal/commit/6da4b86e4d7ad3c01736006ca129b8e3c3f2c82c)
+- [Dev Deps] update `tape` [`6ada1ab`](https://github.com/inspect-js/node-deep-equal/commit/6ada1ab7f9a176b10f0117a8e10b785965c0e830)
+- [Dev Deps] update `tape` [`270d34b`](https://github.com/inspect-js/node-deep-equal/commit/270d34b48401ee40792bf18d06614044246776dd)
+- [meta] fix URLs [`a269c18`](https://github.com/inspect-js/node-deep-equal/commit/a269c183bccb78dfdd2c88a149fe5373f13af4c0)
+- [readme] update default branch name [`030a63f`](https://github.com/inspect-js/node-deep-equal/commit/030a63f40afa3d468ffb10437cbf5acaa677fea2)
+- [Deps] update `which-typed-array` [`2f0c327`](https://github.com/inspect-js/node-deep-equal/commit/2f0c327eaaed7b50649c367f88944b6dd7e9f18c)
+- [Tests] only use `Buffer.from` when it has a length of &gt; 1 [`f7e5776`](https://github.com/inspect-js/node-deep-equal/commit/f7e577622d943da78c2c9cd1e070eb786cf7a68b)
+
+## [v2.2.2](https://github.com/inspect-js/node-deep-equal/compare/v2.2.1...v2.2.2) - 2023-07-10
+
+### Commits
+
+- [Fix] avoid an infinite loop in node 0.8 with Typed Arrays [`f247282`](https://github.com/inspect-js/node-deep-equal/commit/f247282e66060087c51221f77b9170fa0e2e461b)
+- [Dev Deps] update `@ljharb/eslint-config`, `aud`, `tape` [`fa25583`](https://github.com/inspect-js/node-deep-equal/commit/fa255839c1afed228c41ca76177a8c239ec9305a)
+- [Deps] update `get-intrinsic` [`3638470`](https://github.com/inspect-js/node-deep-equal/commit/3638470e71ed6185e06a0f0694e77cbf4c2b791c)
+
+## [v2.2.1](https://github.com/inspect-js/node-deep-equal/compare/v2.2.0...v2.2.1) - 2023-04-27
+
+### Commits
+
+- [Tests] add passing tests covering object key ordering [`51c9ff6`](https://github.com/inspect-js/node-deep-equal/commit/51c9ff6b4c5d4371e0f444ce1160e416bf88e21f)
+- [Refactor] use `array-buffer-byte-length` [`f47822c`](https://github.com/inspect-js/node-deep-equal/commit/f47822cf0c188caa71dfbb107b081324fcb6b99d)
+- [Deps] update `is-array-buffer`, `regexp.prototype.flags` [`160d851`](https://github.com/inspect-js/node-deep-equal/commit/160d8513335d63256f9826835b35d1a462c76771)
+- [Deps] update `es-get-iterator`, `get-intrinsic` [`2e08e95`](https://github.com/inspect-js/node-deep-equal/commit/2e08e956a43c839246d2280cfaaa3f3200937bbd)
+- [Dev Deps] update `object.getownpropertydescriptors` [`63e9ab7`](https://github.com/inspect-js/node-deep-equal/commit/63e9ab7450212bf7e393c1bf725293389cb4626a)
+- [Dev Deps] update `tape` [`c8db964`](https://github.com/inspect-js/node-deep-equal/commit/c8db964f605834388b0df20c5fce49cfbaa541bc)
+
+## [v2.2.0](https://github.com/inspect-js/node-deep-equal/compare/v2.1.0...v2.2.0) - 2023-01-05
+
+### Commits
+
+- [New] add support for `SharedArrayBuffer` [`0ef51c7`](https://github.com/inspect-js/node-deep-equal/commit/0ef51c79b7dcd6ae5890b2dce4304be7c8ebe314)
+- [Refactor] use `is-array-buffer` package [`0360ee1`](https://github.com/inspect-js/node-deep-equal/commit/0360ee1f1bb6e5804c15a9a4aa75ff84120a33e1)
+- [Fix] `whichTypedArray` can return false in both cases [`df3e3c4`](https://github.com/inspect-js/node-deep-equal/commit/df3e3c4e30552b7a7892b62dc45fccd31eac9bfe)
+- [Dev Deps] update `aud`, `object.getownpropertydescriptors` [`6d62ea4`](https://github.com/inspect-js/node-deep-equal/commit/6d62ea4f2b82d4f861fd3e0c2d67916939b1edbc)
+- [Dev Deps] update `@ljharb/eslint-config` [`15aab59`](https://github.com/inspect-js/node-deep-equal/commit/15aab59d647628e05b77d1897036d73884f7a107)
+- [Deps] update `which-typed-array` [`8dfce27`](https://github.com/inspect-js/node-deep-equal/commit/8dfce27f333721c697b90569b26e4bded0d61d88)
+- [eslint] remove `.eslintignore` [`af46773`](https://github.com/inspect-js/node-deep-equal/commit/af46773b281dc67d7743280505a22248f0f0748d)
+
 ## [v2.1.0](https://github.com/inspect-js/node-deep-equal/compare/v2.0.5...v2.1.0) - 2022-11-02
 
 ### Fixed
@@ -112,7 +180,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Fix] check extra properties on regexps [`1eac46b`](https://github.com/inspect-js/node-deep-equal/commit/1eac46b69c7b499cecb7e3b555b6e260de2043fd)
 - [Tests] update test skipping logic [`8adf08d`](https://github.com/inspect-js/node-deep-equal/commit/8adf08dcb91146590f2c57b614de6a853054f297)
 
-## [v2.0.0](https://github.com/inspect-js/node-deep-equal/compare/v1.1.1...v2.0.0) - 2019-12-03
+## [v2.0.0](https://github.com/inspect-js/node-deep-equal/compare/v1.1.2...v2.0.0) - 2019-12-03
 
 ### Fixed
 
@@ -153,6 +221,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Dev Deps] update `eslint` [`7cc1dd9`](https://github.com/inspect-js/node-deep-equal/commit/7cc1dd986fc30946ca06ba6496ef856cfb911cf3)
 - Merge tag 'v1.1.1' [`f9d3c6d`](https://github.com/inspect-js/node-deep-equal/commit/f9d3c6d1e4a895c448ba7d8766f8616d0e235c9a)
 - Merge tag 'v1.1.0' [`0aeca99`](https://github.com/inspect-js/node-deep-equal/commit/0aeca9988dba6fe3318f46c47c933e6926175278)
+
+## [v1.1.2](https://github.com/inspect-js/node-deep-equal/compare/v1.1.1...v1.1.2) - 2023-11-08
+
+### Commits
+
+- [Tests] port tests from main; only diff should be true/falses [`e02cadb`](https://github.com/inspect-js/node-deep-equal/commit/e02cadb650ef9d75684c015a35d2c59e029d5174)
+- [Dev Deps] update `@ljharb/eslint-config`, `auto-changelog`, `aud`, `eslint`, `set-publish-latest`, `tape` [`11bd45b`](https://github.com/inspect-js/node-deep-equal/commit/11bd45b63943466c13a5ae97276796396a8f2619)
+- [Tests] update `.github` from default branch [`58885d3`](https://github.com/inspect-js/node-deep-equal/commit/58885d3280fd25909ca5a17c7cec1e54bdd25233)
+- [readme] update readme from default branch [`b0bca9a`](https://github.com/inspect-js/node-deep-equal/commit/b0bca9a1158a9596ec51a0404a6a8272b70ee204)
+- [Tests] add `nyc` for coverage [`e25bc37`](https://github.com/inspect-js/node-deep-equal/commit/e25bc3716c7ec0390b06bd7b6fac0c9ab0968ab4)
+- [Tests] use `Buffer.from` when available [`f0d4a42`](https://github.com/inspect-js/node-deep-equal/commit/f0d4a42fb87854e17d78cb2d6e9ec0156ea3d2f3)
+- [Deps] update `is-arguments`, `is-date-object`, `is-regex`, `object-is`, `regexp.prototype.flags` [`80c15ca`](https://github.com/inspect-js/node-deep-equal/commit/80c15cae82164c888de8635287c3b44ab84b3fd4)
+- [meta] use `npmignore` to autogenerate an npmignore file [`e0770e5`](https://github.com/inspect-js/node-deep-equal/commit/e0770e594ec683ded32fd1b14e876f087fc04f4a)
+- [Deps] update `is-date-object`, `is-regex`, `object-is`, `regexp.prototype.flags` [`e4fb8c6`](https://github.com/inspect-js/node-deep-equal/commit/e4fb8c6459aa13d3a110b45e5612c31890a5d94e)
+- [Tests] handle ported test failures in iojs v2 [`3798ff4`](https://github.com/inspect-js/node-deep-equal/commit/3798ff490286ee9ba70cf50c339914be355eea18)
+- [Dev Deps] update `eslint`, `@ljharb/eslint-config`, `tape` [`0f8ca75`](https://github.com/inspect-js/node-deep-equal/commit/0f8ca7575e44c66fdf1dc2b6ad4e69e1b549369f)
+- [Tests] handle some additional test differences in node &lt;= 0.10 [`197a220`](https://github.com/inspect-js/node-deep-equal/commit/197a2203f0a95828c62ff2b3c980ddf16736913c)
+- [meta] add missing `engines.node` [`e158993`](https://github.com/inspect-js/node-deep-equal/commit/e158993fcf913aca8a1ffdc037abfeeb3a5cb4e5)
+- [meta] update `.gitignore` from default branch [`6ee186b`](https://github.com/inspect-js/node-deep-equal/commit/6ee186bd39199a1c05421e200b1e8e31a83cf363)
+- [Dev Deps] update `tape` [`270d34b`](https://github.com/inspect-js/node-deep-equal/commit/270d34b48401ee40792bf18d06614044246776dd)
+- [meta] fix URLs [`a269c18`](https://github.com/inspect-js/node-deep-equal/commit/a269c183bccb78dfdd2c88a149fe5373f13af4c0)
+- [Tests] only use `Buffer.from` when it has a length of &gt; 1 [`f7e5776`](https://github.com/inspect-js/node-deep-equal/commit/f7e577622d943da78c2c9cd1e070eb786cf7a68b)
 
 ## [v1.1.1](https://github.com/inspect-js/node-deep-equal/compare/v1.1.0...v1.1.1) - 2019-11-12
 
