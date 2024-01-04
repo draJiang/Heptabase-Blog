@@ -7,6 +7,7 @@ var _exportNames = {
   BaseWatchPlugin: true,
   JestHook: true,
   PatternPrompt: true,
+  TestWatcher: true,
   Prompt: true
 };
 Object.defineProperty(exports, 'BaseWatchPlugin', {
@@ -33,12 +34,20 @@ Object.defineProperty(exports, 'Prompt', {
     return _Prompt.default;
   }
 });
+Object.defineProperty(exports, 'TestWatcher', {
+  enumerable: true,
+  get: function () {
+    return _TestWatcher.default;
+  }
+});
 
 var _BaseWatchPlugin = _interopRequireDefault(require('./BaseWatchPlugin'));
 
 var _JestHooks = _interopRequireDefault(require('./JestHooks'));
 
 var _PatternPrompt = _interopRequireDefault(require('./PatternPrompt'));
+
+var _TestWatcher = _interopRequireDefault(require('./TestWatcher'));
 
 var _constants = require('./constants');
 

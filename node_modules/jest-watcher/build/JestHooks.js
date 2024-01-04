@@ -5,20 +5,6 @@ Object.defineProperty(exports, '__esModule', {
 });
 exports.default = void 0;
 
-function _defineProperty(obj, key, value) {
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
-  return obj;
-}
-
 /**
  * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
@@ -26,13 +12,11 @@ function _defineProperty(obj, key, value) {
  * LICENSE file in the root directory of this source tree.
  */
 class JestHooks {
+  _listeners;
+  _subscriber;
+  _emitter;
+
   constructor() {
-    _defineProperty(this, '_listeners', void 0);
-
-    _defineProperty(this, '_subscriber', void 0);
-
-    _defineProperty(this, '_emitter', void 0);
-
     this._listeners = {
       onFileChange: [],
       onTestRunComplete: [],
