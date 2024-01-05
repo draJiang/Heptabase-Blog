@@ -3,7 +3,8 @@
 Object.defineProperty(exports, '__esModule', {
   value: true
 });
-exports.printRestoredPatternCaret = exports.printPatternCaret = void 0;
+exports.printPatternCaret = printPatternCaret;
+exports.printRestoredPatternCaret = printRestoredPatternCaret;
 
 function _ansiEscapes() {
   const data = _interopRequireDefault(require('ansi-escapes'));
@@ -45,16 +46,14 @@ function _interopRequireDefault(obj) {
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const printPatternCaret = (pattern, pipe) => {
+function printPatternCaret(pattern, pipe) {
   const inputText = `${_chalk().default.dim(' pattern \u203A')} ${pattern}`;
   pipe.write(_ansiEscapes().default.eraseDown);
   pipe.write(inputText);
   pipe.write(_ansiEscapes().default.cursorSavePosition);
-};
+}
 
-exports.printPatternCaret = printPatternCaret;
-
-const printRestoredPatternCaret = (pattern, currentUsageRows, pipe) => {
+function printRestoredPatternCaret(pattern, currentUsageRows, pipe) {
   const inputText = `${_chalk().default.dim(' pattern \u203A')} ${pattern}`;
   pipe.write(
     _ansiEscapes().default.cursorTo(
@@ -63,6 +62,4 @@ const printRestoredPatternCaret = (pattern, currentUsageRows, pipe) => {
     )
   );
   pipe.write(_ansiEscapes().default.cursorRestorePosition);
-};
-
-exports.printRestoredPatternCaret = printRestoredPatternCaret;
+}

@@ -1,8 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import CONFIG from '../config'
-
+// import { Button } from 'antd';
 import logo from '../logo.png'
+// import '../output.css'
+// import '../index.css'
+// import { NextUIProvider } from "@nextui-org/system";
+import { Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenuToggle, NavbarMenu, NavbarMenuItem } from "@nextui-org/navbar";
+
 
 // 页面头部
 class Nav extends React.Component {
@@ -28,15 +33,14 @@ class Nav extends React.Component {
 
             let page
             if (key === 'Activity') {
-                page = <li >
+                page = <NavbarItem >
                     <Link key={CONFIG['pages']} to='/activity'>Activity</Link>
-                </li>
+                </NavbarItem>
             } else {
-                page = <li onClick={this.handleNavBarClick}>
+                page = <NavbarItem onClick={this.handleNavBarClick}>
                     <Link key={CONFIG['pages']} to={'/post?note-id=' + CONFIG['pages'][key] + '&active-note-id=' + CONFIG['pages'][key]}>{key}</Link>
-                </li>
+                </NavbarItem>
             }
-
 
             tabs.push(page)
 
@@ -45,18 +49,15 @@ class Nav extends React.Component {
         console.log(tabs);
 
         return (
-            <div className='markdown-body nav'>
-                <header>
-                    <span onClick={this.handleNavBarClick}><Link to='/post?note-id=3a433c0b-e2e1-4722-8a88-a17e9aa2b927&active-note-id=3a433c0b-e2e1-4722-8a88-a17e9aa2b927'><img src={logo}></img></Link></span>
-                </header>
-                <div>
-                    <ul>
+            < Navbar shouldHideOnScroll isBlurred={false} maxWidth={'full'} height={'3rem'} isBordered={true} >
+                <NavbarBrand>
+                    <span onClick={this.handleNavBarClick}><Link to='/post?note-id=3a433c0b-e2e1-4722-8a88-a17e9aa2b927&active-note-id=3a433c0b-e2e1-4722-8a88-a17e9aa2b927'><img style={{ width: '22px' }} src={logo}></img></Link></span>
+                </NavbarBrand >
+                <NavbarContent justify="end" className='text-red-500'>
+                    {tabs}
+                </NavbarContent>
+            </Navbar >
 
-                        {tabs}
-
-                    </ul>
-                </div>
-            </div>
         );
     }
 }

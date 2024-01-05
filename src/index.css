@@ -1,3 +1,6 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 @media (prefers-color-scheme: light) {
      :root {
         --notes-bg-color: #fff;
@@ -13,6 +16,10 @@
         --notes-border-default: #30363d;
         --notes-text-bg-yellow: #564328;
         --notes-text-color-yellow: #c99849;
+    }
+    .notes_box nav {
+        background-color: var(--notes-bg-color);
+        border-bottom: 1px solid var(--notes-border-default);
     }
     .container .note_title .note_close_button svg,
     .copy-btn svg {
@@ -215,6 +222,16 @@ article .external_link::after {
 
 .overlay {
     box-shadow: 0px 0px 15px 3px rgb(0 0 0 / 10%);
+}
+
+
+/* .markdown-body nav header {
+    padding: 0;
+} */
+
+.markdown-body nav ul,
+.markdown-body nav ul li {
+    margin: 0;
 }
 
 .nav {

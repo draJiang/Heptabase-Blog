@@ -5,6 +5,7 @@ import Post from './page/Post';
 import Empty from './page/404';
 import About from './page/About';
 import Activity from './page/Activity';
+// import { NextUIProvider } from "@nextui-org/system";
 
 import CONFIG from "./config";
 
@@ -16,20 +17,22 @@ import CONFIG from "./config";
 function App() {
     return (
         // <ScrollToTop>
-        <Router >
-            <Routes >
-                <Route exact path="/" element={<Post title={CONFIG.title} />} />
-                <Route path="/post/*" element={<Post title={CONFIG.title} />} />
-                <Route path="/notes/" element={<PostList title={CONFIG.title} />} />
-                <Route path="/activity" element={<Activity />} />
+        // <NextUIProvider>
+            <Router >
+                <Routes >
+                    <Route exact path="/" element={<Post title={CONFIG.title} />} />
+                    <Route path="/post/*" element={<Post title={CONFIG.title} />} />
+                    <Route path="/notes/" element={<PostList title={CONFIG.title} />} />
+                    <Route path="/activity" element={<Activity />} />
 
-                <Route path="/404/" element={<Empty title={CONFIG.title} />} />
-                <Route element={<Empty title={CONFIG.title} />} />
+                    <Route path="/404/" element={<Empty title={CONFIG.title} />} />
+                    <Route element={<Empty title={CONFIG.title} />} />
 
-                {/* <Route path="/sitemap.xml" render={generateSitemap} /> */}
+                    {/* <Route path="/sitemap.xml" render={generateSitemap} /> */}
 
-            </Routes>
-        </Router>
+                </Routes>
+            </Router>
+        // </NextUIProvider>
         // </ScrollToTop>
     )
 }

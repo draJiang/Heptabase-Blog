@@ -39,20 +39,12 @@ function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : {default: obj};
 }
 
-function _defineProperty(obj, key, value) {
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
-  return obj;
-}
-
+/**
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 const {CLEAR} = _jestUtil().specialChars;
 
 const usage = entity =>
@@ -67,19 +59,12 @@ const usage = entity =>
 const usageRows = usage('').split('\n').length;
 
 class PatternPrompt {
-  constructor(pipe, prompt) {
-    _defineProperty(this, '_pipe', void 0);
+  _currentUsageRows;
 
-    _defineProperty(this, '_prompt', void 0);
-
-    _defineProperty(this, '_entityName', void 0);
-
-    _defineProperty(this, '_currentUsageRows', void 0);
-
-    // TODO: Should come in the constructor
-    this._entityName = '';
-    this._pipe = pipe;
-    this._prompt = prompt;
+  constructor(_pipe, _prompt, _entityName = '') {
+    this._pipe = _pipe;
+    this._prompt = _prompt;
+    this._entityName = _entityName;
     this._currentUsageRows = usageRows;
   }
 
@@ -89,7 +74,7 @@ class PatternPrompt {
     this._pipe.write(CLEAR);
 
     if (options && options.header) {
-      this._pipe.write(options.header + '\n');
+      this._pipe.write(`${options.header}\n`);
 
       this._currentUsageRows = usageRows + options.header.split('\n').length;
     } else {

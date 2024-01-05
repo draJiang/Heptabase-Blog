@@ -7,55 +7,42 @@ exports.default = void 0;
 
 var _constants = require('../constants');
 
-function _defineProperty(obj, key, value) {
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
-  return obj;
-}
-
+/**
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 class Prompt {
+  _entering;
+  _value;
+  _onChange;
+  _onSuccess;
+  _onCancel;
+  _offset;
+  _promptLength;
+  _selection;
+
   constructor() {
-    _defineProperty(this, '_entering', void 0);
-
-    _defineProperty(this, '_value', void 0);
-
-    _defineProperty(this, '_onChange', void 0);
-
-    _defineProperty(this, '_onSuccess', void 0);
-
-    _defineProperty(this, '_onCancel', void 0);
-
-    _defineProperty(this, '_offset', void 0);
-
-    _defineProperty(this, '_promptLength', void 0);
-
-    _defineProperty(this, '_selection', void 0);
-
-    _defineProperty(this, '_onResize', () => {
-      this._onChange();
-    });
-
     // Copied from `enter` to satisfy TS
     this._entering = true;
     this._value = '';
     this._selection = null;
     this._offset = -1;
     this._promptLength = 0;
+    /* eslint-disable @typescript-eslint/no-empty-function */
 
     this._onChange = () => {};
 
     this._onSuccess = () => {};
 
     this._onCancel = () => {};
+    /* eslint-enable */
   }
+
+  _onResize = () => {
+    this._onChange();
+  };
 
   enter(onChange, onSuccess, onCancel) {
     this._entering = true;

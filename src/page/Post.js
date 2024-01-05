@@ -6,6 +6,7 @@ import Container from '../components/Container'
 import Nav from '../components/Nav';
 import Footer from '../components/Footer'
 import Loading from '../components/Loading'
+import { NextUIProvider } from "@nextui-org/system";
 
 import '../index.css'
 import 'github-markdown-css'
@@ -60,7 +61,7 @@ function Post(props) {
         // const url = window.location.href
         // const activeCardId = getUrlSearch(url)['active_str'].replace('active-note-id=', '')
         // 渲染 URL、数据
-        
+
         if (HOME_DATA) {
             herfToData()
         }
@@ -704,7 +705,7 @@ function Post(props) {
 
     if (HEPTABASE_DATA === null || cardList.length === 0) {
         return (<div>
-            <Nav />
+            {/* <Nav /> */}
             <div className='notes'>
                 <Loading />
             </div>
@@ -767,18 +768,23 @@ function Post(props) {
             }
         }
 
-        return (<div className='notes_box'>
-            <Nav />
+        return (
+
+            // <NextUIProvider>
+                <div className='notes_box'>
+                    <Nav />
 
 
 
-            <div className='notes'>
+                    <div className='notes'>
 
-                {card_list_dom}
-            </div>
-            {/* <Footer /> */}
+                        {card_list_dom}
+                    </div>
+                    {/* <Footer /> */}
 
-        </div>)
+                </div>
+            // </NextUIProvider>
+        )
     }
     // }
 
