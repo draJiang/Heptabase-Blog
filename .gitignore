@@ -2,3 +2,5 @@
 /node_modules/.cache
 /.idea/runConfigurations/build_runtime.xml
 /.idea
+.run
+build
