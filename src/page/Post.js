@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useParams, useNavigate } from 'react-router-dom';
 
 
@@ -39,7 +39,6 @@ function Post(props) {
     let location = useLocation();
     let navigate = useNavigate();
 
-
     // console.log('location.search');
     // console.log(location.search);
 
@@ -51,17 +50,7 @@ function Post(props) {
 
     useEffect(() => {
         // 在此，你可以通过创建一个 URLSearchParams 对象来获取查询参数
-        let searchParams = new URLSearchParams(location.search);
-
-        let queryParamValue = searchParams.get('myQueryParam');
-        // console.log('location.search========');
-        // console.log(location.search);
-        // console.log(location);
-
-        // const url = window.location.href
-        // const activeCardId = getUrlSearch(url)['active_str'].replace('active-note-id=', '')
         // 渲染 URL、数据
-
         if (HOME_DATA) {
             herfToData()
         }
@@ -103,16 +92,28 @@ function Post(props) {
 
         })
 
-        // 监听 notes 容器滚动
-        const notesElement = document.getElementsByClassName('notes')[0];
-        if (notesElement !== undefined) {
+        // // 监听 notes 容器滚动
+        // const notesElement = document.getElementsByClassName('notes')[0];
+        // if (notesElement !== undefined) {
 
-            notesElement.addEventListener('scroll', setCardMiniTitleAndStyle)
-        }
-        return () => {
-            notesElement.removeEventListener('scroll', setCardMiniTitleAndStyle);
-        }
-        
+        //     notesElement.addEventListener('scroll', setCardMiniTitleAndStyle)
+        // }
+        // return () => {
+        //     notesElement.removeEventListener('scroll', setCardMiniTitleAndStyle);
+        // }
+
+        // // 添加滚动事件监听器
+        // const currentElement = myRef.current;
+        // if (currentElement) {
+        //     currentElement.addEventListener('scroll', setCardMiniTitleAndStyle);
+        // }
+
+
+        // return () => {
+        //     // 在组件卸载的时候移除滚动事件监听器
+        //     currentElement.removeEventListener('scroll', setCardMiniTitleAndStyle);
+        // }
+
     }, [])
 
 
@@ -468,7 +469,7 @@ function Post(props) {
 
     // 设置小标题、overlay 样式
     const setCardMiniTitleAndStyle = () => {
-
+        console.log('setCardMiniTitleAndStyle');
         let notes = document.getElementsByClassName('container')
 
         for (let j = 0; j < notes.length; j++) {
@@ -781,7 +782,7 @@ function Post(props) {
 
 
 
-                <div className='notes'>
+                <div onScroll={setCardMiniTitleAndStyle} className='notes'>
 
                     {card_list_dom}
                 </div>
