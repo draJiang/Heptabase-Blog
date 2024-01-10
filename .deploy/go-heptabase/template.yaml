@@ -1,0 +1,159 @@
+---
+# Source: go-heptabase/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: go-heptabase
+  labels:
+    helm.sh/chart: go-heptabase-0.1.0
+    app.kubernetes.io/name: go-heptabase
+    app.kubernetes.io/instance: go-heptabase
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+---
+# Source: go-heptabase/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: go-heptabase
+  labels:
+    helm.sh/chart: go-heptabase-0.1.0
+    app.kubernetes.io/name: go-heptabase
+    app.kubernetes.io/instance: go-heptabase
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+data:
+  config.yaml: |-
+    env: debug
+    heptabase:
+      shared_id: 5b32b02b51a359eb2e4d5bbbfe41003a043924131f374c0950f444f79fdf65e0
+      timeout: 10
+---
+# Source: go-heptabase/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: go-heptabase
+  labels:
+    helm.sh/chart: go-heptabase-0.1.0
+    app.kubernetes.io/name: go-heptabase
+    app.kubernetes.io/instance: go-heptabase
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: go-heptabase
+    app.kubernetes.io/instance: go-heptabase
+---
+# Source: go-heptabase/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-heptabase
+  labels:
+    helm.sh/chart: go-heptabase-0.1.0
+    app.kubernetes.io/name: go-heptabase
+    app.kubernetes.io/instance: go-heptabase
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: go-heptabase
+      app.kubernetes.io/instance: go-heptabase
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: go-heptabase
+        app.kubernetes.io/instance: go-heptabase
+    spec:
+      serviceAccountName: go-heptabase
+      securityContext:
+        {}
+      containers:
+        - name: go-heptabase
+          volumeMounts:
+            - mountPath: /usr/share/nginx/html
+              name: go-heptabase
+          securityContext:
+            {}
+          image: "ccr.ccs.tencentyun.com/farfalle/blog:server-latest"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {}
+      volumes:
+        - name: go-heptabase
+          hostPath:
+            path: /go-heptabase
+---
+# Source: go-heptabase/templates/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: go-heptabase
+  labels:
+    helm.sh/chart: go-heptabase-0.1.0
+    app.kubernetes.io/name: go-heptabase
+    app.kubernetes.io/instance: go-heptabase
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/tls-acme: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - "go-heptabase.vs-game.com"
+      secretName: go-heptabase.vs-game.com
+  rules:
+    - host: "go-heptabase.vs-game.com"
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: go-heptabase
+                port:
+                  number: 80
+---
+# Source: go-heptabase/templates/tests/test-connection.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "go-heptabase-test-connection"
+  labels:
+    helm.sh/chart: go-heptabase-0.1.0
+    app.kubernetes.io/name: go-heptabase
+    app.kubernetes.io/instance: go-heptabase
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['go-heptabase:80']
+  restartPolicy: Never

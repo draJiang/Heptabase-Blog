@@ -1,0 +1,15 @@
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  hosts:
+    - host: blog.kii.la
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls:
+    - secretName: blog.kii.la
+      hosts:
+        - blog.kii.la
