@@ -104,10 +104,15 @@ function Post(props) {
         })
 
         // 监听 notes 容器滚动
-        if (document.getElementsByClassName('notes')[0] !== undefined) {
+        const notesElement = document.getElementsByClassName('notes')[0];
+        if (notesElement !== undefined) {
 
-            document.getElementsByClassName('notes')[0].addEventListener('scroll', setCardMiniTitleAndStyle)
+            notesElement.addEventListener('scroll', setCardMiniTitleAndStyle)
         }
+        return () => {
+            notesElement.removeEventListener('scroll', setCardMiniTitleAndStyle);
+        }
+        
     }, [])
 
 
@@ -771,18 +776,18 @@ function Post(props) {
         return (
 
             // <NextUIProvider>
-                <div className='notes_box'>
-                    <Nav />
+            <div className='notes_box'>
+                <Nav />
 
 
 
-                    <div className='notes'>
+                <div className='notes'>
 
-                        {card_list_dom}
-                    </div>
-                    {/* <Footer /> */}
-
+                    {card_list_dom}
                 </div>
+                {/* <Footer /> */}
+
+            </div>
             // </NextUIProvider>
         )
     }
