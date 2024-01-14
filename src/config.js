@@ -1,5 +1,6 @@
 const CONFIG = {
     'api_url': 'https://api.dabing.one', // 数据请求地址
+    'whiteboard_id': 'd4cc3728297609add1a00aab108e90c4e57a1c378cfc2307c251745bf7d2a884',
     'title': 'Jiang 的数字花园🌱', // 站点标题
     'pages': {
         'Articles': '9f31ea21-90b9-4523-b8d5-cb33b7a01bda',

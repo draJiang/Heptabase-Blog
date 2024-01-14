@@ -79,7 +79,7 @@ function Post(props) {
         });
 
         // 请求 hepta 数据 getHeptabaseData
-        getHeptabaseData.then((res) => {
+        getHeptabaseData().then((res) => {
 
             let heptabase_blog_data = res.data
 
@@ -90,29 +90,10 @@ function Post(props) {
             // 渲染 URL、数据
             herfToData()
 
-        })
+        }).catch(error => {
+            console.error('Error:', error);
+        });
 
-        // // 监听 notes 容器滚动
-        // const notesElement = document.getElementsByClassName('notes')[0];
-        // if (notesElement !== undefined) {
-
-        //     notesElement.addEventListener('scroll', setCardMiniTitleAndStyle)
-        // }
-        // return () => {
-        //     notesElement.removeEventListener('scroll', setCardMiniTitleAndStyle);
-        // }
-
-        // // 添加滚动事件监听器
-        // const currentElement = myRef.current;
-        // if (currentElement) {
-        //     currentElement.addEventListener('scroll', setCardMiniTitleAndStyle);
-        // }
-
-
-        // return () => {
-        //     // 在组件卸载的时候移除滚动事件监听器
-        //     currentElement.removeEventListener('scroll', setCardMiniTitleAndStyle);
-        // }
 
     }, [])
 
@@ -785,6 +766,7 @@ function Post(props) {
                 <div onScroll={setCardMiniTitleAndStyle} className='notes'>
 
                     {card_list_dom}
+
                 </div>
                 {/* <Footer /> */}
 

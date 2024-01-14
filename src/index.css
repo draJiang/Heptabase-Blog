@@ -8,6 +8,9 @@
         --notes-text-bg-yellow: #fbf2da;
         --notes-text-color-yellow: #ca902e;
     }
+    .notes {
+        background-color: #FAFAFC;
+    }
 }
 
 @media (prefers-color-scheme: dark) {
@@ -17,7 +20,8 @@
         --notes-text-bg-yellow: #564328;
         --notes-text-color-yellow: #c99849;
     }
-    .notes_box nav {
+    .notes_box nav,
+    .notes {
         background-color: var(--notes-bg-color);
         border-bottom: 1px solid var(--notes-border-default);
     }

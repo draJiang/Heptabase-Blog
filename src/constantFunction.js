@@ -8,23 +8,6 @@ import CalendarHeatmap from './components/CalendarHeatmap'
 
 const { confirm } = Modal;
 
-// import { db } from '@vercel/postgres';
-
-// export default async function handler(request, response) {
-//   const client = await db.connect();
-
-//   try {
-//     await client.sql`CREATE TABLE Pets ( Name varchar(255), Owner varchar(255) );`;
-//     const names = ['Fiona', 'Lucy'];
-//     await client.sql`INSERT INTO Pets (Name, Owner) VALUES (${names[0]}, ${names[1]});`;
-//   } catch (error) {
-//     return response.status(500).json({ error });
-//   }
-
-//   const pets = await client.sql`SELECT * FROM Pets;`;
-//   return response.status(200).json({ pets });
-// }
-
 const getCardName = (cardId) => {
 
     const heptabase_blog_data = JSON.parse(localStorage.getItem('heptabase_blog_data'))
@@ -235,219 +218,203 @@ const getClearCard = (card, cards) => {
 
 }
 
-// 获取 Heptabase 的笔记数据
-const getHeptabaseData = new Promise((resolve, reject) => {
+// 从服务端获取 Heptabase 的笔记数据
+const getHeptabaseDataFromServer = async () => {
+    let myHeaders = new Headers();
+    myHeaders.append("User-Agent", "Apifox/1.0.0 (https://apifox.com)");
 
-    console.log('getHeptabaseData');
+    let requestOptions = {
+        method: 'GET',
+        headers: myHeaders,
+        redirect: 'follow'
+    };
 
-    // 获取本地数据
-    let heptabase_blog_data = localStorage.getItem("heptabase_blog_data")
+    try {
+        const whiteboard_id = CONFIG.whiteboard_id;
+        const result = await fetch("https://api.blog.kii.la/?shared-id=" + whiteboard_id, requestOptions);
+        const getDataResponse = await result.json();
 
-    // 若本地存在数据则不重新获取
-    if (heptabase_blog_data !== undefined && heptabase_blog_data !== null) {
+        if (getDataResponse.code === 0) {
+            // 成功获取数据
 
-        let frontGetTime = JSON.parse(heptabase_blog_data)['frontGetTime']
-        console.log(Date.parse(new Date()) / 1000);
-        console.log(frontGetTime);
-        console.log(Date.parse(new Date()) / 1000 - frontGetTime);
+            const data = getDataResponse
+            // 按照时间排序卡片
+            data.data.cards = data.data.cards.sort((a, b) => {
 
-        //Date.parse(new Date()) / 1000 - frontGetTime >= 1200 && frontGetTime !== undefined
-        if (Date.parse(new Date()) / 1000 - frontGetTime >= 1200 || frontGetTime === undefined) {
-            // 数据比较旧时再重新获取
-            console.log('数据比较旧');
+                // 最近编辑时间
+                return b.lastEditedTime < a.lastEditedTime ? -1 : 1
 
-        } else {
-            console.log('从缓存获取数据');
-            // return heptabase_blog_data
-            resolve(JSON.parse(heptabase_blog_data))
-            return
-        }
+            })
 
+            let pages = {}
+            // 获取 About、Projects 页面的数据
+            pages.about = undefined
+            pages.projects = undefined
 
-    }
+            // 存储去重后的数组
+            let new_cards = []
+            // 存储卡片 ID，用户判断是否重复
+            let cards_id = []
 
-    console.log('heptabase_blog_data == undefined');
+            for (let i = 0; i < data.data.cards.length; i++) {
 
-    const header = new Headers({ "Access-Control-Allow-Origin": "*" });
+                // About
+                if (data.data.cards[i]['title'].toLowerCase() === 'about') {
 
-    // 按照时间排序卡片
-    data.data.cards = data.data.cards.sort((a, b) => {
+                    pages.about = data.data.cards[i]
 
-        // 最近编辑时间
-        return b.lastEditedTime < a.lastEditedTime ? -1 : 1
+                }
 
-    })
+                // Projects
+                if (data.data.cards[i]['title'].toLowerCase() === 'projects') {
 
-    let pages = {}
-    // 获取 About、Projects 页面的数据
-    pages.about = undefined
-    pages.projects = undefined
+                    pages.projects = data.data.cards[i]
 
-    // 存储去重后的数组
-    let new_cards = []
-    // 存储卡片 ID，用户判断是否重复
-    let cards_id = []
+                }
 
-    for (let i = 0; i < data.data.cards.length; i++) {
+                // 去重
+                if (cards_id.indexOf(data.data.cards[i]['id']) > -1) {
+                    // 已存在此卡片，则忽略
+                    // console.log(data.cards[i]);
+                } else {
 
-        // About
-        if (data.data.cards[i]['title'].toLowerCase() === 'about') {
+                    // 不存在此卡片
 
-            pages.about = data.data.cards[i]
+                    // 最近编辑的时间差
+                    let timeDiff = getLastEditedTime(data.data.cards[i]['lastEditedTime'])
+                    data.data.cards[i].lastEditedTimeDiff = ''
+                    if (timeDiff['day'] > 0) {
+                        data.data.cards[i].lastEditedTimeDiff = 'Edited ' + timeDiff['day'] + ' days ago'
+                    } else if (timeDiff['hours'] > 0) {
 
-        }
+                        data.data.cards[i].lastEditedTimeDiff = 'Edited ' + timeDiff['hours'] + ' hours ago'
 
-        // Projects
-        if (data.data.cards[i]['title'].toLowerCase() === 'projects') {
-            pages.projects = data.data.cards[i]
+                    } else if (timeDiff['minutes'] > 0) {
 
-        }
+                        data.data.cards[i].lastEditedTimeDiff = 'Edited ' + timeDiff['minutes'] + ' minutes ago'
 
-        // 去重
-        if (cards_id.indexOf(data.data.cards[i]['id']) > -1) {
-            // 已存在此卡片，则忽略
-            // console.log(data.cards[i]);
-        } else {
+                    } else {
 
-            // 不存在此卡片
+                        data.data.cards[i].lastEditedTimeDiff = 'Edited just'
 
-            // 最近编辑的时间差
-            let timeDiff = getLastEditedTime(data.data.cards[i]['lastEditedTime'])
-            data.data.cards[i].lastEditedTimeDiff = ''
-            if (timeDiff['day'] > 0) {
-                data.data.cards[i].lastEditedTimeDiff = 'Edited ' + timeDiff['day'] + ' days ago'
-            } else if (timeDiff['hours'] > 0) {
+                    }
 
-                data.data.cards[i].lastEditedTimeDiff = 'Edited ' + timeDiff['hours'] + ' hours ago'
+                    new_cards.push(data.data.cards[i])
+                    cards_id.push(data.data.cards[i]['id'])
 
-            } else if (timeDiff['minutes'] > 0) {
-
-                data.data.cards[i].lastEditedTimeDiff = 'Edited ' + timeDiff['minutes'] + ' minutes ago'
-
-            } else {
-
-                data.data.cards[i].lastEditedTimeDiff = 'Edited just'
+                }
 
             }
 
-            new_cards.push(data.data.cards[i])
-            cards_id.push(data.data.cards[i]['id'])
+            data.data.cards = new_cards
+            data.frontGetTime = Date.parse(new Date()) / 1000
+            data.pages = pages
+            data.whiteboard_id = CONFIG.whiteboard_id
+
+            // 存储数据到本地缓存
+            localStorage.setItem("heptabase_blog_data", JSON.stringify(data))
+            // console.log(this.state.posts);
+
+            console.log('getHeptabaseData return');
+
+            return data; // 返回结果
+
+
+        } else {
+            // 未成功获取，需要添加此白板到服务端中
+
+            let myHeaders = new Headers();
+            myHeaders.append("User-Agent", "Apifox/1.0.0 (https://apifox.com)");
+            myHeaders.append("Content-Type", "application/json");
+
+            let raw = JSON.stringify({
+                "shared_id": whiteboard_id,
+                "allow_origin": []
+            });
+
+            let requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: raw,
+                redirect: 'follow'
+            };
+
+            const result = await fetch("https://api.blog.kii.la/add", requestOptions)
+            const addWhiteboardResponse = await result.json();
+
+            if (addWhiteboardResponse.code === 0) {
+
+                setTimeout(() => {
+                    // 添加白板后再次获取一次数据
+                    getHeptabaseDataFromServer()
+                }, 5000);
+
+            }
 
         }
 
+
+    } catch (error) {
+
+        console.log('error', error);
+
     }
+};
 
-    data.data.cards = new_cards
-    data.frontGetTime = Date.parse(new Date()) / 1000
-    data.pages = pages
+// 获取 Heptabase 的笔记数据
+const getHeptabaseData = async () => {
+    console.log('getHeptabaseData');
 
-    // 存储数据到本地缓存
-    localStorage.setItem("heptabase_blog_data", JSON.stringify(data))
-    // console.log(this.state.posts);
+    // 获取本地数据
+    let heptabaseDataFromLocal = JSON.parse(localStorage.getItem("heptabase_blog_data"))
 
-    console.log('getHeptabaseData return');
-    // return heptabase_blog_data
-    resolve(data)
 
-    // 获取 Heptabase 数据
-    // fetch(CONFIG.api_url, {
-    //     method: "get",
-    //     header: header
-    //     // mode: 'no-cors'
-    // })
-    //     .then(res => res.json())
-    //     .then(data => {
-    //         console.log(data)
+    if (heptabaseDataFromLocal) {
+        // 存在本地数据
+        if (heptabaseDataFromLocal.data?.Etag && heptabaseDataFromLocal.whiteboard_id) {
 
-    //         // 按照时间排序卡片
-    //         data.data.cards = data.data.cards.sort((a, b) => {
+            // 判断本地数据是否需要更新
+            let myHeaders = new Headers();
+            myHeaders.append("User-Agent", "Apifox/1.0.0 (https://apifox.com)");
 
-    //             // 最近编辑时间
-    //             return b.lastEditedTime < a.lastEditedTime ? -1 : 1
+            let requestOptions = {
+                method: 'GET',
+                headers: myHeaders,
+                redirect: 'follow'
+            };
 
-    //         })
+            const whiteboard_id = CONFIG.whiteboard_id;
+            const result = await fetch("https://api.blog.kii.la/etag?shared-id=" + whiteboard_id, requestOptions)
+            const etagFromServer = await result.json();
 
-    //         let pages = {}
-    //         // 获取 About、Projects 页面的数据
-    //         pages.about = undefined
-    //         pages.projects = undefined
+            console.log('etagFromServer:');
+            console.log(etagFromServer);
 
-    //         // 存储去重后的数组
-    //         let new_cards = []
-    //         // 存储卡片 ID，用户判断是否重复
-    //         let cards_id = []
+            // Etag 不同或者本地缓存的白板 ID 与配置中的不同
+            if (etagFromServer.data !== heptabaseDataFromLocal.data.Etag || heptabaseDataFromLocal.whiteboard_id !== whiteboard_id) {
+                //需要更新
+                const data = await getHeptabaseDataFromServer();
+                return data;
+            } else {
+                //不需要更新
+                return heptabaseDataFromLocal;
+            }
+        } else {
+            // 需要到服务端获取
+            const data = await getHeptabaseDataFromServer();
+            return data;
+        }
+    } else {
+        // 本地不存在数据，则需要到服务端获取
+        const heptabaseDataFromServer = await getHeptabaseDataFromServer();
+        return heptabaseDataFromServer;
+    }
+};
 
-    //         for (let i = 0; i < data.data.cards.length; i++) {
 
-    //             // About
-    //             if (data.data.cards[i]['title'].toLowerCase() === 'about') {
 
-    //                 pages.about = data.data.cards[i]
-
-    //             }
-
-    //             // Projects
-    //             if (data.data.cards[i]['title'].toLowerCase() === 'projects') {
-    //                 pages.projects = data.data.cards[i]
-
-    //             }
-
-    //             // 去重
-    //             if (cards_id.indexOf(data.data.cards[i]['id']) > -1) {
-    //                 // 已存在此卡片，则忽略
-    //                 // console.log(data.cards[i]);
-    //             } else {
-
-    //                 // 不存在此卡片
-
-    //                 // 最近编辑的时间差
-    //                 let timeDiff = getLastEditedTime(data.data.cards[i]['lastEditedTime'])
-    //                 data.data.cards[i].lastEditedTimeDiff = ''
-    //                 if (timeDiff['day'] > 0) {
-    //                     data.data.cards[i].lastEditedTimeDiff = 'Edited ' + timeDiff['day'] + ' days ago'
-    //                 } else if (timeDiff['hours'] > 0) {
-
-    //                     data.data.cards[i].lastEditedTimeDiff = 'Edited ' + timeDiff['hours'] + ' hours ago'
-
-    //                 } else if (timeDiff['minutes'] > 0) {
-
-    //                     data.data.cards[i].lastEditedTimeDiff = 'Edited ' + timeDiff['minutes'] + ' minutes ago'
-
-    //                 } else {
-
-    //                     data.data.cards[i].lastEditedTimeDiff = 'Edited just'
-
-    //                 }
-
-    //                 new_cards.push(data.data.cards[i])
-    //                 cards_id.push(data.data.cards[i]['id'])
-
-    //             }
-
-    //         }
-
-    //         data.data.cards = new_cards
-    //         data.frontGetTime = Date.parse(new Date()) / 1000
-    //         data.pages = pages
-
-    //         // 存储数据到本地缓存
-    //         localStorage.setItem("heptabase_blog_data", JSON.stringify(data))
-    //         // console.log(this.state.posts);
-
-    //         console.log('getHeptabaseData return');
-    //         // return heptabase_blog_data
-    //         resolve(data)
-    //     })
-    //     .catch(e => {
-    //         console.log('错误:', e)
-    //         // 反馈错误
-    //         showConfirm()
-    //     })
-
-})
 
 /**
- * 
  * @param {Object} Hpeta_card_data Hepta 卡片数据
  * @returns 返回拼接后的 DOM 元素
  */

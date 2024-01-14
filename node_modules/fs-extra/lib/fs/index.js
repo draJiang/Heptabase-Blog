@@ -47,15 +47,8 @@ const api = [
   return typeof fs[key] === 'function'
 })
 
-// Export all keys:
-Object.keys(fs).forEach(key => {
-  if (key === 'promises') {
-    // fs.promises is a getter property that triggers ExperimentalWarning
-    // Don't re-export it here, the getter is defined in "lib/index.js"
-    return
-  }
-  exports[key] = fs[key]
-})
+// Export cloned fs:
+Object.assign(exports, fs)
 
 // Universalify async methods:
 api.forEach(method => {
@@ -124,7 +117,12 @@ if (typeof fs.writev === 'function') {
   }
 }
 
-// fs.realpath.native only available in Node v9.2+
+// fs.realpath.native sometimes not available if fs is monkey-patched
 if (typeof fs.realpath.native === 'function') {
   exports.realpath.native = u(fs.realpath.native)
+} else {
+  process.emitWarning(
+    'fs.realpath.native is not a function. Is fs being monkey-patched?',
+    'Warning', 'fs-extra-WARN0003'
+  )
 }
