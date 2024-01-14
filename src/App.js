@@ -18,8 +18,8 @@ import CONFIG from "./config";
 function App() {
 
     useEffect(() => {
-        ReactGA.initialize(CONFIG.ga);
-        ReactGA.pageview(window.location.pathname + window.location.search);
+        // ReactGA.initialize(CONFIG.ga);
+        // ReactGA.pageview(window.location.pathname + window.location.search);
     }, []);
 
 
