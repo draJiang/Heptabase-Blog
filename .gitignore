@@ -1,6 +1,5 @@
-/node_modules
-/node_modules/.cache
-/.idea/runConfigurations/build_runtime.xml
+node_modules
 /.idea
 .run
 build
+.vscode
