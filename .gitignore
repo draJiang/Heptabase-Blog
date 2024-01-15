@@ -1,11 +1,5 @@
-<<<<<<< HEAD
-node_modules/
-/node_modules/.cache
-.vercel
-=======
 node_modules
 /.idea
 .run
 build
 .vscode
->>>>>>> 4df8f83e... update: git ignore.
