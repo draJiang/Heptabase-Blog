@@ -146,8 +146,8 @@ function Container(props) {
     // 组件生命周期，组件载入、更新时将触发此函数
     useEffect(() => {
 
-        console.log('useEffect');
-        props.handleHashChange(window.location.href, props['card'])
+        console.log('useEffect====================');
+        props.handleHashChange(window.location.href, props['card']['card']['id'])
 
         // dom 加载完毕后
         if (post.current != null) {
@@ -206,11 +206,11 @@ function Container(props) {
         }
 
         // // 代码高亮
-        // if (document.querySelectorAll('pre').length > 0) {
-        //     document.querySelectorAll('pre').forEach(element => {
-        //         hljs.highlightBlock(element);
-        //     });
-        // }
+        // // if (document.querySelectorAll('pre').length > 0) {
+        // //     document.querySelectorAll('pre').forEach(element => {
+        // //         hljs.highlightBlock(element);
+        // //     });
+        // // }
 
 
 

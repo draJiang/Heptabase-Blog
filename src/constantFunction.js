@@ -1,6 +1,10 @@
 import React from "react";
+import { createRoot } from 'react-dom/client';
 import CONFIG from "./config";
 import { Button, Modal } from 'antd';
+import data from './resources/data.json';
+
+import CalendarHeatmap from './components/CalendarHeatmap'
 
 const { confirm } = Modal;
 
@@ -214,51 +218,26 @@ const getClearCard = (card, cards) => {
 
 }
 
-// 获取 Heptabase 的笔记数据
-const getHeptabaseData = new Promise((resolve, reject) => {
+// 从服务端获取 Heptabase 的笔记数据
+const getHeptabaseDataFromServer = async () => {
+    let myHeaders = new Headers();
+    myHeaders.append("User-Agent", "Apifox/1.0.0 (https://apifox.com)");
 
-    console.log('getHeptabaseData');
+    let requestOptions = {
+        method: 'GET',
+        headers: myHeaders,
+        redirect: 'follow'
+    };
 
-    // 获取本地数据
-    let heptabase_blog_data = localStorage.getItem("heptabase_blog_data")
+    try {
+        const whiteboard_id = CONFIG.whiteboard_id;
+        const result = await fetch("https://api.blog.kii.la/?shared-id=" + whiteboard_id, requestOptions);
+        const getDataResponse = await result.json();
 
-    // 若本地存在数据则不重新获取
-    if (heptabase_blog_data !== undefined && heptabase_blog_data !== null) {
+        if (getDataResponse.code === 0) {
+            // 成功获取数据
 
-        let frontGetTime = JSON.parse(heptabase_blog_data)['frontGetTime']
-        console.log(Date.parse(new Date()) / 1000);
-        console.log(frontGetTime);
-        console.log(Date.parse(new Date()) / 1000 - frontGetTime);
-
-        //Date.parse(new Date()) / 1000 - frontGetTime >= 1200 && frontGetTime !== undefined
-        if (Date.parse(new Date()) / 1000 - frontGetTime >= 1200 || frontGetTime === undefined) {
-            // 数据比较旧时再重新获取
-            console.log('数据比较旧');
-
-        } else {
-            console.log('从缓存获取数据');
-            // return heptabase_blog_data
-            resolve(JSON.parse(heptabase_blog_data))
-            return
-        }
-
-
-    }
-
-    console.log('heptabase_blog_data == undefined');
-
-    const header = new Headers({ "Access-Control-Allow-Origin": "*" });
-
-    // 获取 Heptabase 数据
-    fetch(CONFIG.api_url, {
-        method: "get",
-        header: header
-        // mode: 'no-cors'
-    })
-        .then(res => res.json())
-        .then(data => {
-            console.log(data)
-
+            const data = getDataResponse
             // 按照时间排序卡片
             data.data.cards = data.data.cards.sort((a, b) => {
 
@@ -280,14 +259,15 @@ const getHeptabaseData = new Promise((resolve, reject) => {
             for (let i = 0; i < data.data.cards.length; i++) {
 
                 // About
-                if (data.data.cards[i]['title'] === 'About') {
+                if (data.data.cards[i]['title'].toLowerCase() === 'about') {
 
                     pages.about = data.data.cards[i]
 
                 }
 
                 // Projects
-                if (data.data.cards[i]['title'] === 'Projects') {
+                if (data.data.cards[i]['title'].toLowerCase() === 'projects') {
+
                     pages.projects = data.data.cards[i]
 
                 }
@@ -329,25 +309,112 @@ const getHeptabaseData = new Promise((resolve, reject) => {
             data.data.cards = new_cards
             data.frontGetTime = Date.parse(new Date()) / 1000
             data.pages = pages
+            data.whiteboard_id = CONFIG.whiteboard_id
 
             // 存储数据到本地缓存
             localStorage.setItem("heptabase_blog_data", JSON.stringify(data))
             // console.log(this.state.posts);
 
             console.log('getHeptabaseData return');
-            // return heptabase_blog_data
-            resolve(data)
-        })
-        .catch(e => {
-            console.log('错误:', e)
-            // 反馈错误
-            showConfirm()
-        })
 
-})
+            return data; // 返回结果
+
+
+        } else {
+            // 未成功获取，需要添加此白板到服务端中
+
+            let myHeaders = new Headers();
+            myHeaders.append("User-Agent", "Apifox/1.0.0 (https://apifox.com)");
+            myHeaders.append("Content-Type", "application/json");
+
+            let raw = JSON.stringify({
+                "shared_id": whiteboard_id,
+                "allow_origin": []
+            });
+
+            let requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: raw,
+                redirect: 'follow'
+            };
+
+            const result = await fetch("https://api.blog.kii.la/add", requestOptions)
+            const addWhiteboardResponse = await result.json();
+
+            if (addWhiteboardResponse.code === 0) {
+
+                setTimeout(() => {
+                    // 添加白板后再次获取一次数据
+                    getHeptabaseDataFromServer()
+                }, 5000);
+
+            }
+
+        }
+
+
+    } catch (error) {
+
+        console.log('error', error);
+
+    }
+};
+
+// 获取 Heptabase 的笔记数据
+const getHeptabaseData = async () => {
+    console.log('getHeptabaseData');
+
+    // 获取本地数据
+    let heptabaseDataFromLocal = JSON.parse(localStorage.getItem("heptabase_blog_data"))
+
+
+    if (heptabaseDataFromLocal) {
+        // 存在本地数据
+        if (heptabaseDataFromLocal.data?.Etag && heptabaseDataFromLocal.whiteboard_id) {
+
+            // 判断本地数据是否需要更新
+            let myHeaders = new Headers();
+            myHeaders.append("User-Agent", "Apifox/1.0.0 (https://apifox.com)");
+
+            let requestOptions = {
+                method: 'GET',
+                headers: myHeaders,
+                redirect: 'follow'
+            };
+
+            const whiteboard_id = CONFIG.whiteboard_id;
+            const result = await fetch("https://api.blog.kii.la/etag?shared-id=" + whiteboard_id, requestOptions)
+            const etagFromServer = await result.json();
+
+            console.log('etagFromServer:');
+            console.log(etagFromServer);
+
+            // Etag 不同或者本地缓存的白板 ID 与配置中的不同
+            if (etagFromServer.data !== heptabaseDataFromLocal.data.Etag || heptabaseDataFromLocal.whiteboard_id !== whiteboard_id) {
+                //需要更新
+                const data = await getHeptabaseDataFromServer();
+                return data;
+            } else {
+                //不需要更新
+                return heptabaseDataFromLocal;
+            }
+        } else {
+            // 需要到服务端获取
+            const data = await getHeptabaseDataFromServer();
+            return data;
+        }
+    } else {
+        // 本地不存在数据，则需要到服务端获取
+        const heptabaseDataFromServer = await getHeptabaseDataFromServer();
+        return heptabaseDataFromServer;
+    }
+};
+
+
+
 
 /**
- * 
  * @param {Object} Hpeta_card_data Hepta 卡片数据
  * @returns 返回拼接后的 DOM 元素
  */
@@ -360,7 +427,6 @@ const heptaToMD = (Hpeta_card_data) => {
 
     let parent_card_id = Hpeta_card_data['id']
     let box = document.createElement('div')
-    console.log(JSON.parse(Hpeta_card_data['content'])['content']);
     box = heptaContentTomd(JSON.parse(Hpeta_card_data['content'])['content'], box, parent_card_id)
     return box
 
@@ -388,11 +454,21 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
             case 'heading':
 
                 new_node = document.createElement('H' + content_list[i]['attrs']['level'])
+
                 break
 
             case 'card':
                 new_node = document.createElement('span')
                 new_node.innerHTML = content_list[i]['attrs']['cardTitle']
+                if (content_list[i]['attrs']['cardTitle'] === undefined) {
+                    // 找不到卡片标题，根据卡片 ID 匹配标题
+                    const card = getCardName(content_list[i]['attrs']['cardId'])
+
+                    if (card) {
+                        new_node.innerHTML = card.title
+                    }
+
+                }
                 if (content_list[i]['attrs']['cardTitle'] === undefined) {
                     // 找不到卡片标题，根据卡片 ID 匹配标题
                     const card = getCardName(content_list[i]['attrs']['cardId'])
@@ -452,12 +528,18 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
                 break
 
             case 'image':
-                new_node = document.createElement('img')
-                new_node.setAttribute('src', content_list[i]['attrs']['src'])
+
+                new_node = document.createElement('div')
+                let imgBox = document.createElement('img')
+                imgBox.setAttribute('src', content_list[i]['attrs']['src'])
+                new_node.classList.add('imgBox')
+                new_node.appendChild(imgBox)
 
                 if (content_list[i]['attrs']['width'] !== null) {
-                    new_node.setAttribute('style', 'width: ' + content_list[i]['attrs']['width']);
+                    imgBox.setAttribute('style', 'width: ' + content_list[i]['attrs']['width']);
                 }
+
+
                 break
 
             case 'paragraph':
@@ -477,6 +559,11 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
 
             case 'text':
                 // 普通文本
+                if (content_list[i]['text'].indexOf('{HTML}') > -1) {
+                    break
+                }
+
+
                 // 判断是否有行内样式，例如 strong、mark
 
                 if ('marks' in content_list[i]) {
@@ -566,6 +653,7 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
                                         } else {
                                             // 外链
                                             new_node = document.createElement('a')
+                                            new_node.classList.add('external_link')
                                             new_node.href = mark['attrs']['href']
                                             new_node.innerHTML = content_list[i]['text']
                                         }
@@ -573,6 +661,7 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
                                     } else {
                                         // 外链
                                         new_node = document.createElement('a')
+                                        new_node.classList.add('external_link')
                                         new_node.href = mark['attrs']['href']
                                         new_node.innerHTML = content_list[i]['text']
                                     }
@@ -593,7 +682,9 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
                     // 无行内样式
                     // new_node = document.createElement('span')
                     // new_node.innerText = new_node.innerText + content_list[i]['text']
+
                     new_node = document.createTextNode(content_list[i]['text'])
+
                 }
 
                 break
@@ -609,6 +700,7 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
 
                 // List 内容
                 new_node = document.createElement('div')
+                new_node.setAttribute('style', 'flex: 1');
 
                 bulletListBox.appendChild(bulletHand)
                 bulletListBox.appendChild(new_node)
@@ -637,11 +729,11 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
                 // numberHand.classList.add('listBullet')
                 numberHand.classList.add('numberListBullet')
                 numberHand.setAttribute('data-before', number_list_index + '.')
-                console.log(i);
                 // numberHand.attr('--before-content', beforeContent)
 
                 // List 内容
                 new_node = document.createElement('div')
+                new_node.setAttribute('style', 'flex: 1');
 
                 numberListBox.appendChild(numberHand)
                 numberListBox.appendChild(new_node)
@@ -676,7 +768,11 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
                 break
 
             case 'toggle_list':
-                new_node = document.createElement('ul')
+                new_node = document.createElement('div')
+                break
+
+            case 'toggle_list_item':
+                new_node = document.createElement('div')
                 break
 
             case 'task_list':
@@ -719,9 +815,17 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
                 new_node.classList.add('language-' + content_list[i]['attrs']['params'])
 
                 // new_node = React.createElement('SyntaxHighlighter')
-                console.log(new_node);
 
-                // <SyntaxHighlighter language="javascript" style={dark}>{codeString}</SyntaxHighlighter>
+                // 直接渲染 code block 内的 HTML
+                if ('content' in content_list[i] && content_list[i]['attrs']['params'] === 'html') {
+                    if (content_list[i]['content'][0]['text'].indexOf('{HTML}') > -1) {
+                        new_node = document.createElement('div')
+                        new_node.classList.add('htmlBox')
+                        new_node.innerHTML = content_list[i]['content'][0]['text'].replace('{HTML}', '')
+                        // new_node.innerHTML = '<iframe style="border: 0; width: 100%; height: 120px;" src="https://bandcamp.com/EmbeddedPlayer/album=2906945127/size=large/bgcol=ffffff/linkcol=0687f5/tracklist=false/artwork=small/transparent=true/" seamless><a href="https://rhodadakar.bandcamp.com/album/as-tears-go-by">As Tears Go By by Rhoda Dakar</a></iframe>'
+                    }
+                }
+
                 break
 
             case 'table':

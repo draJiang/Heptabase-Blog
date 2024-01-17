@@ -5,7 +5,8 @@ An object is plain if it's created by either `{}`, `new Object()`, or `Object.cr
 
 @example
 ```
-import isPlainObject = require('is-plain-obj');
+import isPlainObject from 'is-plain-obj';
+import {runInNewContext} from 'node:vm';
 
 isPlainObject({foo: 'bar'});
 //=> true
@@ -16,14 +17,19 @@ isPlainObject(new Object());
 isPlainObject(Object.create(null));
 //=> true
 
+// This works across realms
+isPlainObject(runInNewContext('({})'));
+//=> true
+
 isPlainObject([1, 2, 3]);
 //=> false
 
 class Unicorn {}
 isPlainObject(new Unicorn());
 //=> false
+
+isPlainObject(Math);
+//=> false
 ```
 */
-declare function isPlainObject<Value = unknown>(value: unknown): value is Record<string | number | symbol, Value>;
-
-export = isPlainObject;
+export default function isPlainObject<Value>(value: unknown): value is Record<PropertyKey, Value>;
