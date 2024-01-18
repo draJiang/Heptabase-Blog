@@ -11,7 +11,7 @@ import Loading from '../components/Loading'
 // import "highlight.js/styles/github.css";
 import 'highlight.js/styles/dark.css';
 // import 'highlight.js/styles/hopscotch.css'; 
-import hljs from "highlight.js";
+// import hljs from "highlight.js";
 
 import { ShareAltOutlined } from '@ant-design/icons';
 import { Button, message, Tooltip } from 'antd';
@@ -146,8 +146,8 @@ function Container(props) {
     // 组件生命周期，组件载入、更新时将触发此函数
     useEffect(() => {
 
-        console.log('useEffect');
-        props.handleHashChange(window.location.href, props['card'])
+        console.log('useEffect====================');
+        props.handleHashChange(window.location.href, props['card']['card']['id'])
 
         // dom 加载完毕后
         if (post.current != null) {
@@ -205,12 +205,12 @@ function Container(props) {
 
         }
 
-        // 代码高亮
-        if (document.querySelectorAll('pre').length > 0) {
-            document.querySelectorAll('pre').forEach(element => {
-                hljs.highlightBlock(element);
-            });
-        }
+        // // 代码高亮
+        // // if (document.querySelectorAll('pre').length > 0) {
+        // //     document.querySelectorAll('pre').forEach(element => {
+        // //         hljs.highlightBlock(element);
+        // //     });
+        // // }
 
 
 

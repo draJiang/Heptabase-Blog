@@ -1,8 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import CONFIG from '../config'
-
+// import { Button } from 'antd';
 import logo from '../logo.png'
+// import '../output.css'
+// import '../index.css'
+// import { NextUIProvider } from "@nextui-org/system";
+import { Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenuToggle, NavbarMenu, NavbarMenuItem } from "@nextui-org/navbar";
+
 
 // 页面头部
 class Nav extends React.Component {
@@ -28,15 +33,14 @@ class Nav extends React.Component {
 
             let page
             if (key === 'Activity') {
-                page = <li >
-                    <Link to='/activity'>Activity</Link>
-                </li>
+                page = <NavbarItem >
+                    <Link key={CONFIG['pages']} to='/activity'>Activity</Link>
+                </NavbarItem>
             } else {
-                page = <li onClick={this.handleNavBarClick}>
-                    <Link to={'/post?note-id=' + CONFIG['pages'][key] + '&active-note-id=' + CONFIG['pages'][key]}>{key}</Link>
-                </li>
+                page = <NavbarItem onClick={this.handleNavBarClick}>
+                    <Link key={CONFIG['pages']} to={'/post?note-id=' + CONFIG['pages'][key] + '&active-note-id=' + CONFIG['pages'][key]}>{key}</Link>
+                </NavbarItem>
             }
-
 
             tabs.push(page)
 
@@ -45,18 +49,15 @@ class Nav extends React.Component {
         console.log(tabs);
 
         return (
-            <div className='markdown-body nav'>
-                <header>
-                    <span onClick={this.handleNavBarClick}><Link to='/post?note-id=8f1243cb-2689-45b2-9388-c1f114c7397b&active-note-id=8f1243cb-2689-45b2-9388-c1f114c7397b'><img src={logo}></img></Link></span>
-                </header>
-                <div>
-                    <ul>
+            < Navbar shouldHideOnScroll isBlurred={false} maxWidth={'full'} height={'3rem'} isBordered={true} >
+                <NavbarBrand>
+                    <span key='home' onClick={this.handleNavBarClick}><Link to='/post?note-id=3a433c0b-e2e1-4722-8a88-a17e9aa2b927&active-note-id=3a433c0b-e2e1-4722-8a88-a17e9aa2b927'><img style={{ width: '22px' }} src={logo}></img></Link></span>
+                </NavbarBrand >
+                <NavbarContent justify="end">
+                    {tabs}
+                </NavbarContent>
+            </Navbar >
 
-                        {tabs}
-
-                    </ul>
-                </div>
-            </div>
         );
     }
 }
