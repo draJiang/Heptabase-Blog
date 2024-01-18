@@ -1,3 +1,5 @@
-node_modules/
-/node_modules/.cache
-.vercel
+node_modules
+/.idea
+.run
+build
+.vscode

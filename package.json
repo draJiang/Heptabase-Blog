@@ -2,7 +2,7 @@
     "name": "heptabase_blog",
     "version": "1.0.0",
     "private": true,
-    "proxy": "http://localhost:3000",
+    "proxy": "http://0.0.0.0:3000",
     "dependencies": {
         "@ant-design/icons": "^4.8.0",
         "@nextui-org/navbar": "^2.0.27",
