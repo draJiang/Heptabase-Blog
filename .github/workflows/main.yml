@@ -2,10 +2,15 @@ name: Fetch JSON Data
 
 on:
 <<<<<<< HEAD
+<<<<<<< HEAD
   schedule:
     - cron: '*/5  * * * *' # 每天 UTC 时间 04:00 执行
 =======
 >>>>>>> jiang
+=======
+  # schedule:
+  #   - cron: '*/5  * * * *' # 每天 UTC 时间 04:00 执行
+>>>>>>> 17c87b7ddd44f0e5b34dbb5a396009249b2fb0b2
   workflow_dispatch:
 
 jobs:
