@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useParams, useNavigate } from 'react-router-dom';
 
+import CONFIG from '../config';
 
 import Container from '../components/Container'
 import Nav from '../components/Nav';
@@ -748,7 +749,7 @@ function Post(props) {
                 if (cardList[k]['card']['title'] !== 'About') {
                     document.title = cardList[k]['card']['title']
                 } else {
-                    document.title = 'Jiang 的数字花园🌱'
+                    document.title = CONFIG.title
                 }
 
                 break;
