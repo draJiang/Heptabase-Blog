@@ -31,7 +31,7 @@ const CalendarHeatmap = () => {
 
     // 获取 Heptabase 数据
     if (myValue.length <= 0) {
-      getHeptabaseData.then((res) => {
+      getHeptabaseData().then((res) => {
 
         heptabase_blog_data = res.data
         console.log('CalendarHeatmap getHeptabaseData');

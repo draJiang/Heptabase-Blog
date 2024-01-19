@@ -51,7 +51,7 @@ class Nav extends React.Component {
         return (
             < Navbar shouldHideOnScroll isBlurred={false} maxWidth={'full'} height={'3rem'} isBordered={true} >
                 <NavbarBrand>
-                    <span key='home' onClick={this.handleNavBarClick}><Link to='/post?note-id=3a433c0b-e2e1-4722-8a88-a17e9aa2b927&active-note-id=3a433c0b-e2e1-4722-8a88-a17e9aa2b927'><img style={{ width: '22px' }} src={logo}></img></Link></span>
+                    <span key='home' onClick={this.handleNavBarClick}><Link to={'/post?note-id=' + CONFIG.pages.About + '&active-note-id=' + CONFIG.pages.About}><img style={{ width: '22px' }} src={logo}></img></Link></span>
                 </NavbarBrand >
                 <NavbarContent justify="end">
                     {tabs}
