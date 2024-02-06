@@ -1,13 +1,13 @@
 const CONFIG = {
     'api_url': '', // 废弃
     'ga': 'G-XXXXXX',
-    'whiteboard_id': '12e511518f5539c9ee5bc3c02fecab6d4f78a37eb8e13a2cfec484026b0d3c55',
-    'title': 'Jiang 的数字花园🌱', // 站点标题
+    'whiteboard_id': '5b32b02b51a359eb2e4d5bbbfe41003a043924131f374c0950f444f79fdf65e0',
+    'title': 'Vincent Shi 的 Blog', // 站点标题
     'pages': {
-        'Articles': '2e0bbcb8-fdf7-4cdb-8ee2-9f0651b71550',
-        'Projects': '2e0bbcb8-fdf7-4cdb-8ee2-9f0651b71550',
+        'Articles': '8f1243cb-2689-45b2-9388-c1f114c7397b',
+        'Projects': '8f1243cb-2689-45b2-9388-c1f114c7397b',
         'Activity': 'activity', // 花园活跃状态页面
-        'About': '2e0bbcb8-fdf7-4cdb-8ee2-9f0651b71550'
+        'About': '8f1243cb-2689-45b2-9388-c1f114c7397b'
     }
 }
 

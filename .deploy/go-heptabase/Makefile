@@ -3,3 +3,6 @@ install:
 
 uninstall:
 	helm -n blog uninstall frontend --kube-context kiila
+
+template:
+	helm -n blog template frontend . -f local.values.yaml --kube-context kiila > template.yaml

@@ -5,12 +5,13 @@
 replicaCount: 1
 
 image:
-  repository: ccr.ccs.tencentyun.com/farfalle/blog
+  repository: registry.kii.la/kiila/heptabase-frontend
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "latest"
+  tag: "17e06aab-dirty"
 
-imagePullSecrets: [ ]
+imagePullSecrets:
+  - name: kiila-reg
 nameOverride: ""
 fullnameOverride: ""
 
