@@ -249,28 +249,40 @@ const getHeptabaseDataFromServer = async () => {
             let pages = {}
             // 获取 About、Projects 页面的数据
             pages.about = undefined
-            pages.projects = undefined
+            pages.firstPage = undefined
+            // pages.projects = undefined
 
             // 存储去重后的数组
             let new_cards = []
             // 存储卡片 ID，用户判断是否重复
             let cards_id = []
 
+            const configPages = CONFIG.pages
+            const firstPageKey = Object.keys(configPages)[0]
+            const firstPageId = configPages[firstPageKey];
+
+
             for (let i = 0; i < data.data.cards.length; i++) {
 
-                // About
+                // 首页
                 if (data.data.cards[i]['title'].toLowerCase() === 'about') {
 
                     pages.about = data.data.cards[i]
 
                 }
 
-                // Projects
-                if (data.data.cards[i]['title'].toLowerCase() === 'projects') {
-
-                    pages.projects = data.data.cards[i]
-
+                // 查找 CONFIG 的 pages 中第 1 个卡片的数据
+                if (data.data.cards[i].id === firstPageId) {
+                    pages.firstPage = data.data.cards[i]
                 }
+
+
+                // Projects
+                // if (data.data.cards[i]['title'].toLowerCase() === 'projects') {
+
+                //     pages.projects = data.data.cards[i]
+
+                // }
 
                 // 去重
                 if (cards_id.indexOf(data.data.cards[i]['id']) > -1) {
@@ -370,6 +382,7 @@ const getHeptabaseData = async () => {
 
 
     if (heptabaseDataFromLocal) {
+
         // 存在本地数据
         if (heptabaseDataFromLocal.data?.Etag && heptabaseDataFromLocal.whiteboard_id) {
 

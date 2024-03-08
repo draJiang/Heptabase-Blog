@@ -86,7 +86,8 @@ function Post(props) {
 
             // 将数据保存到全局变量中
             HEPTABASE_DATA = heptabase_blog_data
-            HOME_DATA = res['pages']['about']
+            // 默认获取名为 about 的卡片作为首页，若无则获取配置中首个卡片作为首页
+            HOME_DATA = res['pages']['about'] || res['pages']['firstPage']
 
             // 渲染 URL、数据
             herfToData()
