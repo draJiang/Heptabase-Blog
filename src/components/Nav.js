@@ -38,7 +38,7 @@ class Nav extends React.Component {
                 </NavbarItem>
             } else {
                 page = <NavbarItem onClick={this.handleNavBarClick}>
-                    <Link key={CONFIG['pages']} to={'/post?note-id=' + CONFIG['pages'][key] + '&active-note-id=' + CONFIG['pages'][key]}>{key}</Link>
+                    <Link key={key} to={'/post?note-id=' + CONFIG['pages'][key] + '&active-note-id=' + CONFIG['pages'][key]}>{key}</Link>
                 </NavbarItem>
             }
 
@@ -51,7 +51,7 @@ class Nav extends React.Component {
         return (
             < Navbar shouldHideOnScroll isBlurred={false} maxWidth={'full'} height={'3rem'} isBordered={true} >
                 <NavbarBrand>
-                    <span key='home' onClick={this.handleNavBarClick}><Link to={'/post?note-id=' + CONFIG.pages.About + '&active-note-id=' + CONFIG.pages.About}><img style={{ width: '22px' }} src={logo}></img></Link></span>
+                    <span key='home' onClick={this.handleNavBarClick}><Link to='/'><img style={{ width: '22px' }} src={logo}></img></Link></span>
                 </NavbarBrand >
                 <NavbarContent justify="end">
                     {tabs}
