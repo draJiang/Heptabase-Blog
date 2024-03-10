@@ -1,7 +1,7 @@
 const CONFIG = {
     'api_url': '', // 废弃
     'ga': 'G-XXXXXX',
-    'whiteboard_id': '12e511518f5539c9ee5bc3c02fecab6d4f78a37eb8e13a2cfec484026b0d3c55',
+    'whiteboard_id': 'd4cc3728297609add1a00aab108e90c4e57a1c378cfc2307c251745bf7d2a884',
     'title': '数字花园🌱', // 站点标题
     'pages': {
         'Articles': '9f31ea21-90b9-4523-b8d5-cb33b7a01bda',
