@@ -2,8 +2,7 @@ import React from "react";
 import { createRoot } from 'react-dom/client';
 import CONFIG from "./config";
 import { Button, Modal } from 'antd';
-import data from './resources/data.json';
-
+import heptabaseData from './resources/data.json';
 import CalendarHeatmap from './components/CalendarHeatmap'
 
 const { confirm } = Modal;
@@ -238,98 +237,9 @@ const getHeptabaseDataFromServer = async () => {
             // 成功获取数据
 
             const data = getDataResponse
-            // 按照时间排序卡片
-            data.data.cards = data.data.cards.sort((a, b) => {
-
-                // 最近编辑时间
-                return b.lastEditedTime < a.lastEditedTime ? -1 : 1
-
-            })
-
-            let pages = {}
-            // 获取 About、Projects 页面的数据
-            pages.about = undefined
-            pages.firstPage = undefined
-            // pages.projects = undefined
-
-            // 存储去重后的数组
-            let new_cards = []
-            // 存储卡片 ID，用户判断是否重复
-            let cards_id = []
-
-            const configPages = CONFIG.pages
-            const firstPageKey = Object.keys(configPages)[0]
-            const firstPageId = configPages[firstPageKey];
-
-
-            for (let i = 0; i < data.data.cards.length; i++) {
-
-                // 首页
-                if (data.data.cards[i]['title'].toLowerCase() === 'about') {
-
-                    pages.about = data.data.cards[i]
-
-                }
-
-                // 查找 CONFIG 的 pages 中第 1 个卡片的数据
-                if (data.data.cards[i].id === firstPageId) {
-                    pages.firstPage = data.data.cards[i]
-                }
-
-
-                // Projects
-                // if (data.data.cards[i]['title'].toLowerCase() === 'projects') {
-
-                //     pages.projects = data.data.cards[i]
-
-                // }
-
-                // 去重
-                if (cards_id.indexOf(data.data.cards[i]['id']) > -1) {
-                    // 已存在此卡片，则忽略
-                    // console.log(data.cards[i]);
-                } else {
-
-                    // 不存在此卡片
-
-                    // 最近编辑的时间差
-                    let timeDiff = getLastEditedTime(data.data.cards[i]['lastEditedTime'])
-                    data.data.cards[i].lastEditedTimeDiff = ''
-                    if (timeDiff['day'] > 0) {
-                        data.data.cards[i].lastEditedTimeDiff = 'Edited ' + timeDiff['day'] + ' days ago'
-                    } else if (timeDiff['hours'] > 0) {
-
-                        data.data.cards[i].lastEditedTimeDiff = 'Edited ' + timeDiff['hours'] + ' hours ago'
-
-                    } else if (timeDiff['minutes'] > 0) {
-
-                        data.data.cards[i].lastEditedTimeDiff = 'Edited ' + timeDiff['minutes'] + ' minutes ago'
-
-                    } else {
-
-                        data.data.cards[i].lastEditedTimeDiff = 'Edited just'
-
-                    }
-
-                    new_cards.push(data.data.cards[i])
-                    cards_id.push(data.data.cards[i]['id'])
-
-                }
-
-            }
-
-            data.data.cards = new_cards
-            data.frontGetTime = Date.parse(new Date()) / 1000
-            data.pages = pages
-            data.whiteboard_id = CONFIG.whiteboard_id
-
-            // 存储数据到本地缓存
-            localStorage.setItem("heptabase_blog_data", JSON.stringify(data))
-            // console.log(this.state.posts);
-
-            console.log('getHeptabaseData return');
-
-            return data; // 返回结果
+            // 处理卡片数据
+            const newData = handleHeptabaseData(data)
+            return data
 
 
         } else {
@@ -377,6 +287,8 @@ const getHeptabaseDataFromServer = async () => {
 const getHeptabaseData = async () => {
     console.log('getHeptabaseData');
 
+    return handleHeptabaseData(heptabaseData)
+
     // 获取本地数据
     let heptabaseDataFromLocal = JSON.parse(localStorage.getItem("heptabase_blog_data"))
 
@@ -417,6 +329,7 @@ const getHeptabaseData = async () => {
             const data = await getHeptabaseDataFromServer();
             return data;
         }
+
     } else {
         // 本地不存在数据，则需要到服务端获取
         const heptabaseDataFromServer = await getHeptabaseDataFromServer();
@@ -424,6 +337,102 @@ const getHeptabaseData = async () => {
     }
 };
 
+
+const handleHeptabaseData = (data) => {
+
+    data.data.cards = data.data.cards.sort((a, b) => {
+
+        // 最近编辑时间
+        return b.lastEditedTime < a.lastEditedTime ? -1 : 1
+
+    })
+
+    let pages = {}
+    // 获取 About、Projects 页面的数据
+    pages.about = undefined
+    pages.firstPage = undefined
+    // pages.projects = undefined
+
+    // 存储去重后的数组
+    let new_cards = []
+    // 存储卡片 ID，用户判断是否重复
+    let cards_id = []
+
+    const configPages = CONFIG.pages
+    const firstPageKey = Object.keys(configPages)[0]
+    const firstPageId = configPages[firstPageKey];
+
+
+    for (let i = 0; i < data.data.cards.length; i++) {
+
+        // 首页
+        if (data.data.cards[i]['title'].toLowerCase() === 'about') {
+
+            pages.about = data.data.cards[i]
+
+        }
+
+        // 查找 CONFIG 的 pages 中第 1 个卡片的数据
+        if (data.data.cards[i].id === firstPageId) {
+            pages.firstPage = data.data.cards[i]
+        }
+
+
+        // Projects
+        // if (data.data.cards[i]['title'].toLowerCase() === 'projects') {
+
+        //     pages.projects = data.data.cards[i]
+
+        // }
+
+        // 去重
+        if (cards_id.indexOf(data.data.cards[i]['id']) > -1) {
+            // 已存在此卡片，则忽略
+            // console.log(data.cards[i]);
+        } else {
+
+            // 不存在此卡片
+
+            // 最近编辑的时间差
+            let timeDiff = getLastEditedTime(data.data.cards[i]['lastEditedTime'])
+            data.data.cards[i].lastEditedTimeDiff = ''
+            if (timeDiff['day'] > 0) {
+                data.data.cards[i].lastEditedTimeDiff = 'Edited ' + timeDiff['day'] + ' days ago'
+            } else if (timeDiff['hours'] > 0) {
+
+                data.data.cards[i].lastEditedTimeDiff = 'Edited ' + timeDiff['hours'] + ' hours ago'
+
+            } else if (timeDiff['minutes'] > 0) {
+
+                data.data.cards[i].lastEditedTimeDiff = 'Edited ' + timeDiff['minutes'] + ' minutes ago'
+
+            } else {
+
+                data.data.cards[i].lastEditedTimeDiff = 'Edited just'
+
+            }
+
+            new_cards.push(data.data.cards[i])
+            cards_id.push(data.data.cards[i]['id'])
+
+        }
+
+    }
+
+    data.data.cards = new_cards
+    data.frontGetTime = Date.parse(new Date()) / 1000
+    data.pages = pages
+    data.whiteboard_id = CONFIG.whiteboard_id
+
+    // 存储数据到本地缓存
+    localStorage.setItem("heptabase_blog_data", JSON.stringify(data))
+    // console.log(this.state.posts);
+
+    console.log('getHeptabaseData return');
+
+    return data; // 返回结果
+
+}
 
 
 

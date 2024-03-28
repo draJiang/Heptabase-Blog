@@ -22,6 +22,8 @@ import { Button, message, Tooltip } from 'antd';
 
 import Clipboard from 'clipboard';
 
+import heptabaseData from '../resources/data.json';
+
 // 属性
 let ACTIVE_NOTE = ''                                            // 焦点笔记 ID 例如 38d9247c-1b0b-47ca-a119-933af80d71c2
 let CURRENT_URL = window.location.href                          // 当前 URL，用来判断 URL 有变化时触发相关事件
@@ -88,12 +90,18 @@ function Post(props) {
             HEPTABASE_DATA = heptabase_blog_data
             // 默认获取名为 about 的卡片作为首页，若无则获取配置中首个卡片作为首页
             HOME_DATA = res['pages']['about'] || res['pages']['firstPage']
-
             // 渲染 URL、数据
             herfToData()
 
         }).catch(error => {
             console.error('Error:', error);
+            // 从本地获取数据
+            // 将数据保存到全局变量中
+            HEPTABASE_DATA = heptabaseData
+            // 默认获取名为 about 的卡片作为首页，若无则获取配置中首个卡片作为首页
+            // HOME_DATA = res['pages']['about'] || res['pages']['firstPage']
+            // 渲染 URL、数据
+            herfToData()
         });
 
 
