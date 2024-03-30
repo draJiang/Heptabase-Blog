@@ -15,16 +15,6 @@ import Loading from '../components/Loading'
 
 import { ShareAltOutlined } from '@ant-design/icons';
 import { Button, message, Tooltip } from 'antd';
-import Clipboard from 'clipboard';
-
-
-
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
-import rehypeRaw from 'rehype-raw'
-
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
-import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 
 
 // 文章正文
