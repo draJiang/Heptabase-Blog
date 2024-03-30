@@ -425,10 +425,12 @@ const handleHeptabaseData = (data) => {
     data.whiteboard_id = CONFIG.whiteboard_id
 
     // 存储数据到本地缓存
-    localStorage.setItem("heptabase_blog_data", JSON.stringify(data))
-    // console.log(this.state.posts);
 
-    console.log('getHeptabaseData return');
+    try {
+        localStorage.setItem("heptabase_blog_data", JSON.stringify(data))
+    } catch (error) {
+        console.log(error);
+    }
 
     return data; // 返回结果
 
@@ -722,7 +724,7 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
 
                 // List 内容
                 new_node = document.createElement('div')
-                new_node.setAttribute('style', 'flex: 1');
+                new_node.setAttribute('style', 'overflow: auto');
 
                 bulletListBox.appendChild(bulletHand)
                 bulletListBox.appendChild(new_node)
@@ -755,7 +757,7 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
 
                 // List 内容
                 new_node = document.createElement('div')
-                new_node.setAttribute('style', 'flex: 1');
+                new_node.setAttribute('style', 'overflow: auto');
 
                 numberListBox.appendChild(numberHand)
                 numberListBox.appendChild(new_node)

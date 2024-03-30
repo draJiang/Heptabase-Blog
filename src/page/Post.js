@@ -10,6 +10,7 @@ import Loading from '../components/Loading'
 import { NextUIProvider } from "@nextui-org/system";
 
 import '../index.css'
+// import '../style.css'
 import 'github-markdown-css'
 import 'antd/dist/reset.css';
 
@@ -21,8 +22,6 @@ import useHash from "../hooks/useHash";
 import { Button, message, Tooltip } from 'antd';
 
 import Clipboard from 'clipboard';
-
-import heptabaseData from '../resources/data.json';
 
 // 属性
 let ACTIVE_NOTE = ''                                            // 焦点笔记 ID 例如 38d9247c-1b0b-47ca-a119-933af80d71c2
@@ -95,13 +94,6 @@ function Post(props) {
 
         }).catch(error => {
             console.error('Error:', error);
-            // 从本地获取数据
-            // 将数据保存到全局变量中
-            HEPTABASE_DATA = heptabaseData
-            // 默认获取名为 about 的卡片作为首页，若无则获取配置中首个卡片作为首页
-            // HOME_DATA = res['pages']['about'] || res['pages']['firstPage']
-            // 渲染 URL、数据
-            herfToData()
         });
 
 
@@ -703,7 +695,9 @@ function Post(props) {
     if (HEPTABASE_DATA === null || cardList.length === 0) {
         return (<div>
             {/* <Nav /> */}
-            <div className='notes'>
+            <div className='notes' style={{
+                padding:'1rem'
+            }}>
                 <Loading />
             </div>
             {/* <Footer /> */}

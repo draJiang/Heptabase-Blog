@@ -46,14 +46,15 @@ class Nav extends React.Component {
 
         });
 
-        console.log(tabs);
 
         return (
             < Navbar shouldHideOnScroll isBlurred={false} maxWidth={'full'} height={'3rem'} isBordered={true} >
                 <NavbarBrand>
                     <span key='home' onClick={this.handleNavBarClick}><Link to='/'><img style={{ width: '22px' }} src={logo}></img></Link></span>
                 </NavbarBrand >
-                <NavbarContent justify="end">
+                <NavbarContent className='nav' justify="end"
+                    style={{ marginBottom: '0' }}
+                >
                     {tabs}
                 </NavbarContent>
             </Navbar >

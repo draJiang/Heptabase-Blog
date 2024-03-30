@@ -5,11 +5,11 @@ import { useLocation } from "react-router";
 import { format } from 'date-fns'
 
 import '../index.css'
-import 'github-markdown-css'
+// import 'github-markdown-css'
 import Loading from '../components/Loading'
 
 // import "highlight.js/styles/github.css";
-import 'highlight.js/styles/dark.css';
+// import 'highlight.js/styles/dark.css';
 // import 'highlight.js/styles/hopscotch.css'; 
 // import hljs from "highlight.js";
 
