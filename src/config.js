@@ -8,7 +8,9 @@ const CONFIG = {
         'Projects': '3dd9a603-a7f3-44e9-a6d7-cd2ebda08952',
         // 'Activity':'activity', // 花园活跃状态页面
         'About': '3a433c0b-e2e1-4722-8a88-a17e9aa2b927'
-    }
+    },
+    'server': '1214087861653995540', // Discord 服务器 ID，非必填，填写后将在网站中显示聊天入口
+    'channel': '1214087861653995545' // Discord 频道 ID，非必填，填写后将在网站中显示聊天入口
 }
 
 export default CONFIG

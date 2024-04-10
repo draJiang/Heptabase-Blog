@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useParams, useNavigate } from 'react-router-dom';
-
+import WidgetBot, { API } from '@widgetbot/react-embed'
 import CONFIG from '../config';
 
 import Container from '../components/Container'
@@ -9,7 +9,7 @@ import Footer from '../components/Footer'
 import Loading from '../components/Loading'
 import { NextUIProvider } from "@nextui-org/system";
 
-import '../index.css'
+import '../style.css'
 // import '../style.css'
 import 'github-markdown-css'
 import 'antd/dist/reset.css';
@@ -36,6 +36,7 @@ let HOME_DATA                                                   // 首页数据
 function Post(props) {
     const [cardList, setCardList] = useState([]);
     const [activeNote, setActiveNote] = useState('null');
+    const [showChatWindow, setShowChatWindow] = useState(false);
 
     let { param1 } = useParams();
     let location = useLocation();
@@ -99,6 +100,11 @@ function Post(props) {
 
     }, [])
 
+    const handleShowChatWindow = () => {
+
+        setShowChatWindow(!showChatWindow)
+
+    }
 
     // 根据 card id 获取 card content
     const findContent = (id, heptabase_blog_data) => {
@@ -465,7 +471,8 @@ function Post(props) {
             // 判断卡片的位置，当遮挡前 1 个卡片时，前 1 个卡片显示垂直标题
             let left_mark = notes[j].getBoundingClientRect().x <= j * 40
             // 判断是否要显示右侧标题
-            let right_mark = notes[j].getBoundingClientRect().x + 1 >= window.innerWidth - (notes.length - j) * 40
+            const chatWindowWidth = showChatWindow ? 480 : 0
+            let right_mark = notes[j].getBoundingClientRect().x + 1 >= window.innerWidth - chatWindowWidth - (notes.length - j) * 40
 
             // 左侧小标题
             if (right_mark !== true) {
@@ -549,7 +556,8 @@ function Post(props) {
                         note_title.style.left = (j - 1) * 40 + 'px'
                     } else {
                         // 右侧小标题
-                        note_title.style.right = (notes.length - j) * 40 - 40 + 'px'
+                        const chatWindowWidth = showChatWindow ? 460 : 0
+                        note_title.style.right = (notes.length - j) * 40 - 40 + chatWindowWidth + 'px'
                         note_title.classList.add('overlay')
                     }
 
@@ -696,7 +704,7 @@ function Post(props) {
         return (<div>
             {/* <Nav /> */}
             <div className='notes' style={{
-                padding:'1rem'
+                padding: '1rem'
             }}>
                 <Loading />
             </div>
@@ -763,16 +771,35 @@ function Post(props) {
 
             // <NextUIProvider>
             <div className='notes_box'>
-                <Nav />
+                <Nav handleShowChatWindow={handleShowChatWindow} discord={windowWidth > minWidth} />
 
 
+                <div className='flex flex-row' style={{
+                    overflowX: 'scroll',
+                    overflowY: 'hidden'
+                }}>
 
-                <div onScroll={setCardMiniTitleAndStyle} className='notes'>
+                    <div onScroll={setCardMiniTitleAndStyle} className='notes' style={{
+                        marginRight: showChatWindow && '460px',
+                        borderRight: showChatWindow && '1px solid #d0d7de'
+                    }}>
 
-                    {card_list_dom}
+                        {card_list_dom}
+
+                    </div>
+                    {(showChatWindow && CONFIG.server.length > 3 && CONFIG.channel) && <WidgetBot
+                        server={CONFIG.server}
+                        channel={CONFIG.channel}
+                        style={{
+                            position: 'absolute',
+                            right: '0',
+                            margin: '10px',
+                            width: '440px',
+                            height: '91vh'
+                        }}
+                    />}
 
                 </div>
-                {/* <Footer /> */}
 
             </div>
             // </NextUIProvider>
