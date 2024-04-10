@@ -781,13 +781,13 @@ function Post(props) {
 
                     <div onScroll={setCardMiniTitleAndStyle} className='notes' style={{
                         marginRight: showChatWindow && '460px',
-                        borderRight: showChatWindow && '1px solid #d0d7de'
+                        // borderRight: showChatWindow && '1px solid #d0d7de'
                     }}>
 
                         {card_list_dom}
 
                     </div>
-                    {(showChatWindow && CONFIG.server.length > 3 && CONFIG.channel) && <WidgetBot
+                    {showChatWindow && <WidgetBot
                         server={CONFIG.server}
                         channel={CONFIG.channel}
                         style={{
