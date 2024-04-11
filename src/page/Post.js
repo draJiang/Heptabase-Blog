@@ -52,6 +52,8 @@ function Post(props) {
     // }, [param1]);
 
     useEffect(() => {
+        console.log('Post useEffect');
+
         // 在此，你可以通过创建一个 URLSearchParams 对象来获取查询参数
         // 渲染 URL、数据
         if (HOME_DATA) {
@@ -65,8 +67,6 @@ function Post(props) {
 
 
     useEffect(() => {
-        console.log('Post useEffect');
-
         // 复制到剪切板实例化
         const copy = new Clipboard('.copy-btn');
         copy.on('success', e => {
@@ -308,6 +308,15 @@ function Post(props) {
         console.log(new_url);
         let old_url_1 = old_url['url_search_list'].join('-')
         let new_url_1 = new_url['url_search_list'].join('-')
+
+        // 移除所有小标题
+        const url_search_list = new_url.url_search_list
+        if (url_search_list.length < 3) {
+            const noteTitles = document.querySelectorAll('.note_title');
+            noteTitles.forEach(function (title) {
+                title.remove();
+            });
+        }
 
         // 定位到焦点卡片
         if (new_url['active_str'].indexOf(cardId) > -1) {
