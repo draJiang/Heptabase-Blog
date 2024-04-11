@@ -312,10 +312,18 @@ function Post(props) {
         // 移除所有小标题
         const url_search_list = new_url.url_search_list
         if (url_search_list.length < 3) {
+            // 移除小标题
             const noteTitles = document.querySelectorAll('.note_title');
             noteTitles.forEach(function (title) {
                 title.remove();
             });
+            // 选取所有同时具有 ".container" 类和 "mini" 类的元素
+            const containersWithMini = document.querySelectorAll('.container.mini');
+            // 遍历这些元素并移除 "mini" 类
+            containersWithMini.forEach(function (container) {
+                container.classList.remove('mini');
+            });
+
         }
 
         // 定位到焦点卡片
