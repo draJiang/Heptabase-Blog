@@ -785,7 +785,8 @@ function Post(props) {
 
                 <div className='flex flex-row' style={{
                     overflowX: 'scroll',
-                    overflowY: 'hidden'
+                    overflowY: 'hidden',
+                    flex: '1'
                 }}>
 
                     <div onScroll={setCardMiniTitleAndStyle} className='notes' style={{

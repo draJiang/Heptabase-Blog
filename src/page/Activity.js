@@ -7,7 +7,7 @@ import CalendarHeatmap from '../components/CalendarHeatmap'
 
 function Activity(props) {
 
-    return<div>
+    return<div className='notes_box'>
         <Nav />
         <div>
             <CalendarHeatmap />
