@@ -1,16 +1,12 @@
-import React from "react";
-import { createRoot } from 'react-dom/client';
 import CONFIG from "./config";
-import { Button, Modal } from 'antd';
+import { Modal } from 'antd';
 import heptabaseData from './resources/data.json';
-import CalendarHeatmap from './components/CalendarHeatmap'
 
 const { confirm } = Modal;
 
 const getCardName = (cardId) => {
 
-    const heptabase_blog_data = JSON.parse(localStorage.getItem('heptabase_blog_data'))
-    const cards = heptabase_blog_data.data.cards
+    const cards = heptabaseData.data.cards
     for (let i = 0; i < cards.length; i++) {
         if (cards[i]['id'] === cardId) {
             return cards[i]
@@ -499,7 +495,7 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
                 if (content_list[i]['attrs']['cardTitle'] === 'Invalid card') {
                     // 未知卡片
                     // 在数据中先找一下
-                    let heptabase_blog_data = JSON.parse(localStorage.getItem("heptabase_blog_data"))
+                    let heptabase_blog_data = heptabaseData
 
                     for (let k = 0; k < heptabase_blog_data.data.cards.length; k++) {
                         if (heptabase_blog_data.data.cards[k]['id'] === content_list[i]['attrs']['cardId']) {
