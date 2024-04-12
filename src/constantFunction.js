@@ -493,15 +493,6 @@ const heptaContentTomd = (content_list, parent_node, parent_card_id) => {
                     }
 
                 }
-                if (content_list[i]['attrs']['cardTitle'] === undefined) {
-                    // 找不到卡片标题，根据卡片 ID 匹配标题
-                    const card = getCardName(content_list[i]['attrs']['cardId'])
-
-                    if (card) {
-                        new_node.innerHTML = card.title
-                    }
-
-                }
 
                 let bingo = false
 
