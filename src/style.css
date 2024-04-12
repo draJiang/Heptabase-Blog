@@ -82,6 +82,7 @@
 @media (width <=600px) {
     #root .container {
         border: none;
+        width: 100%;
     }
 }
 
