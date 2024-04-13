@@ -1,5 +1,4 @@
 const CONFIG = {
-    'api_url': '', // 废弃
     'ga': '',
     'whiteboard_id': 'd4cc3728297609add1a00aab108e90c4e57a1c378cfc2307c251745bf7d2a884',
     'title': '数字花园🌱', // 站点标题
