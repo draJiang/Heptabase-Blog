@@ -1,21 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import WidgetBot, { API } from '@widgetbot/react-embed'
+
+import ReactGA from 'react-ga';
 import CONFIG from '../config';
+
 
 import Container from '../components/Container'
 import Nav from '../components/Nav';
-import Footer from '../components/Footer'
 import Loading from '../components/Loading'
-import { NextUIProvider } from "@nextui-org/system";
 
 import '../style.css'
-// import '../style.css'
 import 'github-markdown-css'
 import 'antd/dist/reset.css';
 
 import { getHeptabaseData, getClearCard, getClearImag, heptaToMD } from '../constantFunction'
-import { id } from 'date-fns/locale';
 
 import useHash from "../hooks/useHash";
 
@@ -31,6 +30,10 @@ let minWidth = 600                                              // 以此宽度�
 // 数据
 let HEPTABASE_DATA                                              // hepta 数据
 let HOME_DATA                                                   // 首页数据
+
+if (CONFIG.ga) {
+    ReactGA.initialize(CONFIG.ga);
+}
 
 // 文章页面
 function Post(props) {
@@ -52,15 +55,16 @@ function Post(props) {
     // }, [param1]);
 
     useEffect(() => {
-        console.log('Post useEffect');
 
-        // 在此，你可以通过创建一个 URLSearchParams 对象来获取查询参数
-        // 渲染 URL、数据
+        console.log('location.search');
+
+        // 根据 URL 显示卡片
         if (HOME_DATA) {
             herfToData()
         }
-
-        // handleHashChange(window.location.href, props['card'])
+        if (CONFIG.ga && location.pathname !== '/') {
+            ReactGA.pageview(location.pathname + location.search);
+        }
 
         // 在此可以处理查询参数 myQueryParam 的变化
     }, [location.search]);
