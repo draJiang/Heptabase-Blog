@@ -792,7 +792,7 @@ function Post(props) {
 
 
                 <div className='flex flex-row' style={{
-                    overflowX: 'scroll',
+                    // overflowX: 'scroll',
                     overflowY: 'hidden',
                     flex: '1'
                 }}>
