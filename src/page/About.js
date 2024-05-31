@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Link, useParams } from 'react-r
 import Container from '../components/Container'
 import Nav from '../components/Nav';
 import Footer from '../components/Footer'
-import '../index.css'
+import '../style.css'
 import Loading from '../components/Loading'
 
 import { getHeptabaseData, getClearCard, getClearImag } from '../constantFunction'

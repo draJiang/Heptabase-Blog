@@ -55,27 +55,35 @@
        'ga': 'G-XXXXXX',     // 填写 Google Analytics 的 ID，不填也没问题
        'whiteboard_id': '',  // 填写白板 ID
        'title': '数字花园🌱',  // 站点标题
-       'pages': {            // pages 里的标题和 ID 可自定义
+       'pages': {            // pages 里的标题和卡片 ID 可自定义
            'Articles': '2e0bbcb8-fdf7-4cdb-8ee2-9f0651b71550',
            'Projects': '2e0bbcb8-fdf7-4cdb-8ee2-9f0651b71550',
            'Activity': 'activity', // 站点活跃状态热力图
            'About': '2e0bbcb8-fdf7-4cdb-8ee2-9f0651b71550',
-           'XXXXX':'xxxx-xxxx-xxx'
+           'XXXXX':'xxxx-xxxx-xxx(Heptabase 卡片 ID)'
        }
        'server': '', // Discord 服务器 ID，非必填，填写后将在网站中显示聊天入口
        'channel': '' // Discord 频道 ID，非必填，填写后将在网站中显示聊天入口
    }
    ```
 
-   配置 `pages` 后会显示在网站的右上角，点击会打开对应的卡片：
+   `pages` 里配置 Heptabase 中的卡片 ID， 配置后会显示在网站的右上角，点击会打开对应的卡片：
 
    ![](https://media.heptabase.com/v1/images/3120a828-7e72-4637-aaff-ff8b5d72a2b3/ca5fc266-33e4-45f4-a504-d5addfeacae2/CleanShot2023-02-2323.34.27-2x.png)
 
-   `pages` 的配置会影响你的网站首页，目前的规则是：网站会在你的白板中寻找名称为 About 的卡片（不区分大小写），如果不存在，则会将 pages 配置中第 1 个卡片作为首页，
+   `pages` 的配置会影响你的网站首页，目前的规则是：网站会在你的白板中寻找名称为 About 的卡片（不区分大小写），如果不存在，则会将 pages 配置中第 1 个卡片作为**首页**。
 
-3. 自定义 LOGO
+3. 设置 GitHub Action
 
-   在 `public` 目录下替换 `favicon.ico`、`apple-touch-icon.png` 两个文件
+   编辑 `.github/workflows/main.yml` ，将 `https://api.dabing.one` 修改为 `https://api.dabing.one?whiteboard_id=your_whiteboard_id` 例如 `https://api.dabing.one?whiteboard_id=d4cc3728297609add1a00aab108e90c4e57a1c378cfc2307c251745bf7d2a884` 
+
+   编辑完毕后保存，这一步是为了后续更新网站的内容。
+
+   ![](https://jiangzilong-image.oss-cn-beijing.aliyuncs.com/uPic/CleanShot2024-05-3119.25.4920240531192617.png)
+
+4. 自定义 LOGO
+   
+   在 `public` 目录下替换 `favicon.ico`、`apple-touch-icon.png` 、`logo.png` 文件
 
 ## Vercel
 
@@ -90,6 +98,18 @@
    在 Vercel 中打开项目，在 Settings 中设置自己的域名
 
    ![](https://jiangzilong-image.oss-cn-beijing.aliyuncs.com/uPic/CleanShot2024-01-3002.29.41@2x20240130023011.png)
+
+## 更新内容
+
+Heptabase 的白板更新后不会自动同步到网站中，需要手动进行更新，手动更新方法：
+
+1. 在你的 GitHub 仓库中打开 Actions
+
+2. 点击 Run workflow
+
+3. 几分钟后网站的内容就会与 Heptabase 同步
+
+![](https://jiangzilong-image.oss-cn-beijing.aliyuncs.com/uPic/CleanShot2024-05-3119.37.21@2x20240531193753.png)
 
 ## 常见问题
 

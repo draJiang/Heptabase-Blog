@@ -1,11 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CONFIG from '../config'
-// import { Button } from 'antd';
-// import logo from 'logo.png'
-// import '../output.css'
-// import '../index.css'
-// import { NextUIProvider } from "@nextui-org/system";
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenuToggle, NavbarMenu, NavbarMenuItem } from "@nextui-org/navbar";
 
 
