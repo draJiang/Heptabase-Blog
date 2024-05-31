@@ -5,7 +5,7 @@ import HeatMap from '@uiw/react-heat-map';
 
 import { getHeptabaseData } from '../constantFunction'
 
-import '../index.css'
+import '../style.css'
 
 let heptabase_blog_data = undefined
 
