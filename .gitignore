@@ -3,3 +3,9 @@ node_modules
 .run
 build
 .vscode
+.env*
+
+!.env.example
+.vercel
+.npm-cache
+src/resources/data.json

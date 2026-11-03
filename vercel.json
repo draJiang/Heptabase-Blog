@@ -1,0 +1,24 @@
+{
+  "buildCommand": "CI=false npm run build",
+  "outputDirectory": "build",
+  "functions": {
+    "api/notes.js": {
+      "maxDuration": 30
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/post/:path*",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/notes/:path*",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/activity",
+      "destination": "/index.html"
+    }
+  ],
+  "installCommand": "npm ci --legacy-peer-deps"
+}

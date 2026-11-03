@@ -37,6 +37,7 @@ if (CONFIG.ga) {
 
 // 文章页面
 function Post(props) {
+    const [loadError, setLoadError] = useState(null);
     const [cardList, setCardList] = useState([]);
     const [activeNote, setActiveNote] = useState('null');
     const [showChatWindow, setShowChatWindow] = useState(false);
@@ -93,12 +94,13 @@ function Post(props) {
             // 将数据保存到全局变量中
             HEPTABASE_DATA = heptabase_blog_data
             // 默认获取名为 about 的卡片作为首页，若无则获取配置中首个卡片作为首页
-            HOME_DATA = res['pages']['about'] || res['pages']['firstPage']
+            HOME_DATA = res['pages']['about'] || res['pages']['firstPage'] || res.data.cards[0]
+            if (!HOME_DATA) throw new Error('还没有已发布的笔记。')
             // 渲染 URL、数据
             herfToData()
 
         }).catch(error => {
-            console.error('Error:', error);
+            setLoadError(error.message);
         });
 
 
@@ -720,6 +722,8 @@ function Post(props) {
     }
 
     // return() {
+
+    if (loadError) return <div><Nav /><p role="alert">{loadError}</p></div>;
 
     if (HEPTABASE_DATA === null || cardList.length === 0) {
         return (<div>

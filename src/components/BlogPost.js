@@ -1,7 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import localStorage from 'localStorage';
-import { format } from 'date-fns'
 import { getHeptabaseData } from '../constantFunction'
 
 import Loading from '../components/Loading'
@@ -11,7 +9,7 @@ class BlogPost extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { posts: [], isLoading: true };
+        this.state = { posts: [], isLoading: true, error: null };
     }
 
     componentDidMount() {
@@ -21,8 +19,10 @@ class BlogPost extends React.Component {
         document.title = 'Notes'
 
         // 获取数据
-        getHeptabaseData.then((res) => {
+        getHeptabaseData().then((res) => {
             this.setState({ posts: res.data, isLoading: false })
+        }).catch(error => {
+            this.setState({ isLoading: false, error: error.message });
         })
 
         console.log('BlogPost componentDidMount end');
@@ -42,6 +42,7 @@ class BlogPost extends React.Component {
     }
 
     render() {
+        if (this.state.error) return <p role="alert">{this.state.error}</p>;
 
         if (this.state.isLoading == false && this.state.posts != undefined) {
             // 加载完毕

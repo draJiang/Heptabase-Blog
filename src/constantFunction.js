@@ -1,6 +1,7 @@
 import CONFIG from "./config";
 import { Modal } from 'antd';
-import heptabaseData from './resources/data.json';
+let heptabaseData = { data: { cards: [] } };
+let pendingNotes;
 
 const { confirm } = Modal;
 
@@ -213,124 +214,21 @@ const getClearCard = (card, cards) => {
 
 }
 
-// 从服务端获取 Heptabase 的笔记数据
-const getHeptabaseDataFromServer = async () => {
-    let myHeaders = new Headers();
-    myHeaders.append("User-Agent", "Apifox/1.0.0 (https://apifox.com)");
-
-    let requestOptions = {
-        method: 'GET',
-        headers: myHeaders,
-        redirect: 'follow'
-    };
-
-    try {
-        const whiteboard_id = CONFIG.whiteboard_id;
-        const result = await fetch("https://api.blog.kii.la/?shared-id=" + whiteboard_id, requestOptions);
-        const getDataResponse = await result.json();
-
-        if (getDataResponse.code === 0) {
-            // 成功获取数据
-
-            const data = getDataResponse
-            // 处理卡片数据
-            const newData = handleHeptabaseData(data)
-            return data
-
-
-        } else {
-            // 未成功获取，需要添加此白板到服务端中
-
-            let myHeaders = new Headers();
-            myHeaders.append("User-Agent", "Apifox/1.0.0 (https://apifox.com)");
-            myHeaders.append("Content-Type", "application/json");
-
-            let raw = JSON.stringify({
-                "shared_id": whiteboard_id,
-                "allow_origin": []
-            });
-
-            let requestOptions = {
-                method: 'POST',
-                headers: myHeaders,
-                body: raw,
-                redirect: 'follow'
-            };
-
-            const result = await fetch("https://api.blog.kii.la/add", requestOptions)
-            const addWhiteboardResponse = await result.json();
-
-            if (addWhiteboardResponse.code === 0) {
-
-                setTimeout(() => {
-                    // 添加白板后再次获取一次数据
-                    getHeptabaseDataFromServer()
-                }, 5000);
-
-            }
-
-        }
-
-
-    } catch (error) {
-
-        console.log('error', error);
-
-    }
-};
-
-// 获取 Heptabase 的笔记数据
+// Fetch the current publication. Do not persist note bodies in browser storage.
 const getHeptabaseData = async () => {
-    console.log('getHeptabaseData');
-
-    return handleHeptabaseData(heptabaseData)
-
-    // 获取本地数据
-    let heptabaseDataFromLocal = JSON.parse(localStorage.getItem("heptabase_blog_data"))
-
-
-    if (heptabaseDataFromLocal) {
-
-        // 存在本地数据
-        if (heptabaseDataFromLocal.data?.Etag && heptabaseDataFromLocal.whiteboard_id) {
-
-            // 判断本地数据是否需要更新
-            let myHeaders = new Headers();
-            myHeaders.append("User-Agent", "Apifox/1.0.0 (https://apifox.com)");
-
-            let requestOptions = {
-                method: 'GET',
-                headers: myHeaders,
-                redirect: 'follow'
-            };
-
-            const whiteboard_id = CONFIG.whiteboard_id;
-            const result = await fetch("https://api.blog.kii.la/etag?shared-id=" + whiteboard_id, requestOptions)
-            const etagFromServer = await result.json();
-
-            console.log('etagFromServer:');
-            console.log(etagFromServer);
-
-            // Etag 不同或者本地缓存的白板 ID 与配置中的不同
-            if (etagFromServer.data !== heptabaseDataFromLocal.data.Etag || heptabaseDataFromLocal.whiteboard_id !== whiteboard_id) {
-                //需要更新
-                const data = await getHeptabaseDataFromServer();
-                return data;
-            } else {
-                //不需要更新
-                return heptabaseDataFromLocal;
-            }
-        } else {
-            // 需要到服务端获取
-            const data = await getHeptabaseDataFromServer();
-            return data;
-        }
-
-    } else {
-        // 本地不存在数据，则需要到服务端获取
-        const heptabaseDataFromServer = await getHeptabaseDataFromServer();
-        return heptabaseDataFromServer;
+    try { localStorage.removeItem("heptabase_blog_data"); } catch (_) {}
+    if (!pendingNotes) {
+        pendingNotes = fetch('/api/notes', { cache: 'no-store' })
+            .then(async response => {
+                if (!response.ok) throw new Error('笔记暂时无法加载，请稍后刷新。');
+                const data = await response.json();
+                if (!Array.isArray(data?.data?.cards)) throw new Error('笔记数据格式错误。');
+                heptabaseData = data;
+                return handleHeptabaseData(data);
+            })
+            .finally(() => { pendingNotes = undefined; });
     }
+    return pendingNotes;
 };
 
 
@@ -419,14 +317,6 @@ const handleHeptabaseData = (data) => {
     data.frontGetTime = Date.parse(new Date()) / 1000
     data.pages = pages
     data.whiteboard_id = CONFIG.whiteboard_id
-
-    // 存储数据到本地缓存
-
-    try {
-        localStorage.setItem("heptabase_blog_data", JSON.stringify(data))
-    } catch (error) {
-        console.log(error);
-    }
 
     return data; // 返回结果
 

@@ -13,6 +13,7 @@
         "@testing-library/user-event": "^13.5.0",
         "@uiw/react-heat-map": "^2.0.5",
         "@uiw/react-tooltip": "^4.21.23",
+        "@vercel/blob": "^2.8.2",
         "@vercel/postgres": "^0.3.0",
         "@widgetbot/react-embed": "^1.9.0",
         "antd": "^5.1.1",
@@ -48,7 +49,9 @@
         "start": "react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test",
-        "eject": "react-scripts eject"
+        "eject": "react-scripts eject",
+        "publish": "node scripts/publish.mjs",
+        "test:publish": "node --test scripts/publish.test.mjs"
     },
     "eslintConfig": {
         "extends": [
@@ -70,5 +73,8 @@
     },
     "devDependencies": {
         "tailwindcss": "^3.4.3"
+    },
+    "engines": {
+        "node": "22.x"
     }
 }
