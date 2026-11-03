@@ -56,12 +56,13 @@ test('unchanged snapshot does not upload; replacement removes untagged notes and
   const storage = {
     get: async (_path, options) => {
       assert.equal(options.useCache, false);
-      return { statusCode: 200, stream: new Response(JSON.stringify(snapshot)).body, blob: { etag: 'current' } };
+      return { statusCode: 200, stream: new Response(JSON.stringify(snapshot)).body, blob: { etag: 'W/"current"' } };
     },
+    head: async () => ({ etag: '"current"' }),
     put: async (_path, body, options) => {
       writes++;
       assert.equal(options.access, 'private');
-      assert.equal(options.ifMatch, 'current');
+      assert.equal(options.ifMatch, '"current"');
       assert.equal(options.addRandomSuffix, false);
       assert.deepEqual(JSON.parse(body).data.cards.map(c => c.id), ['two']);
     },
@@ -74,6 +75,26 @@ test('unchanged snapshot does not upload; replacement removes untagged notes and
 test('initial publication does not allow overwriting a concurrent first publication', async () => {
   await uploadSnapshot(snapshot, { get: async () => null, put: async (_path, _body, options) => assert.equal(options.allowOverwrite, false) });
   await assert.rejects(uploadSnapshot(snapshot, { get: async () => null, put: async () => { throw new Error('upload failure'); } }), /upload failure/);
+});
+test('a change between download and metadata read aborts without overwriting', async () => {
+  let writes = 0;
+  const storage = {
+    get: async () => ({ statusCode: 200, stream: new Response('{}').body, blob: { etag: 'W/"old"' } }),
+    head: async () => ({ etag: '"new"' }),
+    put: async () => { writes++; },
+  };
+  await assert.rejects(uploadSnapshot(snapshot, storage), /changed during upload preparation/);
+  assert.equal(writes, 0);
+});
+test('a conflict after metadata read is propagated without an unconditional retry', async () => {
+  let writes = 0;
+  const storage = {
+    get: async () => ({ statusCode: 200, stream: new Response('{}').body, blob: { etag: '"current"' } }),
+    head: async () => ({ etag: '"current"' }),
+    put: async () => { writes++; throw new Error('ETag mismatch'); },
+  };
+  await assert.rejects(uploadSnapshot(snapshot, storage), /ETag mismatch/);
+  assert.equal(writes, 1);
 });
 function response() {
   return { headers: {}, setHeader(k, v) { this.headers[k] = v; }, status(s) { this.statusCode = s; return this; }, json(body) { this.body = body; return this; } };

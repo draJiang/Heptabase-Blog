@@ -4,7 +4,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { resolve, dirname } from 'node:path';
 import { existsSync } from 'node:fs';
 import { createHash } from 'node:crypto';
-import { get, put } from '@vercel/blob';
+import { get, head, put } from '@vercel/blob';
 import schema from '../lib/published-notes.cjs';
 
 const { BLOB_PATH, canonicalSnapshot, normalizeNote, validateSnapshot } = schema;
@@ -80,16 +80,23 @@ export async function collectNotes(runCli = cli, log = console.log) {
   return canonicalSnapshot(notes);
 }
 
-export async function uploadSnapshot(snapshot, storage = { get, put }) {
+export async function uploadSnapshot(snapshot, storage = { get, head, put }) {
   validateSnapshot(snapshot);
   const body = JSON.stringify(snapshot);
   const current = await storage.get(BLOB_PATH, { access: 'private', useCache: false });
   if (current && current.statusCode !== 200) throw new Error('Could not read the current snapshot.');
   if (current && await new Response(current.stream).text() === body) return false;
+  // Downloads can return a weak HTTP ETag (W/"..."). Conditional writes
+  // require the strong storage ETag returned by the Blob metadata API.
+  const metadata = current ? await storage.head(BLOB_PATH) : null;
+  if (current && (!metadata.etag || !current.blob.etag ||
+      metadata.etag !== current.blob.etag.replace(/^W\//, ''))) {
+    throw new Error('Published notes changed during upload preparation; run publish again.');
+  }
   await storage.put(BLOB_PATH, body, {
     access: 'private', contentType: 'application/json', addRandomSuffix: false,
     allowOverwrite: Boolean(current), cacheControlMaxAge: 60,
-    ...(current ? { ifMatch: current.blob.etag } : {}),
+    ...(current ? { ifMatch: metadata.etag } : {}),
   });
   return true;
 }
